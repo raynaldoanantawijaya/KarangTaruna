@@ -106,8 +106,8 @@ export default async function Berita({
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
                 {/* Search Bar - Centered Top */}
-                <div className="max-w-2xl mx-auto mb-16 relative z-20 -mt-24">
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-2 border border-gray-100 dark:border-gray-700">
+                <div className="max-w-xl mx-auto mb-12 relative z-20 -mt-10 sm:-mt-12">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-1.5 border border-gray-100 dark:border-gray-700">
                         <SearchInput />
                     </div>
                 </div>

@@ -226,9 +226,9 @@ export function ContactForm() {
                 </div>
             )}
 
-            <div className="bg-gray-900 dark:bg-white p-8 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-700">
-                <h3 className="text-2xl font-bold text-white dark:text-gray-900 mb-6">Kirim Pesan</h3>
-                <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="bg-gray-900 dark:bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 mt-8 lg:mt-12">
+                <h3 className="text-xl md:text-2xl font-bold text-white dark:text-gray-900 mb-4 md:mb-6">Kirim Pesan</h3>
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label htmlFor="name" className="block text-sm font-medium text-gray-300 dark:text-gray-700 mb-2">

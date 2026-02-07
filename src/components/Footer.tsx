@@ -22,7 +22,7 @@ export function Footer() {
                             Wadah pengembangan generasi muda yang tumbuh atas dasar kesadaran dan rasa tanggung jawab sosial dari, oleh dan untuk masyarakat.
                         </p>
                         <div className="flex space-x-3 sm:space-x-4">
-                            <a href="https://instagram.com/karangtaruna_mojoska" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-8 sm:h-8 rounded-lg sm:rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors text-white">
+                            <a href="instagram://user?username=karangtaruna_mojoska" onClick={(e) => { setTimeout(() => { window.location.href = 'https://instagram.com/karangtaruna_mojoska'; }, 500); }} className="w-10 h-10 sm:w-8 sm:h-8 rounded-lg sm:rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors text-white">
                                 <span className="sr-only">Instagram</span>
                                 <Instagram className="h-5 w-5 sm:h-4 sm:w-4" />
                             </a>
