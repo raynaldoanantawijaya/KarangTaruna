@@ -1,26 +1,575 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #D32F2F;
+  --secondary: #FBC02D;
 }
 
-@theme inline {
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: #EF5350;
+  --secondary: #FDD835;
+}
+
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ==================== RESPONSIVE UTILITIES ==================== */
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+
+  /* Touch devices - larger tap targets */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+  }
+
+  /* Remove hover effects on touch */
+  .group:hover .group-hover\:scale-110 {
+    transform: none;
+  }
+}
+
+/* Extra small devices (phones, 320px and below) */
+@media (max-width: 320px) {
+  html {
+    font-size: 14px;
+  }
+
+  .container,
+  .max-w-7xl {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Small devices (phones, 375px and below) */
+@media (max-width: 375px) {
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+
+  .text-4xl {
+    font-size: 1.75rem;
+  }
+
+  .text-5xl {
+    font-size: 2rem;
+  }
+
+  .py-20 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .gap-8 {
+    gap: 1.5rem;
+  }
+}
+
+/* Medium phones (425px and below) */
+@media (max-width: 425px) {
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  .p-8 {
+    padding: 1.25rem;
+  }
+
+  .p-6 {
+    padding: 1rem;
+  }
+
+  .mb-12 {
+    margin-bottom: 2rem;
+  }
+
+  .space-y-20>*+* {
+    margin-top: 3rem;
+  }
+}
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+
+  /* Better spacing for mobile */
+  .py-12 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  /* Ensure grid items stack properly */
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Better card spacing */
+  .rounded-3xl {
+    border-radius: 1rem;
+  }
+
+  /* Hide decorative blurs on mobile for performance */
+  .blur-3xl,
+  .blur-2xl {
+    display: none;
+  }
+}
+
+/* Landscape phones and small tablets */
+@media (min-width: 480px) and (max-width: 768px) and (orientation: landscape) {
+  .min-h-\[450px\] {
+    min-height: 350px;
+  }
+
+  .pt-32 {
+    padding-top: 5rem;
+  }
+}
+
+/* Desktop Android / Tablets landscape (1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .max-w-7xl {
+    max-width: 100%;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  /* Adjust grid for tablet */
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Large tablets and small laptops */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Ensure images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Fix for iOS input zoom */
+@media screen and (max-width: 768px) {
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+  .safe-area-inset {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Smooth scroll for all devices */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better readability on mobile */
+@media (max-width: 640px) {
+
+  p,
+  li {
+    line-height: 1.7;
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: 1.3;
+  }
+
+  /* Ensure all content fits on screen */
+  .max-w-7xl,
+  .container {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Smaller text sizes for mobile */
+  .text-xl {
+    font-size: 1.125rem;
+  }
+
+  .text-lg {
+    font-size: 1rem;
+  }
+
+  .text-base {
+    font-size: 0.875rem;
+  }
+
+  .text-sm {
+    font-size: 0.75rem;
+  }
+
+  /* Ensure cards don't overflow */
+  .rounded-xl,
+  .rounded-2xl {
+    border-radius: 0.75rem;
+  }
+
+  /* Reduce padding on mobile */
+  .px-8 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .py-16 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .py-20 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  /* Smaller gaps on mobile */
+  .gap-12 {
+    gap: 1.5rem;
+  }
+
+  .gap-8 {
+    gap: 1rem;
+  }
+
+  .gap-6 {
+    gap: 0.75rem;
+  }
+
+  /* Smaller margins */
+  .mb-16 {
+    margin-bottom: 2rem;
+  }
+
+  .mb-12 {
+    margin-bottom: 1.5rem;
+  }
+
+  .mb-8 {
+    margin-bottom: 1rem;
+  }
+
+  /* Reduce section spacing */
+  .space-y-20>*+* {
+    margin-top: 2.5rem;
+  }
+
+  .space-y-12>*+* {
+    margin-top: 1.5rem;
+  }
+
+  /* Grid adjustments for mobile */
+  .grid-cols-1.md\\:grid-cols-3,
+  .grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Card image heights */
+  .h-56 {
+    height: 10rem;
+  }
+
+  .h-48 {
+    height: 8rem;
+  }
+
+  /* Icons smaller on mobile */
+  .h-10.w-10 {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .h-8.w-8 {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+
+  /* Ensure full width on mobile */
+  .max-w-xl,
+  .max-w-2xl,
+  .max-w-3xl {
+    max-width: 100%;
+  }
+}
+
+/* Extra small phones (320px and below) */
+@media (max-width: 360px) {
+  html {
+    font-size: 13px;
+  }
+
+  .text-2xl {
+    font-size: 1.125rem;
+  }
+
+  .text-3xl {
+    font-size: 1.25rem;
+  }
+
+  .p-6,
+  .p-8 {
+    padding: 0.75rem;
+  }
+
+  .px-4 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  /* Very small card heights */
+  .h-56 {
+    height: 8rem;
+  }
+
+  .h-48 {
+    height: 6rem;
+  }
+}
+
+/* Custom utility for stats section to guarantee dark mode override */
+.bg-stats-section {
+  background-color: white;
+}
+
+.dark .bg-stats-section {
+  background-color: transparent !important;
+}
+
+/* Wave Animation */
+@keyframes wave-shift {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.dark .animate-wave {
+  animation: wave-shift 20s linear infinite;
+  /* Ensure the SVG is wide enough to loop seamlessly.
+     We usually need 2x width for this technique.
+     The current SVG viewbox 0 0 1200 120 and width calc(100% + 1.3px)
+     might need adjustment for a true continuous loop,
+     but shifting it back and forth or using a repeating pattern is common.
+     For a simple "sway", we can just translate slightly.
+     If the user wants "bersambung" (continuous), we need a repeating pattern.
+     Let's try a simple swaying shift first or a repeating background logic.
+     Given the SVG path, a simple infinity loop might be hard without duplicating the path.
+     Let's try a gentle sway first which is easier to implement without changing SVG structure significantly.
+  */
+}
+
+/* Better continuous loop attempt */
+@keyframes wave-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes wave-sway {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-20px);
+  }
+}
+
+.dark .animate-wave-scroll {
+  /* Requires the SVG to be 200% width of the container and contain two identical waves */
+  /* Since we operate on the existing SVG, let's try a gentle sway for now to see "movement" */
+  animation: wave-sway 5s ease-in-out infinite alternate;
+}
+
+@keyframes sparkle {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s infinite ease-in-out;
+}
+
+.gemerlap-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.gemerlap-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right,
+      transparent,
+      rgba(255, 255, 255, 0.4) 20%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0.4) 80%,
+      transparent);
+  transform: skewX(-25deg);
+  animation: shine 3s infinite;
+  z-index: 20;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+
+  20% {
+    left: 200%;
+  }
+
+  100% {
+    left: 200%;
+  }
+}
+
+/* Blob Animation */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.shape-blob {
+  position: absolute;
+  filter: blur(40px);
+  z-index: -1;
+  opacity: 0.7;
+  border-radius: 50%;
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Contact Form Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
 }
