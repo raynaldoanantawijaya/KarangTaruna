@@ -29,7 +29,19 @@ async function getLatestNews(): Promise<NewsItem[]> {
   }
 }
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Karang Taruna Asta Wira Dipta - Organisasi Pemuda Terbaik di Solo",
+  description: "Selamat datang di website resmi Karang Taruna Asta Wira Dipta, Kelurahan Mojo, Surakarta. Temukan profil, program kerja unggulan, dan berita kegiatan pemuda terkini.",
+  keywords: ["karang taruna terbaik solo", "organisasi pemuda surakarta", "kegiatan pemuda mojo", "asta wira dipta profile"],
+  alternates: {
+    canonical: "https://astawiradipta.my.id",
+  }
+};
+
 export default async function Home() {
+
   const latestNews = await getLatestNews();
 
   return (
@@ -45,12 +57,12 @@ export default async function Home() {
           </div>
 
           <h1 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-extrabold text-white mb-2 sm:mb-3 leading-tight tracking-tight drop-shadow-md">
-            Membangun Generasi Muda<br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-white to-yellow-100">Berkarya & Berdaya</span>
+            Karang Taruna Asta Wira Dipta<br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-white to-yellow-100">Kelurahan Mojo - Surakarta</span>
           </h1>
 
           <p className="text-red-50 dark:text-gray-300 text-[10px] sm:text-xs md:text-sm max-w-xs sm:max-w-md md:max-w-xl mx-auto mb-3 sm:mb-5 font-light leading-relaxed opacity-95 transition-colors">
-            Wadah pengembangan generasi muda yang tumbuh atas dasar kesadaran dan rasa tanggung jawab sosial dari, oleh, dan untuk masyarakat.
+            Organisasi kepemudaan resmi tingkat Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo). Wadah pengembangan generasi muda yang berkarya, berdaya, dan bertanggung jawab sosial.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
@@ -89,7 +101,7 @@ export default async function Home() {
                 <img
                   alt="Logo Karang Taruna"
                   className="rounded-xl w-full h-full object-contain aspect-[4/3] bg-gray-100 dark:bg-gray-800 p-4"
-                  src="/visi-misi.png"
+                  src="/visi-misi.jpg"
                 />
               </div>
             </div>
@@ -225,6 +237,51 @@ export default async function Home() {
             ) : (
               <div className="text-center py-10 text-gray-500">Belum ada berita terbaru via API.</div>
             )}
+          </div>
+
+          {/* SECTION BARU: Kabar Karang Taruna Mojo (Internal) */}
+          <div className="mt-16 pt-12 border-t border-gray-100 dark:border-gray-700">
+            <div className="flex justify-between items-end mb-8">
+              <div>
+                <span className="text-secondary-dark dark:text-secondary font-semibold tracking-wider uppercase text-sm">
+                  Kabar Internal
+                </span>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mt-1">
+                  Asta Wira Dipta Update
+                </h2>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl overflow-hidden shadow-xl text-white relative">
+              <div className="absolute top-0 right-0 p-32 bg-primary/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
+              <div className="grid md:grid-cols-2 gap-0">
+                <div className="relative h-64 md:h-auto">
+                  <img
+                    src="/surakarta.jpg"
+                    alt="Profil Kota Surakarta"
+                    className="w-full h-full object-cover opacity-80"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent md:bg-gradient-to-r"></div>
+                </div>
+                <div className="p-8 md:p-10 flex flex-col justify-center relative z-10">
+                  <div className="inline-block px-3 py-1 bg-yellow-500 text-black text-xs font-bold rounded-full mb-4 w-fit">
+                    Featured
+                  </div>
+                  <h3 className="text-2xl font-bold mb-4 leading-tight">
+                    Profil Kota Surakarta (Solo) Lengkap: Sejarah, Wisata, & 54 Kelurahan
+                  </h3>
+                  <p className="text-gray-300 mb-6 text-sm leading-relaxed">
+                    Panduan lengkap Kota Solo: Sejarah Mataram Islam, destinasi wisata, kuliner legendaris, dan profil detail 54 Kelurahan di 5 Kecamatan.
+                  </p>
+                  <Link
+                    href="/berita/read?url=internal-profil-kota-surakarta"
+                    className="inline-flex items-center text-yellow-400 font-bold hover:text-yellow-300 transition-colors"
+                  >
+                    Baca Selengkapnya <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="mt-8 text-center md:hidden">

@@ -1,0 +1,124 @@
+    "internal-pemerintahan-surakarta": {
+        title: "Mengenal Struktur Pemerintahan Kota Surakarta: Kecamatan dan Kelurahan Lengkap",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/City_of_Surakarta_Logo.svg/1200px-City_of_Surakarta_Logo.svg.png",
+        date: new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+        author: "Tim Riset Asta Wira Dipta",
+        body: `
+            <div class="space-y-6 text-gray-800 dark:text-gray-200">
+                <p class="lead text-lg font-medium"><strong>Kota Surakarta</strong>, atau yang lebih dikenal sebagai <strong>Solo</strong>, adalah pusat budaya dan pemerintahan di Jawa Tengah yang memiliki struktur administrasi tertata rapi. Sebagai warga masyarakat, terutama pemuda <strong>Karang Taruna</strong>, penting bagi kita untuk memahami pembagian wilayah administratif ini.</p>
+                
+                <h3 class="text-2xl font-bold mt-8 mb-4">Profil Singkat Pemerintahan Kota Surakarta</h3>
+                <p>
+                    Secara administratif, Kota Surakarta terdiri dari <strong>5 Kecamatan</strong> dan <strong>54 Kelurahan</strong>. Setiap wilayah memiliki karakteristik unik, mulai dari pusat perdagangan di Pasar Klewer hingga pusat pendidikan di Jebres.
+                    Pemahaman tentang struktur ini penting bagi <strong>organisasi kepemudaan Surakarta</strong> agar dapat menyusun program kerja yang tepat sasaran dan bersinergi dengan pemerintah setempat.
+                </p>
+
+                <h3 class="text-2xl font-bold mt-8 mb-4">Daftar Lengkap Kecamatan dan Kelurahan di Surakarta</h3>
+                
+                <div class="space-y-6 mt-6">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="text-xl font-bold text-primary mb-3">1. Kecamatan Pasar Kliwon</h4>
+                        <p class="mb-2 text-sm text-gray-500">Kecamatan di mana <strong>Karang Taruna Asta Wira Dipta (Mojo)</strong> berada. Merupakan kawasan budaya dan religi yang kental.</p>
+                        <ul class="grid grid-cols-2 gap-2 list-disc pl-5">
+                            <li><strong>Kelurahan Mojo</strong> (Home of Asta Wira Dipta)</li>
+                            <li>Kelurahan Pasar Kliwon</li>
+                            <li>Kelurahan Semanggi</li>
+                            <li>Kelurahan Joyosuran</li>
+                            <li>Kelurahan Sangkrah</li>
+                            <li>Kelurahan Kedung Lumbu</li>
+                            <li>Kelurahan Kauman</li>
+                            <li>Kelurahan Kampung Baru</li>
+                            <li>Kelurahan Gajahan</li>
+                            <li>Kelurahan Baluwarti (Keraton)</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="text-xl font-bold text-primary mb-3">2. Kecamatan Jebres</h4>
+                        <p class="mb-2 text-sm text-gray-500">Pusat pendidikan (UNS, ISI) dan kawasan teknologi (Technopark).</p>
+                        <ul class="grid grid-cols-2 gap-2 list-disc pl-5">
+                            <li>Kelurahan Jebres</li>
+                            <li>Kelurahan Mojosongo</li>
+                            <li>Kelurahan Pucangsawit</li>
+                            <li>Kelurahan Jagalan</li>
+                            <li>Kelurahan Purwodiningratan</li>
+                            <li>Kelurahan Tegalharjo</li>
+                            <li>Kelurahan Kepatihan Wetan</li>
+                            <li>Kelurahan Kepatihan Kulon</li>
+                            <li>Kelurahan Sudiroprajan</li>
+                            <li>Kelurahan Gandekan</li>
+                            <li>Kelurahan Sewu</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="text-xl font-bold text-primary mb-3">3. Kecamatan Banjarsari</h4>
+                        <p class="mb-2 text-sm text-gray-500">Kecamatan terpadat, pusat bisnis, dan lokasi Pura Mangkunegaran.</p>
+                        <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 list-disc pl-5">
+                            <li>Kelurahan Banjarsari</li>
+                            <li>Kelurahan Manahan</li>
+                            <li>Kelurahan Mangkubumen</li>
+                            <li>Kelurahan Timuran</li>
+                            <li>Kelurahan Ketelan</li>
+                            <li>Kelurahan Punggawan</li>
+                            <li>Kelurahan Kestalan</li>
+                            <li>Kelurahan Setabelan</li>
+                            <li>Kelurahan Gilingan</li>
+                            <li>Kelurahan Nusukan</li>
+                            <li>Kelurahan Kadipiro</li>
+                            <li>Kelurahan Banyuanyar</li>
+                            <li>Kelurahan Sumber</li>
+                            <li>Kelurahan Trubusaran</li>
+                            <li>Kelurahan Joglo</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="text-xl font-bold text-primary mb-3">4. Kecamatan Laweyan</h4>
+                        <p class="mb-2 text-sm text-gray-500">Terkenal sebagai Kampung Batik dan kawasan heritage.</p>
+                        <ul class="grid grid-cols-2 gap-2 list-disc pl-5">
+                            <li>Kelurahan Laweyan</li>
+                            <li>Kelurahan Sondakan</li>
+                            <li>Kelurahan Pajang</li>
+                            <li>Kelurahan Jajar</li>
+                            <li>Kelurahan Karangasem</li>
+                            <li>Kelurahan Kerten</li>
+                            <li>Kelurahan Purwosari</li>
+                            <li>Kelurahan Penumping</li>
+                            <li>Kelurahan Sriwedari</li>
+                            <li>Kelurahan Panularan</li>
+                            <li>Kelurahan Bumi</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="text-xl font-bold text-primary mb-3">5. Kecamatan Serengan</h4>
+                        <p class="mb-2 text-sm text-gray-500">Pusat kuliner (Serabi Notosuman) dan kawasan perbelanjaan.</p>
+                        <ul class="grid grid-cols-2 gap-2 list-disc pl-5">
+                            <li>Kelurahan Serengan</li>
+                            <li>Kelurahan Danukusuman</li>
+                            <li>Kelurahan Joyotakan</li>
+                            <li>Kelurahan Tipes</li>
+                            <li>Kelurahan Kratonan</li>
+                            <li>Kelurahan Jayengan</li>
+                            <li>Kelurahan Kemlayan</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold mt-8 mb-4">Sinergi Karang Taruna dengan Pemerintah Kota</h3>
+                <p>
+                    <strong>Karang Taruna</strong> sebagai mitra strategis pemerintah memiliki peran vital di setiap tingkatan, mulai dari unit RW, Kelurahan, hingga Kecamatan.
+                    Di wilayah <strong>Kelurahan Mojo</strong>, Karang Taruna Asta Wira Dipta aktif berkolaborasi dengan perangkat kelurahan dan LPMK untuk menyukseskan program-program pembangunan <strong>Kota Surakarta</strong>.
+                    Kami mengajak seluruh elemen pemuda di 54 Kelurahan untuk bersatu padu membangun Solo yang lebih maju, berbudaya, dan sejahtera.
+                </p>
+
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl mt-8 border-l-4 border-blue-500">
+                    <p class="font-bold text-blue-800 dark:text-blue-300 text-lg mb-2">Tahukah Anda?</p>
+                    <p class="text-sm text-blue-800 dark:text-blue-200">
+                        Nama-nama kelurahan di Solo seringkali diambil dari sejarah atau potensi lokal wilayah tersebut. Contohnya <strong>Mojo</strong> yang konon dahulu banyak ditumbuhi pohon Maja. Melestarikan sejarah ini adalah tugas kita bersama sebagai generasi muda.
+                    </p>
+                </div>
+            </div>
+        `
+    }

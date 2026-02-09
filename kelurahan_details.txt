@@ -1,0 +1,281 @@
+
+                <!-- 6. DAFTAR KELURAHAN (DETAILED) -->
+                <div>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 mt-10 border-b-2 border-gray-200 pb-2">6. Ensiklopedia 54 Kelurahan: Detak Jantung Kota Solo</h3>
+                    <p class="mb-6">Surakarta terbagi menjadi 5 kecamatan yang masing-masing memiliki karakter unik. Berikut adalah profil mendalam dari setiap kelurahan yang menjadi urat nadi kehidupan masyarakat Solo:</p>
+
+                    <!-- PASAR KLIWON -->
+                    <div class="mb-8">
+                        <div class="bg-amber-100 dark:bg-amber-900/30 p-4 rounded-t-xl border-b-4 border-amber-500">
+                            <h4 class="text-2xl font-bold text-amber-800 dark:text-amber-200">🏯 I. Kecamatan Pasar Kliwon (10 Kelurahan)</h4>
+                            <p class="text-sm text-amber-700 dark:text-amber-300 mt-1">Kode Pos: 5711X | Pusat Sejarah & Religi</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-gray-800 p-4 rounded-b-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                            
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">1. Kelurahan Mojo</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Rumah bagi RSUD Bung Karno dan Pasar Silir yang legendaris (kini sentra kreatif). Kelurahan ini merupakan hasil pemekaran Semanggi pada 2018 dan menjadi pusat kegiatan Karang Taruna Asta Wira Dipta.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">2. Kelurahan Semanggi</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kawasan padat penduduk yang terkenal dengan industri kreatif rumahan (konveksi). Memiliki Jembatan Mojo yang ikonik menghubungkan Solo dengan Sukoharjo (Bekonang).</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">3. Kelurahan Pasar Kliwon</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Jantung perdagangan tekstil. Di sini terdapat Pasar Kliwon yang menjual berbagai perlengkapan, serta Masjid Agung Surakarta yang bersejarah.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">4. Kelurahan Kauman</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kampung Batik Kauman. Gang-gang sempit dengan arsitektur kolonial-Jawa yang indah. Pusat produksi batik tulis halus dan wisata heritage religius.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">5. Kelurahan Baluwarti</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Berada di DALAM benteng Keraton. "Baluwarti" berarti benteng. Suasana sangat sakral dan tenang, tempat tinggal para abdi dalem dan kerabat keraton.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">6. Kelurahan Gajahan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Terkenal dengan alun-alun selatan (Alkid) dimana terdapat kebo bule Kyai Slamet. Pusat jajanan malam dan tradisi Masangin (berjalan melewati dua beringin).</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">7. Kelurahan Joyosuran</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kawasan pemukiman yang berkembang pesat. Memiliki akses dekat ke jalan raya utama menuju Wonogiri/Sukoharjo.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">8. Kelurahan Sangkrah</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Terletak di tepi Bengawan Solo. Memiliki Stasiun Solo Kota (Sangkrah) yang masih aktif melayani kereta wisata Jaladara dan Railbus Batara Kresna.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">9. Kelurahan Kedung Lumbu</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Wilayah yang cukup luas, mencakup area sekitar Luwes Lojiwetan. Pusat bisnis distribusi barang kebutuhan pokok.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">10. Kelurahan Kampung Baru</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Pusat pemerintahan kota (Balai Kota Surakarta) dan Bank Indonesia. Kawasan yang sangat strategis dan tertata rapi.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- JEBRES -->
+                    <div class="mb-8">
+                        <div class="bg-blue-100 dark:bg-blue-900/30 p-4 rounded-t-xl border-b-4 border-blue-500">
+                            <h4 class="text-2xl font-bold text-blue-800 dark:text-blue-200">🎓 II. Kecamatan Jebres (11 Kelurahan)</h4>
+                            <p class="text-sm text-blue-700 dark:text-blue-300 mt-1">Kode Pos: 5712X | Pusat Pendidikan & Teknologi</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-gray-800 p-4 rounded-b-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                            
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">1. Kelurahan Jebres</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Rumah bagi Universitas Sebelas Maret (UNS) dan Stasiun Jebres yang bergaya arsitektur Indische Empire. Kawasan kos-kosan mahasiswa terbesar.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">2. Kelurahan Mojosongo</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kelurahan terluas di Solo. Lokasi TPA Putri Cempo yang kini menjadi PLTSa (Pembangkit Listrik Tenaga Sampah) terbesar. Banyak perumahan baru berkembang di sini.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">3. Kelurahan Pucangsawit</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Terletak di pinggir Bengawan Solo. Memiliki Taman Sunan Jogo Kali yang digagas oleh FX Rudy Rudyatmo, menjadi destinasi wisata sungai.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">4. Kelurahan Jagalan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Terkenal dengan kuliner daging dan sosis solo. Dahulu merupakan area penyembelihan hewan (jagal). Padat dan sibuk.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">5. Kelurahan Purwodiningratan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Wilayah administratif yang tenang, banyak bangunan tua peninggalan Belanda dan perkantoran.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">6. Kelurahan Tegalharjo</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Dekat dengan RS dr. Oen Kandang Sapi. Pusat layanan kesehatan utama di wilayah utara Solo.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">7. Kelurahan Kepatihan Wetan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Bagian dari kawasan Kepatihan (Dalem Patih Keraton). Bersejarah dan berada di tengah kota.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">8. Kelurahan Kepatihan Kulon</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Berbatasan langsung dengan Kampung Baru. Area bisnis dan percetakan.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">9. Kelurahan Sudiroprajan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Simbol akulturasi Jawa-Tionghoa. Lokasi Pasar Gede Hardjonagoro. Terkenal dengan perayaan Imlek dan Grebeg Sudiro yang meriah.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">10. Kelurahan Gandekan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kawasan padat di tepi sungai Pepe. Sering menjadi indikator banjir kota, namun kini telah banyak dinormalisasi.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">11. Kelurahan Sewu</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Dikenal sebagai Kampung Beton, karena banyak pengrajin beton dan pot. Terletak di tepi Bengawan Solo (Tanggul).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BANJARSARI -->
+                    <div class="mb-8">
+                        <div class="bg-red-100 dark:bg-red-900/30 p-4 rounded-t-xl border-b-4 border-red-500">
+                            <h4 class="text-2xl font-bold text-red-800 dark:text-red-200">🏟️ III. Kecamatan Banjarsari (15 Kelurahan)</h4>
+                            <p class="text-sm text-red-700 dark:text-red-300 mt-1">Kode Pos: 5713X | Pusat Bisnis & Olahraga</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-white dark:bg-gray-800 p-4 rounded-b-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                            
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">1. Kelurahan Manahan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Jantung olahraga Solo. Stadion Manahan (Venue Piala Dunia U-17) berada di sini. Kawasan elit dan kuliner malam (Shelter Manahan).</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">2. Kelurahan Sumber</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kediaman Presiden Joko Widodo. Kawasan perumahan tenang dengan akses mudah ke Graha Saba Buana.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">3. Kelurahan Banjarsari</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Nama kecamatan diambil dari sini. Wilayah pemukiman padat yang strategis.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">4. Kelurahan Nusukan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Pusat keramaian utara. Pasar Nusukan burung dan kuliner malam. Akses utama ke Terminal Tirtonadi.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">5. Kelurahan Gilingan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Lokasi Masjid Raya Sheikh Zayed dan Terminal Tirtonadi. Salah satu kelurahan tersibuk di Solo.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">6. Kelurahan Joglo</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Pintu gerbang utara Kota Solo. Sedang dibangun Rel Layang Simpang Joglo untuk mengurai kemacetan legendaris.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">7. Kelurahan Kadipiro</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kelurahan dengan penduduk terbanyak. Sangat luas, mencakup area Solo utara bagian barat.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">8. Kelurahan Banyuanyar</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Sentra kuliner sate kambing (Sate Hj. Bejo). Kawasan perumahan kelas menengah atas.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">9. Kelurahan Mangkubumen</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kawasan perkotaan dekat Solo Paragon Mall. Banyak hotel dan penginapan.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">10. Kelurahan Punggawan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Di belakang Masjid Sholihin. Kawasan hunian lama yang tenang di tengah hiruk pikuk kota.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">11. Kelurahan Timuran</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Lokasi Pura Mangkunegaran (sebagian) dan Pasar Ngarsopuro (Night Market). Pusat budaya Mangkunegaran.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">12. Kelurahan Ketelan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Area sekitar Pura Mangkunegaran sisi barat. Masjid Al-Wustho Mangkunegaran berada di dekat sini.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">13. Kelurahan Kestalan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Belakang Pasar Legi. Pusat perdagangan sayur dan hasil bumi.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">14. Kelurahan Setabelan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Lokasi Pasar Legi (Induk). Pusat ekonomi pasar tradisional terbesar di Solo.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">15. Kelurahan Trubusaran</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kelurahan kecil di jantung kota, padat penduduk dan dekat dengan jalur utama.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LAWEYAN -->
+                    <div class="mb-8">
+                        <div class="bg-green-100 dark:bg-green-900/30 p-4 rounded-t-xl border-b-4 border-green-500">
+                            <h4 class="text-2xl font-bold text-green-800 dark:text-green-200">🎨 IV. Kecamatan Laweyan (11 Kelurahan)</h4>
+                            <p class="text-sm text-green-700 dark:text-green-300 mt-1">Kode Pos: 5714X | Heritage & Batik</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-gray-800 p-4 rounded-b-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                            
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">1. Kelurahan Laweyan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kampung Batik tertua. Arsitektur rumah saudagar batik yang megah dengan tembok tinggi. Destinasi wisata sejarah utama.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">2. Kelurahan Sondakan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Sentra produksi batik pendukung Laweyan. Banyak workshop dan showroom batik rumahan.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">3. Kelurahan Pajang</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Situs Keraton Pajang (Jaka Tingkir) ada di sekitar sini. Gerbang barat Solo, lokasi Solo Square Mall.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">4. Kelurahan Jajar</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kawasan hotel berbintang (Alila, Sunan). Pusat bisnis perhotelan di jalan masuk kota.</p>
+                            </div>
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">5. Kelurahan Kerten</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Lokasi RS Panti Waluyo dan markas Korem. Kawasan hijau yang tertata.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">6. Kelurahan Purwosari</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Stasiun Purwosari (Pemberhentian KA ekonomi dan lokal). Simpang empat strategis dengan flyover ikonik.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">7. Kelurahan Sriwedari</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Taman Sriwedari, Gedung Wayang Orang, dan Stadion R. Maladi. Pusat hiburan rakyat tempo dulu.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">8. Kelurahan Penumping</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Lokasi Rumah Dinas Walikota (Loji Gandrung) dan Stadion Sriwedari. Jantung protokol Slamet Riyadi.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">9. Kelurahan Bumi</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kawasan pemukiman yang tenang di sisi selatan Laweyan.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">10. Kelurahan Panularan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Terkenal dengan Pasar Kembang (Sarkem-nya Solo untuk bunga). Dekat dengan Mapolresta Surakarta.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">11. Kelurahan Karangasem</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Lokasi kampus UMS (Fakultas Kedokteran) dan RS Mata. Perbatasan dengan Kartasura.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SERENGAN -->
+                    <div class="mb-8">
+                        <div class="bg-purple-100 dark:bg-purple-900/30 p-4 rounded-t-xl border-b-4 border-purple-500">
+                            <h4 class="text-2xl font-bold text-purple-800 dark:text-purple-200">🍽️ V. Kecamatan Serengan (7 Kelurahan)</h4>
+                            <p class="text-sm text-purple-700 dark:text-purple-300 mt-1">Kode Pos: 5715X | Kuliner & Emas</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white dark:bg-gray-800 p-4 rounded-b-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                            
+                            <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">1. Kelurahan Serengan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Pusat kuliner legendaris. Banyak warung makan enak tersembunyi di gang-gangnya.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">2. Kelurahan Danukusuman</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kawasan pemukiman padat yang agamis. Banyak pondok pesantren dan kegiatan keagamaan.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">3. Kelurahan Jayengan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kampung Permata. Sentra pengrajin perhiasan dan batu mulia. Juga terkenal dengan tradisi Bubur Samin Banjar saat Ramadhan.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">4. Kelurahan Kratonan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kawasan bersejarah di selatan Keraton. Jalan-jalan lebar dengan pohon rindang.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">5. Kelurahan Tipes</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Pusat perbelanjaan Lotte Mart. Kawasan bisnis yang berkembang di jalan Veteran.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">6. Kelurahan Kemlayan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Kampung Seniman. Asal maestro Gesang. Gang-gangnya penuh mural dan nuansa seni.</p>
+                            </div>
+                             <div class="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                                <strong class="text-lg text-primary block mb-1">7. Kelurahan Joyotakan</strong>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">Pintu selatan kota Solo. Sering terdampak luapan sungai, namun memiliki semangat gotong royong yang kuat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. INDEKS PENCARIAN (RENAMED) -->
+                <div>
+                    <h3 class="text-2xl font-bold mt-8 mb-4">Indeks Pencarian Terkait</h3>

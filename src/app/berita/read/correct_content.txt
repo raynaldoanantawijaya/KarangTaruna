@@ -1,0 +1,220 @@
+    "internal-profil-kota-surakarta": {
+        title: "Ensiklopedia Kota Surakarta: Menelusuri Jejak Sejarah, Filosofi, dan Wajah Modern Kota Bengawan",
+        image: "/surakarta.jpg",
+        date: new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+        author: "Tim Riset & Redaksi Karang Taruna",
+        body: `
+            <div class="space-y-10 text-gray-800 dark:text-gray-200 text-justify leading-relaxed font-sans">
+                
+                <!-- INTRO -->
+                <div class="p-6 bg-amber-50 dark:bg-amber-900/10 rounded-2xl border-l-8 border-amber-600 shadow-sm">
+                    <p class="text-xl font-serif italic text-amber-900 dark:text-amber-100 mb-4">"Bumi Berseri, Spirit of Java"</p>
+                    <p class="text-lg">
+                        <strong>Surakarta</strong> (Jawa: ꦱꦸꦫꦏꦂꦠ), atau yang populer dengan nama <strong>Solo</strong>, adalah sebuah entitas budaya yang hidup. Kota ini tidak hanya sekadar kumpulan gedung dan jalan, melainkan sebuah <em>naskah kuno</em> yang terbuka lebar. Dari tata kota yang filosofis hingga denyut nadi modernitas di Solo Technopark, Solo adalah simfoni antara masa lalu yang agung dan masa depan yang cerah.
+                    </p>
+                </div>
+
+                <!-- 1. FILOSOFI TATA KOTA -->
+                <div>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-gray-200 pb-2">1. Catur Gatra Tunggal: Filosofi Tata Kota</h3>
+                    <p class="mb-4">
+                        Solo dibangun dengan konsep Jawa Islam yang disebut <strong>Catur Gatra Tunggal</strong>, yaitu penyatuan empat elemen kekuasaan dalam satu sumbu imaginer:
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow border-t-4 border-purple-500">
+                            <h4 class="font-bold text-purple-600 mb-2">👑 Keraton</h4>
+                            <p class="text-sm">Simbol pusat pemerintahan (Ekskutif). Tempat Raja (Sunan) memimpin rakyat.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow border-t-4 border-green-500">
+                            <h4 class="font-bold text-green-600 mb-2">🕌 Masjid Agung</h4>
+                            <p class="text-sm">Simbol pusat keagamaan (Religi). Masjid Agung Surakarta terletak tepat di barat Alun-Alun.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow border-t-4 border-yellow-500">
+                            <h4 class="font-bold text-yellow-600 mb-2">🌳 Alun-Alun</h4>
+                            <p class="text-sm">Simbol ruang publik dan rakyat (Demokrasi). Tempat bertemunya Raja dan kawula (rakyat).</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow border-t-4 border-blue-500">
+                            <h4 class="font-bold text-blue-600 mb-2">💰 Pasar Gede</h4>
+                            <p class="text-sm">Simbol pusat ekonomi. Pasar Gedhe Hardjonagoro merepresentasikan kemakmuran.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. SEJARAH MENDALAM -->
+                <div class="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">2. Lintasan Sejarah: The Rise of Surakarta</h3>
+                    
+                    <ul class="relative border-l-4 border-amber-300 ml-4 space-y-8">
+                        <li class="pl-6 relative">
+                            <span class="absolute -left-3 top-0 bg-amber-500 w-6 h-6 rounded-full border-4 border-white"></span>
+                            <h4 class="font-bold text-lg">1745: Boyong Kedhaton</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Rombongan Sunan Pakubuwono II berpindah dari Kartasura ke Desa Sala. Peristiwa ini diperingati setiap tahun sebagai Hari Jadi Kota Solo (17 Februari).</p>
+                        </li>
+                        <li class="pl-6 relative">
+                            <span class="absolute -left-3 top-0 bg-amber-500 w-6 h-6 rounded-full border-4 border-white"></span>
+                            <h4 class="font-bold text-lg">1755: Perjanjian Giyanti (Palihan Nagari)</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Mataram Islam terbelah dua. Muncullah <strong>Kasunanan Surakarta</strong> (Sunan PB III) dan <strong>Kasultanan Yogyakarta</strong> (Sultan HB I).</p>
+                        </li>
+                        <li class="pl-6 relative">
+                            <span class="absolute -left-3 top-0 bg-amber-500 w-6 h-6 rounded-full border-4 border-white"></span>
+                            <h4 class="font-bold text-lg">1757: Perjanjian Salatiga</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Raden Mas Said (Pangeran Sambernyawa) mendirikan kadipaten sendiri di dalam Surakarta, yaitu <strong>Pura Mangkunegaran</strong>. Sejak itu Solo memiliki "Dua Matahari Kembar".</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 3. BATIK & BUDAYA -->
+                <div>
+                     <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">3. Filosofi Batik & Budaya Adhiluhung</h3>
+                     <p class="mb-4">Solo adalah ibukota Batik. Batik Solo memiliki ciri khas warna sogan (coklat kekuningan) yang melambangkan kerendahan hati dan kedekatan dengan tanah (bumi).</p>
+                     
+                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                         <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                             <div class="bg-amber-800 p-4 h-full text-white">
+                                 <h5 class="font-bold text-lg mb-2">Truntum</h5>
+                                 <p class="text-xs opacity-90">Motif bintik bintang. Bermakna cinta yang tumbuh kembali (tumaruntum). Diciptakan oleh Ratu Kencana saat merindukan Raja.</p>
+                             </div>
+                         </div>
+                         <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                             <div class="bg-amber-700 p-4 h-full text-white">
+                                 <h5 class="font-bold text-lg mb-2">Parang & Lereng</h5>
+                                 <p class="text-xs opacity-90">Garis diagonal tegas. Melambangkan semangat pantang menyerah. Dahulu hanya boleh dipakai oleh Raja dan kerabatnya.</p>
+                             </div>
+                         </div>
+                         <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                             <div class="bg-amber-600 p-4 h-full text-white">
+                                 <h5 class="font-bold text-lg mb-2">Sidomukti</h5>
+                                 <p class="text-xs opacity-90">Sido (menjadi) + Mukti (bahagia/sejahtera). Biasa dipakai pengantin agar hidup bahagia dan sejahtera.</p>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+
+                <!-- 4. WAJAH BARU SOLO (REVITALISASI) -->
+                <div class="bg-blue-50 dark:bg-blue-900/10 p-6 rounded-2xl border border-blue-200">
+                    <h3 class="text-3xl font-bold text-blue-800 dark:text-blue-400 mb-6 flex items-center">
+                        🏗️ 4. The New Face of Solo: Era Revitalisasi
+                    </h3>
+                    <p class="mb-4">Dalam beberapa tahun terakhir, Solo mengalami percepatan pembangunan infrastruktur yang masif (17 Titik Prioritas Pembangunan):</p>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <li class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                            <strong class="text-lg text-primary block mb-1">Masjid Raya Sheikh Zayed</strong>
+                            <span class="text-sm text-gray-600 dark:text-gray-300">Hadiah dari Pangeran UEA. Replika Grand Mosque Abu Dhabi dengan sentuhan motif batik Solo. Kapasitas 10.000 jamaah.</span>
+                        </li>
+                        <li class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                            <strong class="text-lg text-primary block mb-1">Lokananta (Titik Nol Musik Indonesia)</strong>
+                            <span class="text-sm text-gray-600 dark:text-gray-300">Studio rekaman pertama di Indonesia (1956) yang direvitalisasi menjadi creative hub, museum musik, dan venue konser.</span>
+                        </li>
+                        <li class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                            <strong class="text-lg text-primary block mb-1">Solo Technopark</strong>
+                            <span class="text-sm text-gray-600 dark:text-gray-300">Pusat vokasi dan inovasi teknologi. Menggandeng Shopee, Garena, dan industri manufaktur untuk mencetak talenta digital.</span>
+                        </li>
+                        <li class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                            <strong class="text-lg text-primary block mb-1">Rel Layang Simpang Joglo</strong>
+                            <span class="text-sm text-gray-600 dark:text-gray-300">Proyek (under construction) rel kereta api layang terpanjang di Indonesia untuk mengurai kemacetan legendaris di palang Joglo.</span>
+                        </li>
+                        <li class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                            <strong class="text-lg text-primary block mb-1">Taman Balekambang</strong>
+                            <span class="text-sm text-gray-600 dark:text-gray-300">Taman hutan kota peninggalan Mangkunegara VII yang disulap menjadi taman botani kelas dunia dengan panggung pertunjukan terbuka.</span>
+                        </li>
+                         <li class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                            <strong class="text-lg text-primary block mb-1">Museum Budaya Sains & Teknologi</strong>
+                            <span class="text-sm text-gray-600 dark:text-gray-300">Museum baru di Jebres yang akan menjadi pusat edukasi sains terbesar di Jawa Tengah.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 5. KULINER (DEEP DIVE) -->
+                <div>
+                     <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">5. Gastronomi Solo: Murah, Meriah, Mewah</h3>
+                     <p class="mb-4">Solo dikenal sebagai kota dengan biaya hidup termurah namun kualitas rasa bintang lima.</p>
+                     
+                     <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-lg overflow-hidden border">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Kuliner</th>
+                                    <th scope="col" class="px-6 py-3">Deskripsi</th>
+                                    <th scope="col" class="px-6 py-3">Tempat Legendaris</th>
+                                    <th scope="col" class="px-6 py-3">Range Harga</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Sate Buntel</td>
+                                    <td class="px-6 py-4">Daging kambing cincang dibungkus lemak tipis lalu dibakar. Juicy!</td>
+                                    <td class="px-6 py-4">Mbok Galak, H. Bejo (Langganan Presiden Jokowi)</td>
+                                    <td class="px-6 py-4">Rp 40rb - 60rb</td>
+                                </tr>
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Selat Solo</td>
+                                    <td class="px-6 py-4">Fusion Jawa-Eropa (Salad). Manis, asam, segar.</td>
+                                    <td class="px-6 py-4">Selat Mbak Lies, Selat Viens</td>
+                                    <td class="px-6 py-4">Rp 15rb - 25rb</td>
+                                </tr>
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Tengkleng</td>
+                                    <td class="px-6 py-4">Sup balungan kambing, bumbu kuning encer pedas.</td>
+                                    <td class="px-6 py-4">Tengkleng Klewer Bu Edi, Pak Manto (Rica Tengkleng)</td>
+                                    <td class="px-6 py-4">Rp 30rb - 60rb</td>
+                                </tr>
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Soto Seger</td>
+                                    <td class="px-6 py-4">Soto kuah bening daging sapi/ayam, mangkuk kecil.</td>
+                                    <td class="px-6 py-4">Soto Gading, Soto Triwindu</td>
+                                    <td class="px-6 py-4">Rp 10rb - 15rb</td>
+                                </tr>
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Gudeg Ceker</td>
+                                    <td class="px-6 py-4">Gudeg basah dengan ceker ayam lunak. Kuliner dini hari (jam 2 pagi).</td>
+                                    <td class="px-6 py-4">Gudeg Ceker Margoyudan Bu Kasno</td>
+                                    <td class="px-6 py-4">Rp 20rb - 30rb</td>
+                                </tr>
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Tahok</td>
+                                    <td class="px-6 py-4">Kembang tahu jahe hangat (mirip Wedang Tahu). Sarapan khas Pasar Gede.</td>
+                                    <td class="px-6 py-4">Tahok Pak Citro (Pasar Gede)</td>
+                                    <td class="px-6 py-4">Rp 8rb - 10rb</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                     </div>
+                </div>
+
+                <!-- 6. ULTIMATE KEYWORDS -->
+                <div>
+                    <h3 class="text-2xl font-bold mt-8 mb-4">Indeks Pencarian Terkait (SEO Ultimate)</h3>
+                    <div class="p-6 bg-gray-100 dark:bg-gray-800 text-xs font-mono rounded-xl space-y-4 max-h-96 overflow-y-auto border border-gray-300 dark:border-gray-700">
+                        <div>
+                            <strong class="text-primary block mb-1">🏛️ Administrasi & Pemerintahan:</strong>
+                            <p>Kota Surakarta, Pemkot Solo, DPRD Surakarta, Walikota Surakarta Teguh Prakosa, Gibran Rakabuming Raka, Kecamatan Jebres, Kecamatan Pasar Kliwon, Kecamatan Banjarsari, Kecamatan Serengan, Kecamatan Laweyan, Kode Pos Solo, Kelurahan Mojo Surakarta, Peta Kota Solo.</p>
+                        </div>
+                        <div>
+                            <strong class="text-primary block mb-1">✈️ Pariwisata & Landmark:</strong>
+                            <p>Wisata Solo 2024, Keraton Kasunanan Surakarta Hadiningrat, Pura Mangkunegaran, Masjid Raya Sheikh Zayed Solo, Solo Safari Jurug, Taman Balekambang, Benteng Vastenburg, Museum Keris, Museum Batik Danar Hadi, Tumurun Museum, De Tjolomadoe (Karanganyar dekat Solo), Heritage Palace, Pasar Gede, Pasar Klewer, Kampung Batik Laweyan, Kampung Batik Kauman.</p>
+                        </div>
+                        <div>
+                            <strong class="text-primary block mb-1">🍜 Kuliner & Hangout:</strong>
+                            <p>Kuliner legendaris Solo, Sarapan enak di Solo, Nasi Liwet Wongso Lemu, Tengkleng Pak Manto, Sate Buntel Mbok Galak, Selat Solo Mbak Lies, Es Dawet Telasih Bu Dermi, Serabi Notosuman, Roti Mandarijn Orion, Wedangan HIK, Cafe hits Solo, Coffee shop Gatsu Solo, Gudeg Ceker Margoyudan, Soto Gading langganan Jokowi.</p>
+                        </div>
+                        <div>
+                            <strong class="text-primary block mb-1">🚆 Transportasi & Akomodasi:</strong>
+                            <p>Hotel murah di Solo, Hotel bintang 5 Solo, Alila Solo, Swiss-Belhotel Solo, Stasiun Solobalapan, Stasiun Purwosari, Bandara Adi Soemarmo, Jadwal KRL Solo Jogja, Batik Solo Trans (BST), Sewa motor Solo, Rental mobil Solo, Bus Eka Mira, Tol Solo Semarang, Tol Solo Ngawi.</p>
+                        </div>
+                         <div>
+                            <strong class="text-primary block mb-1">🎓 Pendidikan & Kesehatan:</strong>
+                            <p>Universitas Sebelas Maret (UNS), UMS Pabelan, ISI Surakarta, Biaya hidup mahasiswa Solo, Kost daerah UNS, RSUD Moewardi, RS Ortopedi Soeharso, Dokter spesialis Solo, Apotek 24 jam Solo.</p>
+                        </div>
+                        <div>
+                            <strong class="text-primary block mb-1">🎉 Event & Budaya:</strong>
+                            <p>Jadwal Event Solo 2025, Haul Habib Ali Solo, Sekaten Solo, Grebeg Sudiro Imlek, Solo Batik Carnival, SIPA Solo, Rock in Solo, Konser Lokananta, CFD Slamet Riyadi, Wayang Orang Sriwedari jadwal, Kirab Malam Satu Suro.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg text-xs font-mono">
+                    <p><strong>Summary:</strong> Profil lengkap Kota Surakarta (Solo) mencakup sejarah Mataram Islam, 5 kecamatan (Pasar Kliwon, Jebres, Banjarsari, Laweyan, Serengan), wisata budaya Keraton & Mangkunegaran, kuliner legendaris (Nasi Liwet, Tengkleng), pusat pendidikan UNS/ISI, serta fasilitas kesehatan dan transportasi modern.</p>
+                </div>
+            </div>
+        `
+    },

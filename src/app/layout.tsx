@@ -96,18 +96,24 @@ export const metadata: Metadata = {
     description: "Website Resmi Karang Taruna Asta Wira Dipta Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah. Wadah pengembangan generasi muda dan kegiatan sosial komunitas.",
     images: [
       {
+        url: "/surakarta.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Profil Kota Surakarta dan Karang Taruna Mojo",
+      },
+      {
         url: "/logo.png",
         width: 512,
         height: 512,
-        alt: "Logo Karang Taruna Asta Wira Dipta Surakarta"
-      }
-    ]
+        alt: "Logo Karang Taruna Asta Wira Dipta",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Karang Taruna Asta Wira Dipta - Surakarta, Solo, Jawa Tengah",
-    description: "Website Resmi Karang Taruna Asta Wira Dipta Kelurahan Mojo, Pasar Kliwon, Surakarta (Solo). Wadah pengembangan generasi muda.",
-    images: ["/logo.png"]
+    title: "Karang Taruna Asta Wira Dipta - Muda, Berkarya, Berbudaya",
+    description: "Pusat informasi kegiatan kepemudaan di Kelurahan Mojo, Surakarta. Sinergi membangun kota Solo yang berbudaya dan berkemajuan.",
+    images: ["/surakarta.jpg"],
   },
   alternates: {
     canonical: "https://astawiradipta.my.id"
@@ -216,10 +222,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
-        />
         {/* Additional Meta Tags */}
         <meta name="geo.region" content="ID-JT" />
         <meta name="geo.placename" content="Surakarta" />
@@ -228,8 +230,13 @@ export default function RootLayout({
         <link rel="canonical" href="https://astawiradipta.my.id" />
       </head>
       <body
-        className={`${poppins.variable} antialiased bg-background text-foreground font-sans flex flex-col min-h-screen transition-colors duration-300`}
+        className={`${poppins.variable} font-sans antialiased bg-background text-foreground transition-colors duration-300 overflow-x-hidden w-full relative`}
       >
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

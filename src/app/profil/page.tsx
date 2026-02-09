@@ -1,6 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
 import { History, Gavel, CheckCircle, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Profil Karang Taruna Asta Wira Dipta - Visi, Misi & Struktur Organisasi | Solo",
+    description: "Profil lengkap Karang Taruna Asta Wira Dipta Kelurahan Mojo, Surakarta. Visi, misi, struktur organisasi, sejarah, dan arti lambang. Organisasi kepemudaan terbaik di Solo.",
+    keywords: [
+        "profil karang taruna", "karang taruna mojo", "asta wira dipta",
+        "struktur organisasi karang taruna", "visi misi karang taruna",
+        "sejarah karang taruna", "karang taruna solo", "karang taruna surakarta",
+        "organisasi pemuda solo", "kepemudaan mojo", "pasar kliwon"
+    ],
+    openGraph: {
+        title: "Profil Karang Taruna Asta Wira Dipta - Kelurahan Mojo, Surakarta",
+        description: "Visi, misi, struktur organisasi, dan sejarah Karang Taruna Asta Wira Dipta. Organisasi kepemudaan di Kelurahan Mojo, Pasar Kliwon, Solo.",
+        type: "website",
+        url: "https://astawiradipta.my.id/profil",
+    },
+};
 
 const ANONYMOUS_IMG = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
 

@@ -16,7 +16,10 @@ export function Footer() {
                                 className="h-12 w-12"
                                 src="/logo.png"
                             />
-                            <span className="font-bold text-2xl tracking-tight">Asta Wira Dipta</span>
+                            <div>
+                                <span className="font-bold text-lg sm:text-xl tracking-tight block leading-tight">Asta Wira Dipta</span>
+                                <span className="text-xs text-gray-400 block">Kelurahan Mojo - Surakarta</span>
+                            </div>
                         </div>
                         <p className="text-gray-400 text-sm max-w-sm mb-6">
                             Wadah pengembangan generasi muda yang tumbuh atas dasar kesadaran dan rasa tanggung jawab sosial dari, oleh dan untuk masyarakat.

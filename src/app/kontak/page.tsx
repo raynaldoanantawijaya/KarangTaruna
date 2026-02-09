@@ -1,6 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Kontak Karang Taruna Asta Wira Dipta - Alamat & Sekretariat di Mojo, Solo",
+    description: "Hubungi Karang Taruna Asta Wira Dipta. Alamat sekretariat: Jl. Sungai Serang I No.313, Mojo, Pasar Kliwon, Surakarta. Email, telepon, dan peta lokasi.",
+    keywords: [
+        "kontak karang taruna", "alamat karang taruna mojo", "sekretariat asta wira dipta",
+        "hubungi karang taruna solo", "email karang taruna", "telepon karang taruna",
+        "lokasi karang taruna surakarta", "kantor kelurahan mojo", "pasar kliwon solo",
+        "jl sungai serang solo", "organisasi pemuda mojo"
+    ],
+    openGraph: {
+        title: "Kontak Karang Taruna Asta Wira Dipta - Mojo, Surakarta",
+        description: "Alamat sekretariat, email, telepon, dan lokasi Karang Taruna Asta Wira Dipta di Kelurahan Mojo, Pasar Kliwon, Solo.",
+        type: "website",
+        url: "https://astawiradipta.my.id/kontak",
+    },
+};
 
 export default function Kontak() {
     return (
@@ -84,7 +102,7 @@ export default function Kontak() {
                         {/* Map Embed */}
                         <div className="w-full h-64 md:h-80 bg-gray-200 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700">
                             <iframe
-                                src="https://maps.google.com/maps?q=Kelurahan+Mojo,+Pasar+Kliwon,+Surakarta&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                                src="https://maps.google.com/maps?q=Kantor+Kelurahan+Mojo,+Surakarta&t=&z=17&ie=UTF8&iwloc=&output=embed"
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0 }}

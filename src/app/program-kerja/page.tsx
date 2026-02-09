@@ -1,5 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
 import { Calendar, ChevronRight, Check, Clock } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Program Kerja Karang Taruna Asta Wira Dipta - Kegiatan Pemuda di Solo",
+    description: "Daftar program kerja dan kegiatan Karang Taruna Asta Wira Dipta Kelurahan Mojo, Surakarta. Pelatihan, aksi sosial, lingkungan hidup, dan agenda pemuda Solo.",
+    keywords: [
+        "program kerja karang taruna", "kegiatan karang taruna", "agenda pemuda solo",
+        "pelatihan pemuda", "aksi sosial solo", "donor darah solo", "kerja bakti mojo",
+        "kegiatan sosial surakarta", "pemberdayaan pemuda", "karang taruna aktif",
+        "sahur on the road solo", "jumat berkah", "bank sampah mojo"
+    ],
+    openGraph: {
+        title: "Program Kerja Karang Taruna Asta Wira Dipta - Solo",
+        description: "Daftar kegiatan dan program unggulan Karang Taruna di Kelurahan Mojo, Pasar Kliwon, Surakarta.",
+        type: "website",
+        url: "https://astawiradipta.my.id/program-kerja",
+    },
+};
 
 export default function ProgramKerja() {
     return (

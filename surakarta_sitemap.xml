@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>404 - Page</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="https://surakarta.go.id/displayFileFe/setting/aebc2d75-cd64-4f4e-af11-f4ab4353053d.png">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="" crossorigin>
+    <link rel="stylesheet" type="text/css" href="https://surakarta.go.id/404/css2.css">
+    
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://surakarta.go.id/404/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://surakarta.go.id/404/bootstrap-icons.css">
+    
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://surakarta.go.id/404/bootstrap.css">
+    
+
+    <!-- Template Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://surakarta.go.id/404/style.css">
+    
+<!-- Livewire Styles --><style >[wire\:loading][wire\:loading], [wire\:loading\.delay][wire\:loading\.delay], [wire\:loading\.inline-block][wire\:loading\.inline-block], [wire\:loading\.inline][wire\:loading\.inline], [wire\:loading\.block][wire\:loading\.block], [wire\:loading\.flex][wire\:loading\.flex], [wire\:loading\.table][wire\:loading\.table], [wire\:loading\.grid][wire\:loading\.grid], [wire\:loading\.inline-flex][wire\:loading\.inline-flex] {display: none;}[wire\:loading\.delay\.none][wire\:loading\.delay\.none], [wire\:loading\.delay\.shortest][wire\:loading\.delay\.shortest], [wire\:loading\.delay\.shorter][wire\:loading\.delay\.shorter], [wire\:loading\.delay\.short][wire\:loading\.delay\.short], [wire\:loading\.delay\.default][wire\:loading\.delay\.default], [wire\:loading\.delay\.long][wire\:loading\.delay\.long], [wire\:loading\.delay\.longer][wire\:loading\.delay\.longer], [wire\:loading\.delay\.longest][wire\:loading\.delay\.longest] {display: none;}[wire\:offline][wire\:offline] {display: none;}[wire\:dirty]:not(textarea):not(input):not(select) {display: none;}:root {--livewire-progress-bar-color: #2299dd;}[x-cloak] {display: none !important;}[wire\:cloak] {display: none !important;}</style>
+</head>
+    <body style="height:100% !important;" class="background-404">
+       <div wire:snapshot="{&quot;data&quot;:[],&quot;memo&quot;:{&quot;id&quot;:&quot;ZXAwyNoAUjbB3taFkibp&quot;,&quot;name&quot;:&quot;fe.not-found-page.not-found-page&quot;,&quot;path&quot;:&quot;not-found&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;errors&quot;:[],&quot;locale&quot;:&quot;id&quot;},&quot;checksum&quot;:&quot;8e9bc0018ee1241176921affb47a993f15bc3a29c1141be48ed65a0ac6ae6d44&quot;}" wire:effects="[]" wire:id="ZXAwyNoAUjbB3taFkibp">
+    <section >
+        <div class="container">
+            <div class="box">
+                <h1 class="mb-4">404</h1>
+                <h5>Oops... Halaman tidak ditemukan</h5>
+                
+            </div>
+        </div>
+    </section>
+</div>
+
+    <!-- JavaScript fe/assets/Libraries -->
+    <script src="https://surakarta.go.id/&quot;404/jquery-3.4.1.min.js"></script>
+    
+    
+
+    <!-- Template Javascript -->
+    
+<script src="/livewire/livewire.min.js?id=65f3e655"   data-csrf="tOTiOigXvH7tLC8zCStzIZ52RkGxS7kVlMNiJOXC" data-update-uri="/livewire/update" data-navigate-once="true"></script>
+</body>
+
+</html>
