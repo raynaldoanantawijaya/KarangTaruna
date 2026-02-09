@@ -387,15 +387,35 @@ export default function BencanaPage() {
 
         setLocation(prev => ({ ...prev, loading: true, error: undefined }))
 
+        // Check permission status first using Permissions API
+        try {
+            if (navigator.permissions) {
+                const permissionStatus = await navigator.permissions.query({ name: 'geolocation' })
+
+                if (permissionStatus.state === 'denied') {
+                    setLocation(prev => ({
+                        ...prev,
+                        loading: false,
+                        error: "Akses lokasi ditolak. Silakan aktifkan izin lokasi di pengaturan browser Anda:\n\n📱 Android Chrome: Ketuk ikon gembok/info di address bar → Izin → Lokasi → Izinkan\n\n🖥️ Desktop: Klik ikon gembok di address bar → Izin situs → Lokasi → Izinkan",
+                        verified: false
+                    }))
+                    return
+                }
+            }
+        } catch {
+            // Permissions API not supported, continue with regular geolocation request
+        }
+
         try {
             // Get multiple samples for validation
             const samples = await getMultipleSamples()
 
             if (samples.length === 0) {
+                // Check if it's a permission issue or GPS issue
                 setLocation(prev => ({
                     ...prev,
                     loading: false,
-                    error: "Gagal mendapatkan lokasi. Pastikan GPS aktif dan izinkan akses lokasi.",
+                    error: "Gagal mendapatkan lokasi.\n\n🔹 Pastikan GPS/Lokasi aktif di perangkat Anda\n🔹 Izinkan akses lokasi saat browser meminta\n🔹 Jika sudah ditolak sebelumnya, buka pengaturan browser dan aktifkan izin lokasi untuk situs ini",
                     verified: false
                 }))
                 return
@@ -601,9 +621,9 @@ export default function BencanaPage() {
                                     </div>
                                 ) : location.error ? (
                                     <div className="space-y-3">
-                                        <div className="flex items-center gap-2 text-red-500">
-                                            <ShieldAlert className="h-5 w-5" />
-                                            <span className="text-sm font-medium">{location.error}</span>
+                                        <div className="flex items-start gap-2 text-red-500">
+                                            <ShieldAlert className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                                            <p className="text-sm font-medium whitespace-pre-line">{location.error}</p>
                                         </div>
                                         <button
                                             onClick={getUserLocation}
