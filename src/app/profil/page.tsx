@@ -21,7 +21,7 @@ export default function Profil() {
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full space-y-12">
                 {/* Structure Section - UPDATED ROLE TEXTS */}
-                <section className="w-full overflow-x-auto pb-4 sm:pb-10 md:pb-20 flex flex-col items-center">
+                <section className="w-full pb-4 sm:pb-10 md:pb-20 flex flex-col items-center overflow-hidden">
 
                     {/* Title - outside scaling container to stay normal size */}
                     <div className="text-center mb-4 sm:mb-8 md:mb-12 w-full">
@@ -149,7 +149,7 @@ export default function Profil() {
                                 {/* ROW 3: BIDANG COORDINATORS (Top y=880) */}
 
                                 {/* 1 */}
-                                <div className="absolute top-[880px] left-[110px] w-[180px] bg-white dark:bg-gray-800 rounded-xl shadow-md border-t-4 border-gray-500 p-4 text-center z-10 flex flex-col items-center">
+                                <div className="absolute top-[880px] left-[110px] w-[180px] h-[220px] bg-white dark:bg-gray-800 rounded-xl shadow-md border-t-4 border-gray-500 p-4 text-center z-10 flex flex-col items-center">
                                     <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100 dark:border-gray-700 mb-3 bg-gray-200">
                                         <img src={ANONYMOUS_IMG} alt="Alfian Aji" className="w-full h-full object-cover" />
                                     </div>
@@ -158,7 +158,7 @@ export default function Profil() {
                                 </div>
 
                                 {/* 2 */}
-                                <div className="absolute top-[880px] left-[310px] w-[180px] bg-white dark:bg-gray-800 rounded-xl shadow-md border-t-4 border-gray-500 p-4 text-center z-10 flex flex-col items-center">
+                                <div className="absolute top-[880px] left-[310px] w-[180px] h-[220px] bg-white dark:bg-gray-800 rounded-xl shadow-md border-t-4 border-gray-500 p-4 text-center z-10 flex flex-col items-center">
                                     <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100 dark:border-gray-700 mb-3 bg-gray-200">
                                         <img src={ANONYMOUS_IMG} alt="Nita" className="w-full h-full object-cover" />
                                     </div>
@@ -167,7 +167,7 @@ export default function Profil() {
                                 </div>
 
                                 {/* 3 */}
-                                <div className="absolute top-[880px] left-[510px] w-[180px] bg-white dark:bg-gray-800 rounded-xl shadow-md border-t-4 border-gray-500 p-4 text-center z-10 flex flex-col items-center">
+                                <div className="absolute top-[880px] left-[510px] w-[180px] h-[220px] bg-white dark:bg-gray-800 rounded-xl shadow-md border-t-4 border-gray-500 p-4 text-center z-10 flex flex-col items-center">
                                     <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100 dark:border-gray-700 mb-3 bg-gray-200">
                                         <img src={ANONYMOUS_IMG} alt="Putri" className="w-full h-full object-cover" />
                                     </div>
@@ -176,7 +176,7 @@ export default function Profil() {
                                 </div>
 
                                 {/* 4 */}
-                                <div className="absolute top-[880px] left-[710px] w-[180px] bg-white dark:bg-gray-800 rounded-xl shadow-md border-t-4 border-gray-500 p-4 text-center z-10 flex flex-col items-center">
+                                <div className="absolute top-[880px] left-[710px] w-[180px] h-[220px] bg-white dark:bg-gray-800 rounded-xl shadow-md border-t-4 border-gray-500 p-4 text-center z-10 flex flex-col items-center">
                                     <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100 dark:border-gray-700 mb-3 bg-gray-200">
                                         <img src={ANONYMOUS_IMG} alt="Ahmad Sidiq" className="w-full h-full object-cover" />
                                     </div>
@@ -185,7 +185,7 @@ export default function Profil() {
                                 </div>
 
                                 {/* 5 */}
-                                <div className="absolute top-[880px] left-[910px] w-[180px] bg-white dark:bg-gray-800 rounded-xl shadow-md border-t-4 border-gray-500 p-4 text-center z-10 flex flex-col items-center">
+                                <div className="absolute top-[880px] left-[910px] w-[180px] h-[220px] bg-white dark:bg-gray-800 rounded-xl shadow-md border-t-4 border-gray-500 p-4 text-center z-10 flex flex-col items-center">
                                     <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100 dark:border-gray-700 mb-3 bg-gray-200">
                                         <img src={ANONYMOUS_IMG} alt="Dani" className="w-full h-full object-cover" />
                                     </div>
