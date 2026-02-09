@@ -240,38 +240,67 @@ export default function BencanaPage() {
         return { valid: true }
     }
 
-    // Get multiple GPS samples for validation
+    // Get multiple GPS samples for validation with global timeout
     const getMultipleSamples = (): Promise<GeolocationPosition[]> => {
         return new Promise((resolve) => {
             const samples: GeolocationPosition[] = []
-            const targetSamples = 5 // Get 5 samples for better accuracy
+            const targetSamples = 3 // Reduced from 5 to 3 for faster response
             let attempts = 0
-            const maxAttempts = 8
+            const maxAttempts = 5 // Reduced from 8
+            let resolved = false
+
+            // Global timeout to prevent infinite loading (15 seconds max)
+            const globalTimeout = setTimeout(() => {
+                if (!resolved) {
+                    resolved = true
+                    // If we have at least 1 sample, use it
+                    if (samples.length > 0) {
+                        resolve(samples)
+                    } else {
+                        // Fallback: try single reading with lower accuracy requirement
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => resolve([position]),
+                            () => resolve([]),
+                            { enableHighAccuracy: false, timeout: 5000, maximumAge: 30000 }
+                        )
+                    }
+                }
+            }, 15000)
 
             const getSample = () => {
+                if (resolved) return
+
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
+                        if (resolved) return
                         samples.push(position)
                         if (samples.length >= targetSamples) {
+                            resolved = true
+                            clearTimeout(globalTimeout)
                             resolve(samples)
                         } else if (attempts < maxAttempts) {
                             attempts++
-                            setTimeout(getSample, 300)
+                            setTimeout(getSample, 200) // Reduced delay from 300ms to 200ms
                         } else {
+                            resolved = true
+                            clearTimeout(globalTimeout)
                             resolve(samples)
                         }
                     },
                     () => {
+                        if (resolved) return
                         attempts++
                         if (attempts < maxAttempts && samples.length < targetSamples) {
-                            setTimeout(getSample, 300)
+                            setTimeout(getSample, 200)
                         } else {
+                            resolved = true
+                            clearTimeout(globalTimeout)
                             resolve(samples)
                         }
                     },
                     {
                         enableHighAccuracy: true,
-                        timeout: 8000,
+                        timeout: 5000, // Reduced from 8000ms to 5000ms
                         maximumAge: 0
                     }
                 )
@@ -566,8 +595,8 @@ export default function BencanaPage() {
                                     <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                                         <RefreshCw className="h-5 w-5 animate-spin" />
                                         <div>
-                                            <span className="block">Mengambil {location.sampleCount || 0}/5 sampel GPS...</span>
-                                            <span className="text-xs text-gray-500">Validasi anti-spoofing aktif</span>
+                                            <span className="block">Mendeteksi lokasi GPS...</span>
+                                            <span className="text-xs text-gray-500">Mohon tunggu maksimal 15 detik</span>
                                         </div>
                                     </div>
                                 ) : location.error ? (
