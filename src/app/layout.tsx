@@ -102,7 +102,7 @@ export const metadata: Metadata = {
         alt: "Profil Kota Surakarta dan Karang Taruna Mojo",
       },
       {
-        url: "/logo.png",
+        url: "/icon-512.png",
         width: 512,
         height: 512,
         alt: "Logo Karang Taruna Asta Wira Dipta",

@@ -63,10 +63,10 @@ export function Navbar() {
                     <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
                         <img
                             alt="Logo Asta Wira Dipta"
-                            className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14"
-                            src="/logo.png"
+                            className="h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 object-contain"
+                            src="/icon-192.png"
                         />
-                        <span className="font-bold text-base sm:text-lg md:text-xl tracking-tight text-gray-900 dark:text-white">
+                        <span className="font-bold text-sm sm:text-base md:text-xl tracking-tight text-gray-900 dark:text-white leading-tight">
                             Asta Wira Dipta
                         </span>
                     </Link>

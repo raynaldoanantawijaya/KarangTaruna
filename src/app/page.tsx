@@ -12,24 +12,17 @@ interface NewsItem {
   body: string;
 }
 
-async function getLatestNews(): Promise<NewsItem[]> {
-  try {
-    const res = await fetch("https://berita-lemon.vercel.app/api/category/terbaru", {
-      next: { revalidate: 3600 }
-    });
+import { Suspense } from "react";
+import LatestNewsSection from "@/components/home/LatestNewsSection";
+import { LatestNewsSkeleton } from "@/components/home/LatestNewsSkeleton";
 
-    if (!res.ok) return [];
-
-    const json = await res.json();
-    // Return only top 2 items
-    return (json.data || []).slice(0, 2);
-  } catch (error) {
-    console.error("Failed to fetch latest news for homepage:", error);
-    return [];
-  }
-}
-
-import { Metadata } from "next";
+// Internal news (static) does not block, but was part of the refactored section.
+// I need to add the Internal News section back since I removed it in the previous step's range.
+// Wait, the previous step removed lines 177-295 which INCLUDED key internal news logic.
+// I must ensure I didn't lose the Internal News section. 
+// I will restore it in a subsequent step or include it in LatestNewsSection if I moved it there?
+// Creating LatestNewsSection ONLY included the external news.
+// So I need to put the Internal News section BACK into page.tsx below the Suspense.
 
 export const metadata: Metadata = {
   title: "Karang Taruna Asta Wira Dipta - Organisasi Pemuda Terbaik di Solo",
@@ -42,7 +35,6 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 
-  const latestNews = await getLatestNews();
 
   return (
     <div className="w-full">
@@ -174,125 +166,10 @@ export default async function Home() {
         </section>
 
         {/* Latest News Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="flex justify-between items-end mb-12">
-            <div>
-              <span className="text-primary font-semibold tracking-wider uppercase text-sm">
-                Informasi Terkini
-              </span>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-                Berita Terbaru
-              </h2>
-              <div className="w-20 h-1 bg-secondary mt-4 rounded-full"></div>
-            </div>
-            <Link
-              href="/berita"
-              className="hidden md:flex items-center text-primary font-semibold hover:text-primary-dark transition-colors"
-            >
-              Lihat Semua Berita <ArrowRight className="ml-1 h-5 w-5" />
-            </Link>
-          </div>
-
-          <div className="space-y-6">
-            {latestNews.length > 0 ? (
-              latestNews.map((item, index) => (
-                <div key={index} className="bg-card-light dark:bg-card-dark rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col md:flex-row h-full md:h-56 group">
-                  <div className="md:w-1/3 relative h-48 md:h-full overflow-hidden">
-                    <NewsImage
-                      alt={item.title}
-                      className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
-                      src={item.image}
-                    />
-                    {index === 0 && (
-                      <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                        Terbaru
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-6 md:w-2/3 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2 space-x-2">
-                        <span className="flex items-center">{item.time}</span>
-                        <span>•</span>
-                        <span className="flex items-center">{item.source}</span>
-                      </div>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 hover:text-primary transition-colors cursor-pointer line-clamp-2">
-                        <Link href={`/berita/read?url=${encodeURIComponent(item.link)}`}>
-                          {item.title}
-                        </Link>
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 mb-4">
-                        {item.body}
-                      </p>
-                    </div>
-                    <Link
-                      href={`/berita/read?url=${encodeURIComponent(item.link)}`}
-                      className="text-primary font-semibold text-sm hover:underline inline-flex items-center"
-                    >
-                      Baca Selengkapnya
-                    </Link>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-10 text-gray-500">Belum ada berita terbaru via API.</div>
-            )}
-          </div>
-
-          {/* SECTION BARU: Kabar Karang Taruna Mojo (Internal) */}
-          <div className="mt-16 pt-12 border-t border-gray-100 dark:border-gray-700">
-            <div className="flex justify-between items-end mb-8">
-              <div>
-                <span className="text-secondary-dark dark:text-secondary font-semibold tracking-wider uppercase text-sm">
-                  Kabar Internal
-                </span>
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mt-1">
-                  Asta Wira Dipta Update
-                </h2>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl overflow-hidden shadow-xl text-white relative">
-              <div className="absolute top-0 right-0 p-32 bg-primary/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
-              <div className="grid md:grid-cols-2 gap-0">
-                <div className="relative h-64 md:h-auto">
-                  <img
-                    src="/surakarta.jpg"
-                    alt="Profil Kota Surakarta"
-                    className="w-full h-full object-cover opacity-80"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent md:bg-gradient-to-r"></div>
-                </div>
-                <div className="p-8 md:p-10 flex flex-col justify-center relative z-10">
-                  <div className="inline-block px-3 py-1 bg-yellow-500 text-black text-xs font-bold rounded-full mb-4 w-fit">
-                    Featured
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4 leading-tight">
-                    Profil Kota Surakarta (Solo) Lengkap: Sejarah, Wisata, & 54 Kelurahan
-                  </h3>
-                  <p className="text-gray-300 mb-6 text-sm leading-relaxed">
-                    Panduan lengkap Kota Solo: Sejarah Mataram Islam, destinasi wisata, kuliner legendaris, dan profil detail 54 Kelurahan di 5 Kecamatan.
-                  </p>
-                  <Link
-                    href="/berita/read?url=internal-profil-kota-surakarta"
-                    className="inline-flex items-center text-yellow-400 font-bold hover:text-yellow-300 transition-colors"
-                  >
-                    Baca Selengkapnya <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 text-center md:hidden">
-            <Link
-              href="/berita"
-              className="inline-flex items-center text-primary font-semibold hover:text-primary-dark transition-colors"
-            >
-              Lihat Semua Berita <ArrowRight className="ml-1 h-5 w-5" />
-            </Link>
-          </div>
-        </section>
+        {/* Latest News Section - Wrapped in Suspense for Non-Blocking Load */}
+        <Suspense fallback={<LatestNewsSkeleton />}>
+          <LatestNewsSection />
+        </Suspense>
 
         {/* Featured Programs */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-gray-50 dark:bg-transparent rounded-3xl mb-12">

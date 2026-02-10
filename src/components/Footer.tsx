@@ -13,8 +13,8 @@ export function Footer() {
                         <div className="flex items-center space-x-3 mb-4">
                             <img
                                 alt="Logo Karang Taruna Footer"
-                                className="h-12 w-12"
-                                src="/logo.png"
+                                className="h-16 w-16 md:h-20 md:w-20 object-contain"
+                                src="/icon-192.png"
                             />
                             <div>
                                 <span className="font-bold text-lg sm:text-xl tracking-tight block leading-tight">Asta Wira Dipta</span>
