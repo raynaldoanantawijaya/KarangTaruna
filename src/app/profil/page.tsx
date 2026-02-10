@@ -220,7 +220,7 @@ export default function Profil() {
                     {/* History */}
                     <div className="bg-gray-900 dark:bg-white rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
                         <div className="flex items-center mb-6">
-                            <img src="/icon-sejarah.png" alt="Icon Sejarah" className="h-12 w-12 object-contain mr-4" />
+                            <img src="/icon-sejarah.webp" alt="Icon Sejarah" className="h-12 w-12 object-contain mr-4" />
                             <h2 className="text-2xl font-bold text-white dark:text-gray-900">Sejarah Singkat</h2>
                         </div>
                         <div className="prose dark:prose-invert max-w-none text-gray-300 dark:text-gray-600">
@@ -241,7 +241,7 @@ export default function Profil() {
                     {/* Arti Lambang - Compact Grid */}
                     <div className="bg-gray-900 dark:bg-white rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
                         <div className="flex items-center mb-6">
-                            <img src="/logo.png" alt="Logo Karang Taruna" className="h-16 w-16 object-contain mr-4" />
+                            <img src="/logo.webp" alt="Logo Karang Taruna" className="h-16 w-16 object-contain mr-4" />
                             <h2 className="text-2xl font-bold text-white dark:text-gray-900">Arti Lambang</h2>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-gray-300 dark:text-gray-600 text-[13px] leading-snug">

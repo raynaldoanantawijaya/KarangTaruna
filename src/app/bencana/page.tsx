@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { AlertTriangle, MapPin, Clock, Activity, RefreshCw, Waves, CircleDot, Navigation, Shield, AlertCircle, CheckCircle, ShieldCheck, ShieldAlert } from "lucide-react"
+import { AlertTriangle, MapPin, Clock, Activity, RefreshCw, Waves, CircleDot, Navigation, Shield, AlertCircle, CheckCircle, ShieldCheck, ShieldAlert, Download, Lock } from "lucide-react"
 
 interface GempaData {
     Tanggal: string
@@ -144,6 +144,7 @@ export default function BencanaPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [activeTab, setActiveTab] = useState<"terkini" | "dirasakan">("terkini")
+    const [notificationStatus, setNotificationStatus] = useState<NotificationPermission>('default')
     const [location, setLocation] = useState<LocationData>({
         latitude: 0,
         longitude: 0,
@@ -151,6 +152,17 @@ export default function BencanaPage() {
         verified: false
     })
     const [nearestQuake, setNearestQuake] = useState<NearestQuake | null>(null)
+    const [installPrompt, setInstallPrompt] = useState<any>(null)
+
+    // Capture Install Prompt
+    useEffect(() => {
+        const handleInstallPrompt = (e: any) => {
+            e.preventDefault();
+            setInstallPrompt(e);
+        };
+        window.addEventListener('beforeinstallprompt', handleInstallPrompt);
+        return () => window.removeEventListener('beforeinstallprompt', handleInstallPrompt);
+    }, [])
 
     const fetchData = async () => {
         setLoading(true)
@@ -164,6 +176,104 @@ export default function BencanaPage() {
             setError(err instanceof Error ? err.message : "Terjadi kesalahan")
         } finally {
             setLoading(false)
+        }
+    }
+
+    // Check Notification Permission on Mount
+    useEffect(() => {
+        if ('Notification' in window) {
+            setNotificationStatus(Notification.permission)
+        }
+
+        // Register Service Worker if permission granted
+        if (Notification.permission === 'granted') {
+            registerServiceWorker()
+        }
+    }, [])
+
+    const registerServiceWorker = async () => {
+        if ('serviceWorker' in navigator) {
+            try {
+                const registration = await navigator.serviceWorker.register('/notify-sw.js')
+                console.log('SW Registered:', registration)
+
+                // Send START message
+                if (navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({ action: 'START_MONITORING' })
+                }
+
+                // Request Periodic Sync (Experimental)
+                // This allows the browser to wake up the SW periodically (e.g. every 12h or more depending on engagement)
+                // Note: Frequency is controlled by browser, not us.
+                if ('periodicSync' in registration) {
+                    try {
+                        await (registration as any).periodicSync.register('check-gempa', {
+                            minInterval: 24 * 60 * 60 * 1000 // 1 day (Browser limits this heavily)
+                        });
+                        console.log('Periodic Sync registered');
+                    } catch (e) {
+                        console.log('Periodic Sync not supported/allowed:', e);
+                    }
+                }
+            } catch (error) {
+                console.error('SW Registration failed:', error)
+            }
+        }
+    }
+
+    // Check query param for notification source
+    const [showInstallModal, setShowInstallModal] = useState(false)
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const source = urlParams.get('source');
+
+            // If from notification AND install available
+            if (source === 'notification' && installPrompt) {
+                setShowInstallModal(true);
+            }
+        }
+    }, [installPrompt])
+
+    // Handle Activation Button Click
+    const handleActivation = async () => {
+        // 1. If Install Prompt is available, Trigger it first
+        if (installPrompt) {
+            await triggerInstall();
+        } else {
+            // 2. Request Notification Permission
+            await requestNotificationPermission();
+        }
+    }
+
+    const triggerInstall = async () => {
+        if (!installPrompt) return;
+
+        const result = await installPrompt.prompt();
+        if (result.outcome === 'accepted') {
+            setInstallPrompt(null);
+            setShowInstallModal(false);
+        }
+    }
+
+    const requestNotificationPermission = async () => {
+        if (!('Notification' in window)) {
+            alert('Browser Anda tidak mendukung notifikasi.')
+            return
+        }
+
+        const permission = await Notification.requestPermission()
+        setNotificationStatus(permission)
+
+        if (permission === 'granted') {
+            registerServiceWorker()
+
+            // Show test notification
+            new Notification("Monitoring Gempa Aktif", {
+                body: "Sistem akan memantau gempa di area Surakarta.",
+                icon: "/icon-192.webp"
+            })
         }
     }
 
@@ -667,6 +777,72 @@ export default function BencanaPage() {
             </div>
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                {/* Notification Card */}
+                {/* Notification Card (Ultra Compact) */}
+                <section className="mb-6">
+                    <div className="bg-gradient-to-r from-blue-700 to-blue-900 rounded-xl p-3 text-white shadow-md relative overflow-hidden flex items-center justify-between gap-3">
+                        <div className="absolute top-0 right-0 p-2 opacity-5 pointer-events-none">
+                            <ShieldAlert className="w-16 h-16" />
+                        </div>
+
+                        <div className="relative z-10 flex-1 min-w-0">
+                            <h2 className="text-sm font-bold flex items-center gap-1.5 mb-0.5 whitespace-nowrap">
+                                <ShieldCheck className="h-4 w-4 text-blue-200" />
+                                Monitor Gempa Surakarta
+                            </h2>
+                            <p className="text-blue-200 text-xs truncate">
+                                Notifikasi otomatis gempa area Surakarta (Background).
+                            </p>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            {/* Install Button (Visible if prompt exists) */}
+                            {installPrompt && (
+                                <button
+                                    onClick={triggerInstall}
+                                    className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-transform active:scale-95 flex items-center gap-1.5 bg-white text-blue-700 active:bg-blue-50"
+                                >
+                                    <Download className="h-3.5 w-3.5" />
+                                    Install
+                                </button>
+                            )}
+
+                            {/* Notification Status Button */}
+                            <button
+                                onClick={requestNotificationPermission}
+                                disabled={!!installPrompt || notificationStatus === 'granted'}
+                                className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-transform active:scale-95 flex items-center gap-1.5 ${installPrompt
+                                    ? 'bg-white/20 text-white/50 cursor-not-allowed' // Locked/Disabled Look
+                                    : notificationStatus === 'granted'
+                                        ? 'bg-green-500 text-white cursor-default'
+                                        : 'bg-white text-blue-700 active:bg-blue-50'
+                                    }`}
+                            >
+                                {installPrompt ? (
+                                    <>
+                                        <Lock className="h-3.5 w-3.5" />
+                                        Wajib Install
+                                    </>
+                                ) : notificationStatus === 'granted' ? (
+                                    <>
+                                        <CheckCircle className="h-3.5 w-3.5" />
+                                        Aktif
+                                    </>
+                                ) : (
+                                    <>
+                                        <Shield className="h-3.5 w-3.5" />
+                                        Aktifkan
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                    {/* Tiny Tip */}
+                    <p className="text-[10px] text-center mt-1 text-gray-400 dark:text-gray-500">
+                        *Tips: Install App & Matikan Battery Saver agar notifikasi lancar.
+                    </p>
+                </section>
+
                 {/* Location Tracking Card */}
                 <section className="mb-8">
                     <div className={`rounded-2xl p-6 border-2 ${nearestQuake ? impactInfo?.borderColor : location.latitude ? 'border-green-500 dark:border-green-600' : 'border-gray-200 dark:border-gray-700'} bg-white dark:bg-gray-800 shadow-lg`}>
@@ -997,6 +1173,38 @@ export default function BencanaPage() {
                     </div>
                 ) : null}
             </main>
+
+            {/* Install Prompt Modal (From Notification Click) */}
+            {showInstallModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
+                        <div className="text-center mb-6">
+                            <div className="bg-blue-100 dark:bg-blue-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <ShieldCheck className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <h3 className="text-xl font-bold mb-2">Install Aplikasi</h3>
+                            <p className="text-gray-600 dark:text-gray-300 text-sm">
+                                Agar notifikasi gempa berjalan optimal di background, silakan install aplikasi ini ke layar utama Anda.
+                            </p>
+                        </div>
+                        <div className="space-y-3">
+                            <button
+                                onClick={triggerInstall}
+                                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-colors"
+                            >
+                                <Download className="w-5 h-5" />
+                                Install Sekarang
+                            </button>
+                            <button
+                                onClick={() => setShowInstallModal(false)}
+                                className="w-full py-3 text-gray-500 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors"
+                            >
+                                Nanti Saja
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

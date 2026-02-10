@@ -273,6 +273,52 @@ export default function ProgramKerja() {
                         </button>
                     </div>
                 </section>
+
+                {/* Documentation Gallery */}
+                <section>
+                    <div className="text-center mb-12">
+                        <span className="text-secondary font-semibold tracking-wider uppercase text-sm">Memories</span>
+                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">Galeri Dokumentasi</h2>
+                        <div className="w-24 h-1 bg-primary mx-auto mt-4 rounded-full"></div>
+                        <p className="text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
+                            Momen kebersamaan dan aksi nyata pemuda dalam membangun lingkungan.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                        {/* Item 1 - Makrab (Left) */}
+                        <div className="relative rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all h-[300px] md:h-[400px]">
+                            <img
+                                src="/images/galeri/makrab.webp"
+                                alt="Kegiatan Outbound & Makrab"
+                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 flex items-end p-8">
+                                <div>
+                                    <span className="bg-secondary text-gray-900 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block shadow-sm">Rekreasi</span>
+                                    <h3 className="text-white font-bold text-2xl mb-1">Outbound & Makrab</h3>
+                                    <p className="text-gray-300 text-sm">Mempererat tali persaudaraan antar anggota Karang Taruna.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Item 2 - Sosialisasi (Right) */}
+                        <div className="relative rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all h-[300px] md:h-[400px]">
+                            <img
+                                src="/images/galeri/sosialisasi.webp"
+                                alt="Kegiatan Sosialisasi Hukum Kontrak"
+                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 flex items-end p-8">
+                                <div>
+                                    <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block shadow-sm">Edukasi</span>
+                                    <h3 className="text-white font-bold text-2xl mb-1">Sosialisasi Hukum Kontrak</h3>
+                                    <p className="text-gray-300 text-sm">Menambah wawasan hukum bagi masyarakat dan pemuda.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
     );

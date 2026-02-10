@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { ArrowRight, Calendar, Users, MapPin, Award, CheckCircle } from "lucide-react";
 import NewsImage from "@/components/NewsImage";
+import { INTERNAL_ARTICLES } from "@/app/berita/read/page";
 
 interface NewsItem {
   title: string;
@@ -94,7 +95,7 @@ export default async function Home() {
                 <img
                   alt="Logo Karang Taruna"
                   className="rounded-xl w-full h-full object-contain aspect-[4/3] bg-gray-100 dark:bg-gray-800 p-4"
-                  src="/visi-misi.jpg"
+                  src="/visi-misi.webp"
                 />
               </div>
             </div>
@@ -171,6 +172,56 @@ export default async function Home() {
         <Suspense fallback={<LatestNewsSkeleton />}>
           <LatestNewsSection />
         </Suspense>
+
+        {/* Internal News Grid (4 Items) */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-100 dark:border-gray-800">
+          <div className="flex justify-between items-end mb-8">
+            <div>
+              <span className="text-secondary font-semibold tracking-wider uppercase text-sm">
+                Kabar Asta Wira Dipta
+              </span>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+                Kegiatan & Artikel Internal
+              </h2>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {Object.entries(INTERNAL_ARTICLES).slice(0, 4).map(([slug, article], index) => (
+              <div key={slug} className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col h-full">
+                <div className="relative h-40 overflow-hidden">
+                  <NewsImage
+                    alt={article.title}
+                    className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+                    src={article.image}
+                  />
+                  <div className="absolute top-2 right-2 bg-white/90 dark:bg-black/80 backdrop-blur-sm text-xs font-bold px-2 py-1 rounded-lg shadow-sm">
+                    Internal
+                  </div>
+                </div>
+                <div className="p-4 flex flex-col flex-grow">
+                  <div className="text-[10px] text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {article.date}
+                  </div>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                    <Link href={`/berita/read?url=${slug}`}>
+                      {article.title}
+                    </Link>
+                  </h3>
+                  <div className="mt-auto pt-3">
+                    <Link
+                      href={`/berita/read?url=${slug}`}
+                      className="text-sm font-semibold text-primary hover:text-primary-dark inline-flex items-center gap-1"
+                    >
+                      Baca <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* Featured Programs */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-gray-50 dark:bg-transparent rounded-3xl mb-12">
@@ -265,20 +316,37 @@ export default async function Home() {
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">Dokumentasi Kegiatan</h2>
             <div className="w-24 h-1 bg-secondary mx-auto mt-4 rounded-full"></div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
-            {/* Images reused from reference */}
-            <div className="col-span-2 row-span-2 relative group overflow-hidden rounded-xl">
-              <img alt="Gallery 1" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop" />
-            </div>
-            <div className="col-span-1 row-span-1 relative group overflow-hidden rounded-xl">
-              <img alt="Gallery 2" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop" />
-            </div>
-            <div className="col-span-1 row-span-1 relative group overflow-hidden rounded-xl">
-              <img alt="Gallery 3" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=800&auto=format&fit=crop" />
-            </div>
-            <div className="col-span-2 row-span-1 relative group overflow-hidden rounded-xl">
-              <img alt="Gallery 4" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=800&auto=format&fit=crop"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {/* Item 1 - Makrab (Left) */}
+            <div className="relative rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all h-[300px] md:h-[400px]">
+              <img
+                src="/images/galeri/makrab.webp"
+                alt="Kegiatan Outbound & Makrab"
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 flex items-end p-8">
+                <div>
+                  <span className="bg-secondary text-gray-900 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block shadow-sm">Rekreasi</span>
+                  <h3 className="text-white font-bold text-2xl mb-1">Outbound & Makrab</h3>
+                  <p className="text-gray-300 text-sm">Mempererat tali persaudaraan antar anggota Karang Taruna.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Item 2 - Sosialisasi (Right) */}
+            <div className="relative rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all h-[300px] md:h-[400px]">
+              <img
+                src="/images/galeri/sosialisasi.webp"
+                alt="Kegiatan Sosialisasi Hukum Kontrak"
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 flex items-end p-8">
+                <div>
+                  <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block shadow-sm">Edukasi</span>
+                  <h3 className="text-white font-bold text-2xl mb-1">Sosialisasi Hukum Kontrak</h3>
+                  <p className="text-gray-300 text-sm">Menambah wawasan hukum bagi masyarakat dan pemuda.</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>

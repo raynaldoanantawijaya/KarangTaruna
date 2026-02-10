@@ -14,7 +14,7 @@ export function Footer() {
                             <img
                                 alt="Logo Karang Taruna Footer"
                                 className="h-16 w-16 md:h-20 md:w-20 object-contain"
-                                src="/icon-192.png"
+                                src="/icon-192.webp"
                             />
                             <div>
                                 <span className="font-bold text-lg sm:text-xl tracking-tight block leading-tight">Asta Wira Dipta</span>

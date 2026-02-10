@@ -1,4 +1,5 @@
 import { load } from 'cheerio';
+import { Metadata } from 'next';
 
 interface NewsDetail {
     title: string;
@@ -12,10 +13,10 @@ interface NewsDetail {
 }
 
 // Dictionary of Internal Static Articles for SEO
-const INTERNAL_ARTICLES: Record<string, NewsDetail> = {
+export const INTERNAL_ARTICLES: Record<string, NewsDetail> = {
     "internal-profil-mojo": {
         title: "Mengenal Lebih Dekat Karang Taruna Asta Wira Dipta Kelurahan Mojo, Surakarta",
-        image: "/visi-misi.jpg",
+        image: "/visi-misi.webp",
         date: new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
         author: "Admin Asta Wira Dipta",
         body: `
@@ -296,7 +297,7 @@ const INTERNAL_ARTICLES: Record<string, NewsDetail> = {
     },
     "internal-sejarah-kelurahan-mojo": {
         title: "Sejarah Kelurahan Mojo: Lahir dari Pemekaran Semanggi Tahun 2018",
-        image: "/kelurahan-mojo-history.jpg",
+        image: "/kelurahan-mojo-history.webp",
         date: new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
         author: "Tim Redaksi Kelurahan Mojo",
         body: `
@@ -634,7 +635,7 @@ const INTERNAL_ARTICLES: Record<string, NewsDetail> = {
     },
     "internal-profil-pasar-kliwon": {
         title: "Menjelajahi Pasar Kliwon: Jantung Budaya dan Perdagangan Kota Surakarta",
-        image: "/pasarkliwon.jpeg",
+        image: "/pasarkliwon.webp",
         date: new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
         author: "Tim Redaksi Karang Taruna",
         body: `
@@ -916,7 +917,7 @@ const INTERNAL_ARTICLES: Record<string, NewsDetail> = {
 
     "internal-profil-kota-surakarta": {
         title: "Profil Kota Surakarta (Solo) Lengkap: Sejarah, Wisata, & 54 Kelurahan",
-        image: "/surakarta.jpg",
+        image: "/surakarta.webp",
         date: new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
         author: "Tim Riset & Redaksi Karang Taruna",
         body: `
@@ -1606,6 +1607,36 @@ async function getExternalNews(url: string): Promise<NewsDetail | null> {
     }
 }
 
+// Generate Metadata for SEO
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }): Promise<Metadata> {
+    const resolvedSearchParams = await searchParams;
+    const url = resolvedSearchParams.url as string;
+    const id = resolvedSearchParams.id as string; // Support ID param too
+
+    // Check Internal dictionary
+    const target = url || id;
+    const internalArticle = INTERNAL_ARTICLES[target];
+
+    if (internalArticle) {
+        return {
+            title: `${internalArticle.title} - Karang Taruna Asta Wira Dipta`,
+            description: internalArticle.title, // Use title as description or truncate body in real app
+            openGraph: {
+                title: internalArticle.title,
+                description: "Berita dan Artikel Karang Taruna Asta Wira Dipta, Kelurahan Mojo, Surakarta.",
+                images: [internalArticle.image],
+                type: 'article',
+                authors: [internalArticle.author]
+            }
+        }
+    }
+
+    return {
+        title: "Baca Berita - Karang Taruna Asta Wira Dipta",
+        description: "Portal Berita dan Informasi Terkini Karang Taruna Asta Wira Dipta."
+    }
+}
+
 export default async function ReadNews({
     searchParams,
 }: {
@@ -1614,10 +1645,14 @@ export default async function ReadNews({
     const resolvedSearchParams = await searchParams;
     const url = resolvedSearchParams.url as string;
 
-    if (!url) return <div className="p-8 text-center">URL Invalid</div>;
+    // Support for ID param if URL is missing (fallback for some internal routing?)
+    const id = resolvedSearchParams.id as string;
+    const effectiveUrl = url || id;
+
+    if (!effectiveUrl) return <div className="p-8 text-center">URL Invalid (Missing URL or ID)</div>;
 
     // 1. Cek Apakah URL adalah internal slug
-    let detail = INTERNAL_ARTICLES[url];
+    let detail = INTERNAL_ARTICLES[effectiveUrl];
 
     // 2. Jika bukan internal, coba fetch eksternal
     if (!detail) {
@@ -1682,6 +1717,25 @@ export default async function ReadNews({
                     <div dangerouslySetInnerHTML={{ __html: detail.body }} />
                 )}
             </div>
+
+            {/* Structured Data (JSON-LD) for SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "NewsArticle",
+                        "headline": detail.title,
+                        "image": [detail.image],
+                        "datePublished": new Date().toISOString(), // In real app, use article date
+                        "author": [{
+                            "@type": "Organization",
+                            "name": detail.author || "Karang Taruna Asta Wira Dipta",
+                            "url": "https://astawiradipta.my.id"
+                        }]
+                    })
+                }}
+            />
 
             {/* Source/Footer - Touch friendly */}
             <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700">

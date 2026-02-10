@@ -96,13 +96,13 @@ export const metadata: Metadata = {
     description: "Website Resmi Karang Taruna Asta Wira Dipta Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah. Wadah pengembangan generasi muda dan kegiatan sosial komunitas.",
     images: [
       {
-        url: "/surakarta.jpg",
+        url: "/surakarta.webp",
         width: 1200,
         height: 630,
         alt: "Profil Kota Surakarta dan Karang Taruna Mojo",
       },
       {
-        url: "/icon-512.png",
+        url: "/icon-512.webp",
         width: 512,
         height: 512,
         alt: "Logo Karang Taruna Asta Wira Dipta",
@@ -113,7 +113,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Karang Taruna Asta Wira Dipta - Muda, Berkarya, Berbudaya",
     description: "Pusat informasi kegiatan kepemudaan di Kelurahan Mojo, Surakarta. Sinergi membangun kota Solo yang berbudaya dan berkemajuan.",
-    images: ["/surakarta.jpg"],
+    images: ["/surakarta.webp"],
   },
   alternates: {
     canonical: "https://astawiradipta.my.id"
@@ -140,7 +140,7 @@ const jsonLd = {
   name: "Karang Taruna Asta Wira Dipta",
   alternateName: ["Karang Taruna Mojo", "Karang Taruna Surakarta", "Karang Taruna Solo", "Asta Wira Dipta"],
   url: "https://astawiradipta.my.id",
-  logo: "https://astawiradipta.my.id/logo.png",
+  logo: "https://astawiradipta.my.id/logo.webp",
   description: "Karang Taruna Asta Wira Dipta adalah organisasi kepemudaan di Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah. Wadah pengembangan generasi muda yang tumbuh atas dasar kesadaran dan rasa tanggung jawab sosial.",
   address: {
     "@type": "PostalAddress",
@@ -183,7 +183,7 @@ const localBusinessJsonLd = {
   "@type": "LocalBusiness",
   "@id": "https://astawiradipta.my.id",
   name: "Karang Taruna Asta Wira Dipta",
-  image: "https://astawiradipta.my.id/logo.png",
+  image: "https://astawiradipta.my.id/logo.webp",
   telephone: "+62-87-888-2-666-99",
   email: "astawiradipta@gmail.com",
   address: {
@@ -228,6 +228,8 @@ export default function RootLayout({
         <meta name="geo.position" content="-7.5755;110.8243" />
         <meta name="ICBM" content="-7.5755, 110.8243" />
         <link rel="canonical" href="https://astawiradipta.my.id" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#1a56db" />
       </head>
       <body
         className={`${poppins.variable} font-sans antialiased bg-background text-foreground transition-colors duration-300 overflow-x-hidden w-full relative`}

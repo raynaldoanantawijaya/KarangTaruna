@@ -191,7 +191,7 @@ export default async function Berita({
                                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
                                         <Link href="/berita/read?url=internal-profil-mojo">
                                             <NewsImage
-                                                src="/visi-misi.jpg"
+                                                src="/visi-misi.webp"
                                                 alt="Profil Karang Taruna Mojo"
                                                 className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
                                             />
@@ -229,7 +229,7 @@ export default async function Berita({
                                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
                                         <Link href="/berita/read?url=internal-sejarah-kelurahan-mojo">
                                             <NewsImage
-                                                src="/kelurahan-mojo-history.jpg"
+                                                src="/kelurahan-mojo-history.webp"
                                                 alt="Sejarah Kelurahan Mojo"
                                                 className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
                                             />
@@ -267,7 +267,7 @@ export default async function Berita({
                                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
                                         <Link href="/berita/read?url=internal-profil-pasar-kliwon">
                                             <NewsImage
-                                                src="/pasarkliwon.jpeg"
+                                                src="/pasarkliwon.webp"
                                                 alt="Kecamatan Pasar Kliwon"
                                                 className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
                                             />
@@ -305,7 +305,7 @@ export default async function Berita({
                                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
                                         <Link href="/berita/read?url=internal-profil-kota-surakarta">
                                             <NewsImage
-                                                src="/surakarta.jpg"
+                                                src="/surakarta.webp"
                                                 alt="Kota Surakarta"
                                                 className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
                                             />
