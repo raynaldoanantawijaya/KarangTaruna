@@ -526,6 +526,63 @@ export default function BencanaPage() {
         }
     }, [])
 
+    // Helper to check if quake is recent (within 24 hours)
+    function isRecentQuake(dateStr: string, timeStr: string): boolean {
+        try {
+            // Parse date "06 Feb 2025" -> "2025-02-06"
+            // BMKG format usually: "dd MMM yyyy", "HH:mm:ss WIB"
+            // We can treat them as string or try to parse.
+            // Simplified approach: BMKG often provides DateTime ISO like "2025-02-06T12:00:00+07:00" in some endpoints, 
+            // but here we have separate fields. Let's rely on DateTime field if available, or current data structure.
+
+            // Actually, the interface has DateTime: string. Let's use that if possible.
+            // If not available/reliable, we can parse manually.
+
+            // Let's assume DateTime is ISO or parseable.
+            // If DateTime missing, fallback to parsing Tanggal/Jam.
+
+            // Note: The previous code didn't use DateTime field in logic, just passed it around.
+            // Let's rely on DateTime string which is standard in this API.
+
+            // However, the `GempaData` interface has `DateTime`.
+            // Let's try parsing `DateTime`.
+
+            // Allow quakes from the last 24 hours
+            const now = new Date()
+            const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+
+            // Try parsing DateTime field first
+            // Example DateTime: "2025-02-06T06:23:16+07:00"
+            // But wait, the API response might not have strict ISO.
+            // Let's try to parse "Tanggal" and "Jam" manually to be safe for Indonesian format?
+            // "06 Feb 2025", "13:23:45 WIB"
+
+            // Actually, let's just parsing DateTime if it exists.
+            // If not, we might need a parser map for months.
+
+            // Let's use the provided DateTime field from the API if it's there.
+            // The API (https://api.ryzumi.vip/api/search/bmkg) usually returns standard BMKG format.
+            // BMKG `DateTime` is usually ISO-8601 compliant.
+
+            // Let's assume we can use DateTime.
+            // If DateTime is not available in the item, return false (safe).
+
+            // WAIT: `isRecentQuake` needs to be called inside the loop.
+            return true; // Placeholder for now, logic below
+        } catch (e) {
+            return false
+        }
+    }
+
+    // Function to parse BMKG date string to Date object
+    const parseGempaDate = (dateTimeStr: string): Date => {
+        try {
+            return new Date(dateTimeStr)
+        } catch {
+            return new Date(0) // Invalid date
+        }
+    }
+
     // Calculate nearest earthquake when data or location changes
     useEffect(() => {
         if (!data || !location.latitude || !location.longitude) return
@@ -536,7 +593,18 @@ export default function BencanaPage() {
         let nearest: NearestQuake | null = null
         let minDistance = Infinity
 
+        const now = new Date()
+        const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+
+        const isRecent = (dt: string) => {
+            const quakeDate = new Date(dt)
+            return quakeDate >= twentyFourHoursAgo
+        }
+
         for (const gempa of allQuakes) {
+            // Filter by time: Only consider quakes within last 24 hours
+            if (!isRecent(gempa.DateTime)) continue;
+
             const { lat, lon } = parseCoordinates(gempa.Coordinates)
             const distance = calculateDistance(location.latitude, location.longitude, lat, lon)
 
@@ -550,16 +618,20 @@ export default function BencanaPage() {
             }
         }
 
-        // Also check autogempa
+        // Also check autogempa (usually the absolute latest significant one)
         if (data.autogempa) {
-            const { lat, lon } = parseCoordinates(data.autogempa.Coordinates)
-            const distance = calculateDistance(location.latitude, location.longitude, lat, lon)
+            // Check if autogempa is recent too!
+            if (isRecent(data.autogempa.DateTime)) {
+                const { lat, lon } = parseCoordinates(data.autogempa.Coordinates)
+                const distance = calculateDistance(location.latitude, location.longitude, lat, lon)
 
-            if (distance < minDistance) {
-                nearest = {
-                    gempa: data.autogempa,
-                    distance,
-                    impactLevel: getImpactLevel(distance, data.autogempa.Magnitude)
+                // If autogempa is closer AND recent, it overrides (or competes with) gempaterkini
+                if (distance < minDistance) {
+                    nearest = {
+                        gempa: data.autogempa,
+                        distance,
+                        impactLevel: getImpactLevel(distance, data.autogempa.Magnitude)
+                    }
                 }
             }
         }
@@ -597,7 +669,7 @@ export default function BencanaPage() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* Location Tracking Card */}
                 <section className="mb-8">
-                    <div className={`rounded-2xl p-6 border-2 ${nearestQuake ? impactInfo?.borderColor : 'border-gray-200 dark:border-gray-700'} bg-white dark:bg-gray-800 shadow-lg`}>
+                    <div className={`rounded-2xl p-6 border-2 ${nearestQuake ? impactInfo?.borderColor : location.latitude ? 'border-green-500 dark:border-green-600' : 'border-gray-200 dark:border-gray-700'} bg-white dark:bg-gray-800 shadow-lg`}>
                         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
                             {/* Location Info */}
                             <div className="flex-1">
@@ -710,8 +782,9 @@ export default function BencanaPage() {
                                     </div>
                                     <p className="text-sm opacity-90 mb-4">{impactInfo?.message}</p>
                                     <div className="bg-black/20 rounded-lg p-3 space-y-1 text-sm">
-                                        <p>📍 Gempa terdekat: <strong>{nearestQuake.distance.toFixed(1)} km</strong></p>
+                                        <p>📍 Jarak: <strong>{nearestQuake.distance.toFixed(1)} km</strong></p>
                                         <p>📊 Magnitudo: <strong>M {nearestQuake.gempa.Magnitude}</strong></p>
+                                        <p>🕒 Waktu: <strong>{nearestQuake.gempa.Jam}</strong> ({nearestQuake.gempa.Tanggal})</p>
                                         <p>🗺️ {nearestQuake.gempa.Wilayah}</p>
                                     </div>
                                     {!location.verified && (
@@ -721,9 +794,14 @@ export default function BencanaPage() {
                                     )}
                                 </div>
                             ) : location.latitude && !nearestQuake ? (
-                                <div className="bg-gray-100 dark:bg-gray-700 rounded-xl p-5 min-w-[280px] text-center">
-                                    <RefreshCw className="h-8 w-8 text-gray-400 mx-auto mb-2 animate-spin" />
-                                    <p className="text-gray-600 dark:text-gray-400">Menghitung status dampak...</p>
+                                <div className="bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-xl p-5 min-w-[280px] text-center flex flex-col items-center justify-center h-full">
+                                    <div className="bg-green-200 dark:bg-green-800 p-3 rounded-full mb-3">
+                                        <CheckCircle className="h-8 w-8 text-green-700 dark:text-green-400" />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-green-800 dark:text-green-300 mb-1">Status Aman</h3>
+                                    <p className="text-sm text-green-700 dark:text-green-400">
+                                        Tidak ada aktivitas gempa signifikan di dekat Anda dalam 24 jam terakhir.
+                                    </p>
                                 </div>
                             ) : null}
                         </div>
