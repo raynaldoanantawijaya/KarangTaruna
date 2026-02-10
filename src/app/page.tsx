@@ -15,6 +15,7 @@ interface NewsItem {
 import { Suspense } from "react";
 import LatestNewsSection from "@/components/home/LatestNewsSection";
 import { LatestNewsSkeleton } from "@/components/home/LatestNewsSkeleton";
+import { Metadata } from "next";
 
 // Internal news (static) does not block, but was part of the refactored section.
 // I need to add the Internal News section back since I removed it in the previous step's range.
