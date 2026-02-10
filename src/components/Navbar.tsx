@@ -66,19 +66,20 @@ export function Navbar() {
                             className="h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 object-contain"
                             src="/icon-192.png"
                         />
-                        <span className="font-bold text-sm sm:text-base md:text-xl tracking-tight text-gray-900 dark:text-white leading-tight">
+                        <span className="font-bold text-sm sm:text-base md:text-sm lg:text-xl tracking-tight text-gray-900 dark:text-white leading-tight whitespace-nowrap">
                             Asta Wira Dipta
                         </span>
                     </Link>
 
                     {/* Desktop Menu - Centered */}
-                    <div className="hidden md:flex items-center space-x-6 absolute left-1/2 -translate-x-1/2">
+                    {/* Changed from absolute centering to flex to avoid overlap on smaller desktops */}
+                    <div className="hidden md:flex items-center space-x-4 lg:space-x-6 absolute left-1/2 -translate-x-1/2 w-auto whitespace-nowrap">
                         {navItems.map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
                                 className={cn(
-                                    "font-medium transition-colors",
+                                    "font-medium transition-colors text-sm lg:text-base",
                                     pathname === item.href
                                         ? "text-primary font-bold border-b-2 border-primary pb-1"
                                         : "text-gray-500 hover:text-primary dark:text-gray-300 dark:hover:text-primary"
@@ -93,7 +94,7 @@ export function Navbar() {
                             <button
                                 onClick={() => setIsToolsOpen(!isToolsOpen)}
                                 className={cn(
-                                    "font-medium transition-colors flex items-center gap-1",
+                                    "font-medium transition-colors flex items-center gap-1 text-sm lg:text-base",
                                     pathname.startsWith("/alat")
                                         ? "text-primary font-bold"
                                         : "text-gray-500 hover:text-primary dark:text-gray-300 dark:hover:text-primary"
@@ -115,7 +116,7 @@ export function Navbar() {
                                     <Link
                                         key={tool.href}
                                         href={tool.href}
-                                        className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary transition-colors"
+                                        className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-primary transition-colors text-sm"
                                         onClick={() => setIsToolsOpen(false)}
                                     >
                                         <tool.icon className="h-4 w-4" />
