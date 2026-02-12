@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { ArrowRight, Calendar, Users, MapPin, Award, CheckCircle } from "lucide-react";
+import Pagination from "@/components/Pagination";
 import NewsImage from "@/components/NewsImage";
-import { INTERNAL_ARTICLES } from "@/app/berita/read/page";
+import { INTERNAL_ARTICLES } from "@/data/articles";
 
 interface NewsItem {
   title: string;
@@ -205,13 +206,13 @@ export default async function Home() {
                     {article.date}
                   </div>
                   <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                    <Link href={`/berita/read?url=${slug}`}>
+                    <Link href={`/artikel/${slug}`}>
                       {article.title}
                     </Link>
                   </h3>
                   <div className="mt-auto pt-3">
                     <Link
-                      href={`/berita/read?url=${slug}`}
+                      href={`/artikel/${slug}`}
                       className="text-sm font-semibold text-primary hover:text-primary-dark inline-flex items-center gap-1"
                     >
                       Baca <ArrowRight className="w-3 h-3" />

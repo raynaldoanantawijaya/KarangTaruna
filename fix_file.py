@@ -1,47 +1,25 @@
+
 import os
 
-file_path = r"c:/Users/rayna/Pictures/Website Karang Taruna/karang-taruna-app/src/app/berita/read/page.tsx"
-content_path = r"c:/Users/rayna/Pictures/Website Karang Taruna/karang-taruna-app/src/app/berita/read/correct_content.txt"
+file_path = r'c:/Users/rayna/Pictures/Website Karang Taruna/karang-taruna-app/src/app/berita/read/page.tsx'
 
-try:
-    with open(file_path, "r", encoding="utf-8") as f:
-        original_content = f.read()
+with open(file_path, 'r', encoding='utf-8') as f:
+    lines = f.readlines()
 
-    with open(content_path, "r", encoding="utf-8") as f:
-        correct_content = f.read()
+# 1-based indexing in mind, but list is 0-based.
+# We want to keep lines 1 to 21. (indices 0 to 20)
+# We want to remove lines 22 to 1547. (indices 21 to 1546)
+# We want to keep lines 1548 to end. (indices 1547 to end)
 
-    start_marker = '    "internal-profil-kota-surakarta": {'
-    end_marker = '    "internal-pemerintahan-surakarta": {'
+# Let's verify content of the lines we are about to delete
+print(f"Deleting lines 22 to 1547. Total: {1547 - 22 + 1} lines.")
+print(f"Line 22 starts with: {lines[21]}")
+print(f"Line 1547 starts with: {lines[1546]}")
 
-    start_idx = original_content.find(start_marker)
-    end_idx = original_content.find(end_marker)
+# Slice
+new_lines = lines[:21] + lines[1547:]
 
-    if start_idx == -1:
-        print("Error: Start marker not found!")
-        exit(1)
-    
-    if end_idx == -1:
-        print("Error: End marker not found!")
-        exit(1)
+with open(file_path, 'w', encoding='utf-8') as f:
+    f.writelines(new_lines)
 
-    print(f"Found start at {start_idx}, end at {end_idx}")
-
-    # Construct new content
-    # We keep everything before start_idx
-    # We insert correct_content
-    # We keep everything from end_idx onwards
-    new_content = original_content[:start_idx] + correct_content + "\n" + original_content[end_idx:]
-
-    # Also fix the specific < div error globally if it exists elsewhere (like in pemerintahan article)
-    new_content = new_content.replace("< div", "<div")
-    new_content = new_content.replace("< !--", "<!--") # Fix potential bad comments
-    new_content = new_content.replace("-- >", "-->")
-
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(new_content)
-
-    print("Successfully patched the file.")
-
-except Exception as e:
-    print(f"An error occurred: {e}")
-    exit(1)
+print("File updated.")
