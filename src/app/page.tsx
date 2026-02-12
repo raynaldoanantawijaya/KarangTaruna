@@ -370,6 +370,17 @@ export default async function Home() {
             </div>
           </div>
         </section>
+        {/* SEO Content Section (Hidden visually or unobtrusive but readable by bots) */}
+        <section className="bg-gray-50 dark:bg-gray-900 py-8 border-t border-gray-200 dark:border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Tentang Karang Taruna Kelurahan Mojo</h2>
+            <p className="text-xs text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              Karang Taruna Asta Wira Dipta adalah organisasi kepemudaan resmi yang berlokasi di Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah.
+              Kami berfokus pada pemberdayaan pemuda, kegiatan sosial, dan pembangunan masyarakat di wilayah Mojo dan sekitarnya.
+              Bergabunglah bersama kami untuk mewujudkan generasi muda Solo yang berbudaya, berdaya saing, dan bermanfaat bagi lingkungan.
+            </p>
+          </div>
+        </section>
       </main>
     </div>
   );

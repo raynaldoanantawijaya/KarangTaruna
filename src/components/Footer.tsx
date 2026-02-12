@@ -22,7 +22,7 @@ export function Footer() {
                             </div>
                         </div>
                         <p className="text-gray-400 text-sm max-w-sm mb-6">
-                            Wadah pengembangan generasi muda yang tumbuh atas dasar kesadaran dan rasa tanggung jawab sosial dari, oleh dan untuk masyarakat.
+                            Website Resmi Karang Taruna Kelurahan Mojo (Asta Wira Dipta), Kecamatan Pasar Kliwon, Kota Surakarta. Wadah pengembangan generasi muda yang aktif, kreatif, dan berjiwa sosial.
                         </p>
                         <div className="flex space-x-3 sm:space-x-4">
                             <a href="https://www.instagram.com/karangtaruna_mojoska/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 sm:w-8 sm:h-8 rounded-lg sm:rounded-full bg-gray-800 flex items-center justify-center hover:bg-primary transition-colors text-white">

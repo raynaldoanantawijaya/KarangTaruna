@@ -29,10 +29,10 @@ export default function Profil() {
             <div className="relative overflow-hidden transition-colors duration-500 min-h-[180px] sm:min-h-[220px] md:min-h-[280px] flex flex-col justify-start pt-10 sm:pt-14 md:pt-20 pb-6 sm:pb-8 md:pb-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
                     <h1 className="text-2xl md:text-4xl font-bold text-white mb-4">
-                        Profil <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-white to-yellow-100">Organisasi</span>
+                        Profil <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-white to-yellow-100">Karang Taruna Mojo</span>
                     </h1>
                     <p className="text-white/90 dark:text-gray-300 text-sm md:text-base max-w-2xl mx-auto transition-colors">
-                        Asta Wira Dipta. Mengenal lebih dekat struktur, sejarah, dan nilai-nilai Karang Taruna kami.
+                        Mengenal lebih dekat Karang Taruna "Asta Wira Dipta" Kelurahan Mojo, Pasar Kliwon, Surakarta.
                     </p>
                 </div>
             </div>
@@ -225,7 +225,7 @@ export default function Profil() {
                         </div>
                         <div className="prose dark:prose-invert max-w-none text-gray-300 dark:text-gray-600">
                             <p className="mb-4">
-                                Karang Taruna lahir pada tanggal <strong>26 September 1960</strong> di Kampung Melayu, Jakarta. Kelahiran ini merupakan perwujudan semangat kepedulian generasi muda untuk turut mencegah dan menanggulangi masalah kesejahteraan sosial masyarakat, terutama yang dihadapi anak dan remaja di lingkungannya.
+                                Karang Taruna <strong>Asta Wira Dipta</strong> (Kelurahan Mojo, Surakarta) lahir dari semangat kepedulian generasi muda. Secara umum, Karang Taruna lahir pada tanggal <strong>26 September 1960</strong> di Kampung Melayu, Jakarta, sebagai perwujudan tanggung jawab sosial pemuda.
                             </p>
                             <p>
                                 Nama Karang Taruna sendiri diambil dari bahasa Sansekerta; <em>Karang</em> yang berarti pekarangan, halaman, atau tempat, dan <em>Taruna</em> yang berarti remaja. Secara harfiah berarti tempat atau wadah pengembangan remaja.
