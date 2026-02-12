@@ -14,9 +14,10 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://astawiradipta.my.id'),
   title: {
-    default: "Karang Taruna Asta Wira Dipta - Mojo, Pasar Kliwon, Surakarta",
-    template: "%s | Karang Taruna Asta Wira Dipta"
+    default: "Karang Taruna Asta Wira Dipta - Kelurahan Mojo, Surakarta",
+    template: "%s | Karang Taruna Kelurahan Mojo"
   },
   description: "Website Resmi Karang Taruna Asta Wira Dipta Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah. Wadah pengembangan generasi muda, kegiatan sosial, program kerja pemuda, dan informasi komunitas karang taruna terbaik di Solo Raya.",
   keywords: [
@@ -29,9 +30,8 @@ export const metadata: Metadata = {
     "karang taruna jawa tengah",
     "asta wira dipta",
     "asta wira dipta surakarta",
-    "asta wira dipta solo",
-    // Kombinasi lokasi
     "karang taruna kelurahan mojo",
+    "karang taruna mojo",
     "karang taruna kecamatan pasar kliwon",
     "karang taruna kota surakarta",
     "karang taruna kota solo",
@@ -71,7 +71,20 @@ export const metadata: Metadata = {
     "karang taruna terbaik surakarta",
     "karang taruna terbaik solo",
     "karang taruna aktif surakarta",
-    "karang taruna aktif solo"
+    "karang taruna aktif solo",
+    // Typo & Variasi Penulisan (User Request)
+    "karangtaruna",
+    "karangtaruna mojo",
+    "karangtaruna surakarta",
+    "karangtaruna solo",
+    "karangtaruna kelurahan mojo",
+    "kt mojo",
+    "kt surakarta",
+    "kt solo",
+    "kt asta wira dipta",
+    "karang taruna mojosongo", // Antisipasi salah ketik mojo/mojosongo
+    "karang taruna pasar kliwon solo",
+    "organisasi pemuda kelurahan mojo"
   ],
   authors: [{ name: "Karang Taruna Asta Wira Dipta" }],
   creator: "Karang Taruna Asta Wira Dipta",
@@ -92,7 +105,7 @@ export const metadata: Metadata = {
     locale: "id_ID",
     url: "https://astawiradipta.my.id",
     siteName: "Karang Taruna Asta Wira Dipta",
-    title: "Karang Taruna Asta Wira Dipta - Mojo, Pasar Kliwon, Surakarta (Solo)",
+    title: "Karang Taruna Asta Wira Dipta - Kelurahan Mojo, Surakarta",
     description: "Website Resmi Karang Taruna Asta Wira Dipta Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah. Wadah pengembangan generasi muda dan kegiatan sosial komunitas.",
     images: [
       {
@@ -138,7 +151,15 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Karang Taruna Asta Wira Dipta",
-  alternateName: ["Karang Taruna Mojo", "Karang Taruna Surakarta", "Karang Taruna Solo", "Asta Wira Dipta"],
+  alternateName: [
+    "Karang Taruna Mojo",
+    "Karang Taruna Surakarta",
+    "Karang Taruna Solo",
+    "Asta Wira Dipta",
+    "Karangtaruna Mojo",
+    "KT Asta Wira Dipta",
+    "Karang Taruna Kelurahan Mojo"
+  ],
   url: "https://astawiradipta.my.id",
   logo: "https://astawiradipta.my.id/logo.webp",
   description: "Karang Taruna Asta Wira Dipta adalah organisasi kepemudaan di Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah. Wadah pengembangan generasi muda yang tumbuh atas dasar kesadaran dan rasa tanggung jawab sosial.",

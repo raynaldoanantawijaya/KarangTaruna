@@ -27,9 +27,9 @@ import { Metadata } from "next";
 // So I need to put the Internal News section BACK into page.tsx below the Suspense.
 
 export const metadata: Metadata = {
-  title: "Karang Taruna Asta Wira Dipta - Organisasi Pemuda Terbaik di Solo",
-  description: "Selamat datang di website resmi Karang Taruna Asta Wira Dipta, Kelurahan Mojo, Surakarta. Temukan profil, program kerja unggulan, dan berita kegiatan pemuda terkini.",
-  keywords: ["karang taruna terbaik solo", "organisasi pemuda surakarta", "kegiatan pemuda mojo", "asta wira dipta profile"],
+  title: "Karang Taruna Asta Wira Dipta - Kelurahan Mojo, Surakarta",
+  description: "Website Resmi Karang Taruna Asta Wira Dipta, Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo). Wadah pengembangan generasi muda kreatif dan inovatif.",
+  keywords: ["karang taruna kelurahan mojo", "karang taruna mojo", "karangtaruna mojo", "kt mojo", "pemuda surakarta", "asta wira dipta", "organisasi pemuda solo"],
   alternates: {
     canonical: "https://astawiradipta.my.id",
   }
@@ -181,7 +181,7 @@ export default async function Home() {
                 Kabar Asta Wira Dipta
               </span>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-                Kegiatan & Artikel Internal
+                Kegiatan & Artikel Internal (Mojo)
               </h2>
             </div>
           </div>
