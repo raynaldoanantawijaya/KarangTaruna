@@ -33,6 +33,7 @@ interface ActivityLog {
         latitude: number;
         longitude: number;
         address?: string;
+        accuracy?: number;
     };
 }
 
@@ -387,14 +388,21 @@ function UsersPageContent() {
                                                                         <span className="text-xs truncate max-w-[200px]" title={log.location.address || `${log.location.latitude}, ${log.location.longitude}`}>
                                                                             {log.location.address || `${log.location.latitude}, ${log.location.longitude}`}
                                                                         </span>
-                                                                        <a
-                                                                            href={`https://www.google.com/maps?q=${log.location.latitude},${log.location.longitude}`}
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
-                                                                            className="text-[11px] text-primary hover:underline font-medium"
-                                                                        >
-                                                                            Lihat Maps
-                                                                        </a>
+                                                                        <div className="flex items-center gap-2">
+                                                                            <a
+                                                                                href={`https://www.google.com/maps?q=${log.location.latitude},${log.location.longitude}`}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                className="text-[11px] text-primary hover:underline font-medium"
+                                                                            >
+                                                                                Lihat Maps
+                                                                            </a>
+                                                                            {log.location.accuracy && (
+                                                                                <span className="text-[10px] text-gray-400" title={`Akurasi GPS: ~${Math.round(log.location.accuracy)} meter`}>
+                                                                                    (±{Math.round(log.location.accuracy)}m)
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
                                                                     </div>
                                                                 ) : (
                                                                     <span className="text-xs italic text-gray-400">-</span>

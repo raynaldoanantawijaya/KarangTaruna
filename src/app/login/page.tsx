@@ -36,6 +36,7 @@ export default function LoginPage() {
 
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
             let address = `${lat}, ${lon}`;
 
             // Try reverse geocoding (best effort, don't block login if it fails)
@@ -55,8 +56,18 @@ export default function LoginPage() {
             if (nav.userAgentData && nav.userAgentData.getHighEntropyValues) {
                 try {
                     const hints = await nav.userAgentData.getHighEntropyValues(["model", "platform", "architecture"]);
+
+                    // Filter out fake privacy brands like "Not A;Brand" injected by Chromium
+                    let realBrand = '';
+                    if (nav.userAgentData.brands) {
+                        const validBrandObj = nav.userAgentData.brands.find((b: any) =>
+                            !b.brand.toLowerCase().includes('not') && !b.brand.toLowerCase().includes('brand')
+                        );
+                        realBrand = validBrandObj ? validBrandObj.brand : '';
+                    }
+
                     clientDevice = {
-                        brand: nav.userAgentData.brands?.[0]?.brand,
+                        brand: realBrand,
                         model: hints.model,
                         os: hints.platform
                     };
@@ -75,7 +86,7 @@ export default function LoginPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     idToken,
-                    location: { latitude: lat, longitude: lon, address },
+                    location: { latitude: lat, longitude: lon, address, accuracy },
                     clientDevice
                 }),
             });

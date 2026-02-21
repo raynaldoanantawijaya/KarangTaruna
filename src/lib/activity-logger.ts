@@ -21,6 +21,7 @@ interface LocationData {
     latitude: number;
     longitude: number;
     address?: string;
+    accuracy?: number;
 }
 
 interface DeviceInfo {
