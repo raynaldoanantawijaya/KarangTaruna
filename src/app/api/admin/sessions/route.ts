@@ -24,8 +24,11 @@ export async function GET() {
             query = query.where('userId', '==', currentUser.id);
         }
 
-        const snap = await query.orderBy('createdAt', 'desc').get();
-        const sessions = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const snap = await query.get();
+        // Sort in memory to avoid needing a composite Firestore index
+        const sessions = snap.docs
+            .map(doc => ({ id: doc.id, ...doc.data() }))
+            .sort((a: any, b: any) => (b.createdAt || 0) - (a.createdAt || 0));
 
         return NextResponse.json({ sessions });
     } catch (error: any) {

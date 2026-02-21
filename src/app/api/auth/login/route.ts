@@ -45,21 +45,21 @@ export async function POST(request: Request) {
         }
 
         // ── Active Session Limit Check ──────────────────────────────────────
-        // Purge sessions older than 25 hours (safety cleanup for expired cookies)
         const sessionsRef = adminDb.collection('active_sessions');
-
-        // Purge stale sessions for this user (older than 25 hours)
         const cutoff = Date.now() - 25 * 60 * 60 * 1000;
-        const staleSessionsSnap = await sessionsRef
-            .where('userId', '==', uid)
-            .where('createdAt', '<', cutoff)
-            .get();
-        const staleDeletes = staleSessionsSnap.docs.map(doc => doc.ref.delete());
-        await Promise.all(staleDeletes);
 
-        // Count current active sessions for this user
-        const activeSnap = await sessionsRef.where('userId', '==', uid).get();
-        const activeCount = activeSnap.size;
+        // Fetch ALL sessions for this user with a simple single-field query (no index needed)
+        const allUserSessionsSnap = await sessionsRef.where('userId', '==', uid).get();
+        const allUserSessions = allUserSessionsSnap.docs;
+
+        // Split into stale and active (filter in memory to avoid needing a composite index)
+        const staleSessionDocs = allUserSessions.filter(doc => doc.data().createdAt < cutoff);
+        const activeSessionDocs = allUserSessions.filter(doc => doc.data().createdAt >= cutoff);
+
+        // Delete stale sessions (fire and forget)
+        await Promise.all(staleSessionDocs.map(doc => doc.ref.delete()));
+
+        const activeCount = activeSessionDocs.length;
 
         if (activeCount >= MAX_SESSIONS) {
             return NextResponse.json({
