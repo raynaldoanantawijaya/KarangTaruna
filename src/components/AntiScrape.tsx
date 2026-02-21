@@ -34,20 +34,26 @@ export default function AntiScrape() {
             const doc = document as any;
             const userAgent = n.userAgent ? n.userAgent.toLowerCase() : "";
 
+            // Detect mobile devices (skip desktop-only checks for them)
+            const isMobile = /android|iphone|ipad|ipod|mobile/i.test(userAgent);
+
             const isAutomated =
                 n.webdriver || w.callPhantom || w._phantom || w.__nightmare ||
-                w.domAutomation || w.domAutomationController || w.emit ||
-                w.spawn || w.webdriver || w._selenium || w._Selenium_IDE_Recorder;
+                w.domAutomation || w.domAutomationController ||
+                w._selenium || w._Selenium_IDE_Recorder;
 
-            const isFakeChrome = userAgent.includes('chrome') && !w.chrome;
-            const hasNoPlugins = typeof n.plugins !== "undefined" && n.plugins.length === 0 && userAgent.includes('chrome');
+            // Desktop-only checks (Android Chrome doesn't have window.chrome or plugins)
+            const isFakeChrome = !isMobile && userAgent.includes('chrome') && !w.chrome;
+            const hasNoPlugins = !isMobile && typeof n.plugins !== "undefined" && n.plugins.length === 0 && userAgent.includes('chrome');
             const hasNoLanguages = !n.languages || n.languages.length === 0;
 
+            // Strict bot detection: avoid matching generic words like "bot" which appear in legit UAs
             const isScriptClient =
-                userAgent.includes("python") || userAgent.includes("curl") || userAgent.includes("wget") ||
-                userAgent.includes("urllib") || userAgent.includes("scrapy") || userAgent.includes("postman") ||
-                userAgent.includes("httpclient") || userAgent.includes("bot") || userAgent.includes("spider") ||
-                userAgent.includes("headless") || userAgent.includes("crawler");
+                userAgent.includes("python-requests") || userAgent.includes("python-urllib") ||
+                userAgent.includes("curl/") || userAgent.includes("wget/") ||
+                userAgent.includes("scrapy") || userAgent.includes("postman") ||
+                userAgent.includes("httpclient") || userAgent.includes("headlesschrome") ||
+                userAgent.includes("phantomjs") || userAgent.includes("selenium");
 
             const hasSeleniumAttr = doc.documentElement.getAttribute("webdriver") !== null;
 
