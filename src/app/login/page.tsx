@@ -35,6 +35,19 @@ export default function LoginPage() {
             const data = await res.json();
 
             if (res.ok) {
+                // Ask browser to save password to Google Password Manager
+                if ((window as any).PasswordCredential) {
+                    try {
+                        const cred = new (window as any).PasswordCredential({
+                            id: email,
+                            password: password,
+                            name: data.name || email,
+                        });
+                        await navigator.credentials.store(cred);
+                    } catch {
+                        // Silently ignore if browser doesn't support or user declines
+                    }
+                }
                 router.push('/admin');
                 router.refresh();
             } else {
