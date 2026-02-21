@@ -114,7 +114,7 @@ export default function AntiScrape() {
 
             // Memeriksa jika ini adalah klik pertama dan tanpa pergerakan mouse (Sangat tak wajar bagi manusia di desktop)
             // (Kecuali TouchScreen, yang mouseMoves-nya kita naikkan di event touchstart)
-            if (clickCount === 1 && !isHuman && mouseMoves === 0 && e.pointerType === "mouse") {
+            if (clickCount === 1 && !isHuman && mouseMoves === 0 && (e as PointerEvent).pointerType === "mouse") {
                 blockBot("Unnatural Interaction Speed");
             }
 
