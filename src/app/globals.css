@@ -30,6 +30,94 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Editor Specific Styles */
+.editor-content ul {
+  list-style: disc outside !important;
+  margin-left: 0 !important;
+  padding-left: 1.5rem !important;
+}
+
+.editor-content ol {
+  list-style: decimal outside !important;
+  margin-left: 0 !important;
+  padding-left: 1.5rem !important;
+}
+
+.editor-content li {
+  display: list-item !important;
+  color: inherit;
+}
+
+/* Inverted Theme for Editor:
+   Light Mode -> Dark BG -> White/Light Markers
+   Dark Mode -> Light BG -> Black/Dark Markers
+*/
+.editor-content ul li::marker,
+.editor-content ol li::marker {
+  color: #ffffff !important;
+}
+
+.dark .editor-content ul li::marker,
+.dark .editor-content ol li::marker {
+  color: #000000 !important;
+}
+
+/* Ensure multilevel custom markers inherit correctly or force color */
+.editor-content ol.list-preset-paren>li>ol>li::before,
+.editor-content ol.list-preset-alpha-paren ol>li::before,
+.editor-content ol.list-preset-roman-paren ol>li::before {
+  color: inherit;
+  /* Should inherit from li text */
+}
+
+/* Multilevel List Styling */
+.editor-content ol li ol {
+  list-style-type: lower-alpha !important;
+}
+
+.editor-content ol li ol li ol {
+  list-style-type: lower-roman !important;
+}
+
+/* Preset: 1. -> a) -> i. */
+.editor-content ol.list-preset-paren {
+  list-style-type: decimal !important;
+}
+
+/* Level 2: a) */
+/* Level 2: a) */
+.editor-content ol.list-preset-paren>li>ol {
+  list-style: none !important;
+  /* Use shorthand to override generic shorthand */
+  counter-reset: level2;
+}
+
+.editor-content ol.list-preset-paren>li>ol>li {
+  counter-increment: level2;
+  position: relative;
+}
+
+.editor-content ol.list-preset-paren>li>ol>li::before {
+  content: counter(level2, lower-alpha) ") ";
+  color: inherit;
+  font-weight: normal;
+  display: inline-block;
+  width: 1.5rem;
+  /* Fixed width for alignment */
+  margin-left: -1.5rem;
+  /* Pull back into padding */
+}
+
+.editor-content ol.list-preset-paren>li>ol>li::marker {
+  content: none !important;
+}
+
+/* Level 3: i. */
+.editor-content ol.list-preset-paren>li>ol>li>ol {
+  list-style-type: lower-roman !important;
 }
 
 /* ==================== RESPONSIVE UTILITIES ==================== */
@@ -568,4 +656,112 @@ html {
 
 .animate-shake {
   animation: shake 0.5s ease-in-out;
+}
+
+/* ==================== NEW MULTILEVEL PRESETS ==================== */
+
+/* Preset 1: 1. -> a) -> i. */
+.editor-content ol.list-preset-paren {
+  list-style: decimal !important;
+}
+
+/* Level 2: a) */
+.editor-content ol.list-preset-paren ol {
+  list-style: none !important;
+  counter-reset: level2;
+}
+
+.editor-content ol.list-preset-paren ol>li {
+  counter-increment: level2;
+  position: relative;
+  list-style: none !important;
+  /* Force remove default numbering */
+}
+
+.editor-content ol.list-preset-paren ol>li::before {
+  content: counter(level2, lower-alpha) ") " !important;
+  color: inherit;
+  font-weight: normal;
+  display: inline-block;
+  width: 1.5rem;
+  /* Fixed width for alignment */
+  margin-left: -1.5rem;
+  /* Pull back into padding */
+}
+
+.editor-content ol.list-preset-paren li ol>li::marker {
+  content: none !important;
+}
+
+/* Level 3: i. */
+.editor-content ol.list-preset-paren ol ol {
+  list-style-type: lower-roman !important;
+}
+
+
+/* Preset 2: A. -> 1) -> a. */
+.editor-content ol.list-preset-alpha-paren {
+  list-style: upper-alpha !important;
+}
+
+/* Level 2: 1) */
+.editor-content ol.list-preset-alpha-paren ol {
+  list-style: none !important;
+  counter-reset: level2alpha;
+}
+
+.editor-content ol.list-preset-alpha-paren ol>li {
+  counter-increment: level2alpha;
+  position: relative;
+  list-style: none !important;
+}
+
+.editor-content ol.list-preset-alpha-paren ol>li::before {
+  content: counter(level2alpha, decimal) ") " !important;
+  color: inherit;
+  font-weight: normal;
+  display: inline-block;
+  width: 1.5rem;
+  margin-left: -1.5rem;
+}
+
+/* Level 3: a. */
+.editor-content ol.list-preset-alpha-paren ol ol {
+  list-style-type: lower-alpha !important;
+}
+
+
+/* Preset 3: I. -> i) -> 1. */
+.editor-content ol.list-preset-roman-paren {
+  list-style-type: upper-roman !important;
+}
+
+/* Level 2: i) */
+.editor-content ol.list-preset-roman-paren ol {
+  list-style: none !important;
+  counter-reset: level2roman;
+}
+
+.editor-content ol.list-preset-roman-paren ol>li {
+  counter-increment: level2roman;
+  position: relative;
+  list-style: none !important;
+}
+
+.editor-content ol.list-preset-roman-paren ol>li::before {
+  content: counter(level2roman, lower-roman) ") " !important;
+  color: inherit;
+  font-weight: normal;
+  display: inline-block;
+  width: 1.5rem;
+  margin-left: -1.5rem;
+}
+
+.editor-content ol.list-preset-roman-paren li ol>li::marker {
+  content: none !important;
+}
+
+/* Level 3: 1. */
+.editor-content ol.list-preset-roman-paren ol ol {
+  list-style-type: decimal !important;
 }

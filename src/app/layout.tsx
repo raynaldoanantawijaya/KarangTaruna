@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import PersistentHeaderBg from "@/components/PersistentHeaderBg";
-import { ScrollToTop } from "@/components/ScrollToTop";
+import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -109,13 +106,13 @@ export const metadata: Metadata = {
     description: "Website Resmi Karang Taruna Asta Wira Dipta Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah. Wadah pengembangan generasi muda dan kegiatan sosial komunitas.",
     images: [
       {
-        url: "/surakarta.webp",
+        url: "https://astawiradipta.my.id/surakarta.webp",
         width: 1200,
         height: 630,
         alt: "Profil Kota Surakarta dan Karang Taruna Mojo",
       },
       {
-        url: "/icon-512.webp",
+        url: "https://astawiradipta.my.id/icon-512.webp",
         width: 512,
         height: 512,
         alt: "Logo Karang Taruna Asta Wira Dipta",
@@ -126,10 +123,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Karang Taruna Asta Wira Dipta - Muda, Berkarya, Berbudaya",
     description: "Pusat informasi kegiatan kepemudaan di Kelurahan Mojo, Surakarta. Sinergi membangun kota Solo yang berbudaya dan berkemajuan.",
-    images: ["/surakarta.webp"],
-  },
-  alternates: {
-    canonical: "https://astawiradipta.my.id"
+    images: ["https://astawiradipta.my.id/surakarta.webp"],
   },
   category: "organization",
   verification: {
@@ -248,7 +242,6 @@ export default function RootLayout({
         <meta name="geo.placename" content="Surakarta" />
         <meta name="geo.position" content="-7.5755;110.8243" />
         <meta name="ICBM" content="-7.5755, 110.8243" />
-        <link rel="canonical" href="https://astawiradipta.my.id" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1a56db" />
       </head>
@@ -266,13 +259,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          <ScrollToTop />
-          <main className="flex-grow flex flex-col w-full relative">
-            <PersistentHeaderBg />
+          <ClientLayoutWrapper>
             {children}
-          </main>
-          <Footer />
+          </ClientLayoutWrapper>
         </ThemeProvider>
       </body>
     </html>

@@ -1,23 +1,116 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { ArrowRight, Calendar, Users, MapPin, Award, CheckCircle } from "lucide-react";
-import Pagination from "@/components/Pagination";
 import NewsImage from "@/components/NewsImage";
-import { INTERNAL_ARTICLES } from "@/data/articles";
+import { INTERNAL_ARTICLES } from "@/app/berita/read/page";
+
+import GalleryImage from '@/components/GalleryImage';
+import { adminDb } from '@/lib/firebase-admin';
 
 interface NewsItem {
+  id: string;
   title: string;
-  link: string;
-  image: string;
-  source: string;
-  time: string;
-  body: string;
+  slug: string;
+  image?: string;
+  date: string;
+  status: string;
 }
+
+interface GalleryItem {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  category: string;
+  date: string;
+}
+
+import fs from 'fs/promises';
+import path from 'path';
+
+async function getInternalNews() {
+  try {
+    const postsRef = adminDb.collection('posts');
+    const snapshot = await postsRef
+      .where('status', '==', 'published')
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (error) {
+    console.error("Error reading internal news from Firestore:", error);
+    return [];
+  }
+}
+
+async function getGalleryItems(limitCount: number = 6) {
+  try {
+    const snapshot = await adminDb.collection('gallery')
+      .orderBy('date', 'desc')
+      .limit(limitCount)
+      .get();
+
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as GalleryItem));
+  } catch (error) {
+    console.error("Error reading gallery items from Firestore:", error);
+    return [];
+  }
+}
+
+interface VideoItem {
+  id: string;
+  title: string;
+  description: string;
+  youtubeId?: string;
+  videoUrl?: string; // Cloudinary or direct URL
+  isYouTube: boolean;
+  date: string;
+}
+
+async function getVideoItems(limitCount: number = 2) {
+  try {
+    const snapshot = await adminDb.collection('videos')
+      .orderBy('date', 'desc')
+      .limit(limitCount)
+      .get();
+
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as VideoItem));
+  } catch (error) {
+    console.error("Error reading video items from Firestore:", error);
+    return [];
+  }
+}
+
+async function getAppearanceData() {
+  try {
+    const docRef = adminDb.collection('settings').doc('appearance');
+    const doc = await docRef.get();
+
+    if (doc.exists) {
+      return doc.data();
+    }
+    return null;
+  } catch (error) {
+    console.error("Error reading appearance data from Firestore:", error);
+    return null;
+  }
+}
+
 
 import { Suspense } from "react";
 import LatestNewsSection from "@/components/home/LatestNewsSection";
 import { LatestNewsSkeleton } from "@/components/home/LatestNewsSkeleton";
 import { Metadata } from "next";
+import AntiScrape from "@/components/AntiScrape";
 
 // Internal news (static) does not block, but was part of the refactored section.
 // I need to add the Internal News section back since I removed it in the previous step's range.
@@ -37,10 +130,49 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
+  const internalNews = await getInternalNews();
+  const galleryItems = await getGalleryItems(6); // Limit to 6 for homepage
+  const videoItems = await getVideoItems(2); // Limit to 2 for homepage
+  const appearance = await getAppearanceData(); // Fetch Appearance Data
+
+  // Default values if data missing
+  const hero = appearance?.hero || {
+    title: "Karang Taruna Asta Wira Dipta",
+    subtitle: "Kelurahan Mojo - Surakarta",
+    description: "Organisasi kepemudaan resmi tingkat Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo). Wadah pengembangan generasi muda yang berkarya, berdaya, dan bertanggung jawab sosial.",
+    buttonText: "Gabung Sekarang",
+    secondaryButtonText: "Pelajari Lebih Lanjut"
+  };
+
+  const stats = appearance?.stats || {
+    members: "20", membersLabel: "Anggota Aktif",
+    programs: "10", programsLabel: "Program Terlaksana",
+    units: "12", unitsLabel: "Unit RW Binaan",
+    awards: "3", awardsLabel: "Penghargaan"
+  };
+
+  const vision = appearance?.vision || "Mewujudkan generasi muda yang mandiri, tangguh, terampil, berakhlak, dan berkualitas dalam pembangunan kesejahteraan sosial.";
+
+  const mission = appearance?.mission || [
+    "Mengembangkan potensi generasi muda dan wawasan kebangsaan.",
+    "Memperkuat kerjasama antar pemuda dan masyarakat.",
+    "Berperan aktif dalam kegiatan sosial dan kemanusiaan."
+  ];
+
+  // Use dynamic news if available, otherwise fallback to static for demo
+  const displayNews = internalNews.length > 0 ? internalNews : Object.entries(INTERNAL_ARTICLES).map(([slug, article]) => ({
+    id: slug,
+    title: article.title,
+    slug: slug,
+    image: article.image,
+    date: article.date,
+    status: 'published'
+  }));
 
 
   return (
     <div className="w-full">
+      <AntiScrape />
       {/* Hero Section */}
       <div className="relative overflow-hidden transition-colors duration-500 min-h-[280px] sm:min-h-[350px] md:min-h-[450px] flex flex-col justify-start pt-8 sm:pt-10 md:pt-14 pb-8 sm:pb-12 md:pb-16">
         {/* Texture removed as requested for pure CSS styling */}
@@ -52,12 +184,12 @@ export default async function Home() {
           </div>
 
           <h1 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-extrabold text-white mb-2 sm:mb-3 leading-tight tracking-tight drop-shadow-md">
-            Karang Taruna Asta Wira Dipta<br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-white to-yellow-100">Kelurahan Mojo - Surakarta</span>
+            {hero.title}<br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-white to-yellow-100">{hero.subtitle}</span>
           </h1>
 
           <p className="text-red-50 dark:text-gray-300 text-[10px] sm:text-xs md:text-sm max-w-xs sm:max-w-md md:max-w-xl mx-auto mb-3 sm:mb-5 font-light leading-relaxed opacity-95 transition-colors">
-            Organisasi kepemudaan resmi tingkat Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo). Wadah pengembangan generasi muda yang berkarya, berdaya, dan bertanggung jawab sosial.
+            {hero.description}
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
@@ -65,7 +197,7 @@ export default async function Home() {
               href="/kontak"
               className="group bg-white text-primary hover:bg-gray-50 font-bold py-1.5 sm:py-2 px-4 sm:px-5 rounded-full shadow-xl shadow-red-900/30 transition-all transform hover:-translate-y-1 hover:shadow-2xl flex items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs"
             >
-              Gabung Sekarang
+              {hero.buttonText}
               <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
@@ -73,7 +205,7 @@ export default async function Home() {
               className="group bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white/20 font-semibold py-1.5 sm:py-2 px-4 sm:px-5 rounded-full transition-all flex items-center justify-center gap-1.5 sm:gap-2 hover:border-white/50 text-[10px] sm:text-xs"
             >
               <CheckCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-              Pelajari Lebih Lanjut
+              {hero.secondaryButtonText}
             </Link>
           </div>
         </div>
@@ -113,14 +245,14 @@ export default async function Home() {
               <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                 <div>
                   <h4 className="font-bold text-gray-900 dark:text-white mb-1">Visi</h4>
-                  <p>Mewujudkan generasi muda yang mandiri, tangguh, terampil, berakhlak, dan berkualitas dalam pembangunan kesejahteraan sosial.</p>
+                  <p>{vision}</p>
                 </div>
                 <div>
                   <h4 className="font-bold text-gray-900 dark:text-white mb-1">Misi</h4>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Mengembangkan potensi generasi muda dan wawasan kebangsaan.</li>
-                    <li>Memperkuat kerjasama antar pemuda dan masyarakat.</li>
-                    <li>Berperan aktif dalam kegiatan sosial dan kemanusiaan.</li>
+                    {Array.isArray(mission) ? mission.map((item: string, index: number) => (
+                      <li key={index}>{item}</li>
+                    )) : <li>{String(mission)}</li>}
                   </ul>
                 </div>
               </div>
@@ -140,29 +272,29 @@ export default async function Home() {
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10 text-primary mb-4">
                   <Users className="h-6 w-6" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">20+</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-200">Anggota Aktif</p>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.members}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-200">{stats.membersLabel}</p>
               </div>
               <div className="p-4">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-secondary/20 text-yellow-700 dark:text-yellow-400 mb-4">
                   <Calendar className="h-6 w-6" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">10</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-200">Program Terlaksana</p>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.programs}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-200">{stats.programsLabel}</p>
               </div>
               <div className="p-4">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 mb-4">
                   <MapPin className="h-6 w-6" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">12</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-200">Unit RW Binaan</p>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.units}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-200">{stats.unitsLabel}</p>
               </div>
               <div className="p-4">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 mb-4">
                   <Award className="h-6 w-6" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">3</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-200">Penghargaan</p>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stats.awards}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-200">{stats.awardsLabel}</p>
               </div>
             </div>
           </div>
@@ -188,13 +320,14 @@ export default async function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {Object.entries(INTERNAL_ARTICLES).slice(0, 4).map(([slug, article], index) => (
-              <div key={slug} className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col h-full">
+
+            {displayNews.slice(0, 4).map((article: any) => (
+              <div key={article.id} className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col h-full">
                 <div className="relative h-40 overflow-hidden">
                   <NewsImage
                     alt={article.title}
                     className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
-                    src={article.image}
+                    src={article.image || '/logo-kt.webp'} // Fallback image
                   />
                   <div className="absolute top-2 right-2 bg-white/90 dark:bg-black/80 backdrop-blur-sm text-xs font-bold px-2 py-1 rounded-lg shadow-sm">
                     Internal
@@ -203,16 +336,16 @@ export default async function Home() {
                 <div className="p-4 flex flex-col flex-grow">
                   <div className="text-[10px] text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
-                    {article.date}
+                    {new Date(article.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </div>
                   <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                    <Link href={`/artikel/${slug}`}>
+                    <Link href={`/berita/read?slug=${article.slug}`}>
                       {article.title}
                     </Link>
                   </h3>
                   <div className="mt-auto pt-3">
                     <Link
-                      href={`/artikel/${slug}`}
+                      href={`/berita/read?slug=${article.slug}`}
                       className="text-sm font-semibold text-primary hover:text-primary-dark inline-flex items-center gap-1"
                     >
                       Baca <ArrowRight className="w-3 h-3" />
@@ -313,42 +446,78 @@ export default async function Home() {
         {/* Gallery Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center mb-12">
-            <span className="text-primary font-semibold tracking-wider uppercase text-sm">Galeri Foto</span>
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">Dokumentasi Kegiatan</h2>
+            <span className="text-primary font-semibold tracking-wider uppercase text-sm">Memories & Dokumentasi</span>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">Galeri Kegiatan</h2>
             <div className="w-24 h-1 bg-secondary mx-auto mt-4 rounded-full"></div>
+            <p className="text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
+              Kumpulan rekam jejak visual dari berbagai aksi dan kontribusi nyata kami untuk masyarakat.
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            {/* Item 1 - Makrab (Left) */}
-            <div className="relative rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all h-[300px] md:h-[400px]">
-              <img
-                src="/images/galeri/makrab.webp"
-                alt="Kegiatan Outbound & Makrab"
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 flex items-end p-8">
-                <div>
-                  <span className="bg-secondary text-gray-900 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block shadow-sm">Rekreasi</span>
-                  <h3 className="text-white font-bold text-2xl mb-1">Outbound & Makrab</h3>
-                  <p className="text-gray-300 text-sm">Mempererat tali persaudaraan antar anggota Karang Taruna.</p>
-                </div>
-              </div>
-            </div>
 
-            {/* Item 2 - Sosialisasi (Right) */}
-            <div className="relative rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all h-[300px] md:h-[400px]">
-              <img
-                src="/images/galeri/sosialisasi.webp"
-                alt="Kegiatan Sosialisasi Hukum Kontrak"
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 flex items-end p-8">
-                <div>
-                  <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block shadow-sm">Edukasi</span>
-                  <h3 className="text-white font-bold text-2xl mb-1">Sosialisasi Hukum Kontrak</h3>
-                  <p className="text-gray-300 text-sm">Menambah wawasan hukum bagi masyarakat dan pemuda.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {/* Render Videos First */}
+            {videoItems.map((video: VideoItem) => (
+              <div key={video.id} className="relative rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all h-[250px] md:h-[300px] border border-gray-100 dark:border-gray-800">
+                {video.isYouTube && video.youtubeId ? (
+                  <iframe
+                    className="w-full h-full object-cover"
+                    src={`https://www.youtube.com/embed/${video.youtubeId}?modestbranding=1&rel=0`}
+                    title={video.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : video.videoUrl ? (
+                  <video
+                    className="w-full h-full object-cover"
+                    src={video.videoUrl}
+                    controls
+                    preload="metadata"
+                  ></video>
+                ) : null}
+
+                {/* Overlay for non-iframe videos or just lower text */}
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-100 flex items-end p-6">
+                  <div>
+                    <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block shadow-sm">Video</span>
+                    <h3 className="text-white font-bold text-lg mb-1 drop-shadow-md line-clamp-2">{video.title}</h3>
+                  </div>
                 </div>
               </div>
+            ))}
+
+            {/* Render Photos/Gallery */}
+            {galleryItems.map((item: GalleryItem) => (
+              <div key={item.id} className="relative rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all h-[250px] md:h-[300px]">
+                <GalleryImage
+                  src={item.imageUrl}
+                  alt={item.title}
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                  <div>
+                    <span className="bg-secondary text-gray-900 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block shadow-sm">Foto</span>
+                    <h3 className="text-white font-bold text-lg mb-1 drop-shadow-md">{item.title}</h3>
+                    <p className="text-gray-300 text-xs line-clamp-2">{item.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {videoItems.length === 0 && galleryItems.length === 0 && (
+            <div className="text-center py-10 text-gray-500 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+              Belum ada dokumentasi. Minta Admin untuk mengunggah momen terbaru.
             </div>
+          )}
+
+          <div className="text-center mt-12">
+            <Link
+              href="/program-kerja"
+              className="inline-block border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold py-3 px-8 rounded-full transition-all duration-300"
+            >
+              Lihat Seluruh Galeri
+            </Link>
           </div>
         </section>
 

@@ -3,6 +3,7 @@ import { ChevronRight, Calendar, User, Tag, ArrowRight } from "lucide-react";
 import SearchInput from "@/components/SearchInput";
 import NewsImage from "@/components/NewsImage";
 import Pagination from "@/components/Pagination";
+import { adminDb } from '@/lib/firebase-admin';
 
 // Define Types for API Response
 interface NewsItem {
@@ -12,6 +13,17 @@ interface NewsItem {
     source: string;
     time: string;
     body: string;
+}
+
+interface AdminPost {
+    id: string;
+    title: string;
+    slug: string;
+    image?: string;
+    date: string;
+    status: string;
+    content?: string;
+    createdAt?: string;
 }
 
 interface ApiResponse {
@@ -59,6 +71,24 @@ async function getNews(query?: string, category?: string): Promise<NewsItem[]> {
     }
 }
 
+async function getAdminPosts(): Promise<AdminPost[]> {
+    try {
+        const postsRef = adminDb.collection('posts');
+        const snapshot = await postsRef
+            .where('status', '==', 'published')
+            .orderBy('createdAt', 'desc')
+            .get();
+
+        return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...(doc.data() as Omit<AdminPost, 'id'>)
+        }));
+    } catch (error) {
+        console.error("Error fetching admin posts:", error);
+        return [];
+    }
+}
+
 export default async function Berita({
     searchParams,
 }: {
@@ -73,7 +103,10 @@ export default async function Berita({
     const currentPage = pageParam ? parseInt(pageParam, 10) : 1;
     const itemsPerPage = 5;
 
-    const allNews = await getNews(q, category);
+    const [allNews, adminPosts] = await Promise.all([
+        getNews(q, category),
+        getAdminPosts()
+    ]);
 
     const totalItems = allNews.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -84,7 +117,7 @@ export default async function Berita({
     const displayedNews = allNews.slice(startIndex, endIndex);
 
     // Debugging logs
-    console.log(`[BeritaPage] Current Page: ${currentPage}, Displaying ${displayedNews.length} items.`);
+    console.log(`[BeritaPage] Current Page: ${currentPage}, Displaying ${displayedNews.length} items, Admin Posts: ${adminPosts.length}`);
     if (displayedNews.length > 0) {
         console.log(`[BeritaPage] First Item: ${displayedNews[0].title}`);
     }
@@ -178,7 +211,7 @@ export default async function Berita({
                             </div>
                         )}
 
-                        {/* SECTION TAMBAHAN: Kabar Internal (Static) */}
+                        {/* SECTION TAMBAHAN: Kabar Internal (Static + Dynamic) */}
                         <div className="mt-16 pt-8 border-t border-gray-100 dark:border-gray-700">
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                                 <span className="bg-secondary w-2 h-8 mr-3 rounded-full"></span>
@@ -186,6 +219,46 @@ export default async function Berita({
                             </h3>
 
                             <div className="space-y-6">
+                                {/* Dynamic Admin Posts from Firestore */}
+                                {adminPosts.map((post) => (
+                                    <article key={post.id} className="flex flex-col md:flex-row bg-yellow-50 dark:bg-yellow-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-yellow-100 dark:border-yellow-900/30 group">
+                                        <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
+                                            <Link href={`/berita/read?slug=${post.slug}`}>
+                                                <NewsImage
+                                                    src={post.image || '/logo-kt.webp'}
+                                                    alt={post.title}
+                                                    className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
+                                                />
+                                                <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                                    Internal
+                                                </div>
+                                            </Link>
+                                        </div>
+                                        <div className="md:w-7/12 p-6 flex flex-col justify-between">
+                                            <div>
+                                                <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-2">
+                                                    <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> {post.date ? new Date(post.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Baru saja'}</span>
+                                                    <span>•</span>
+                                                    <span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi Internal</span>
+                                                </div>
+                                                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                                                    <Link href={`/berita/read?slug=${post.slug}`}>
+                                                        {post.title}
+                                                    </Link>
+                                                </h2>
+                                                <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
+                                                    {post.content ? post.content.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : ''}
+                                                </p>
+                                            </div>
+                                            <div className="mt-auto pt-4 border-t border-yellow-200 dark:border-yellow-800/30">
+                                                <Link href={`/berita/read?slug=${post.slug}`} className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
+                                                    Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </article>
+                                ))}
+
                                 {/* Item Internal 1 */}
                                 <article className="flex flex-col md:flex-row bg-yellow-50 dark:bg-yellow-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-yellow-100 dark:border-yellow-900/30 group">
                                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">

@@ -1,0 +1,25 @@
+{
+  "hero": {
+    "title": "Karang Taruna Asta Wira Dipta",
+    "subtitle": "Kelurahan Mojo - Surakarta",
+    "description": "Organisasi kepemudaan resmi tingkat Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo). Wadah pengembangan generasi muda yang berkarya, berdaya, dan bertanggung jawab sosial.",
+    "buttonText": "Gabung Sekarang",
+    "secondaryButtonText": "Pelajari Lebih Lanjut"
+  },
+  "stats": {
+    "members": "50",
+    "membersLabel": "Anggota Aktif",
+    "programs": "10",
+    "programsLabel": "Program Terlaksana",
+    "units": "12",
+    "unitsLabel": "Unit RW Binaan",
+    "awards": "3",
+    "awardsLabel": "Penghargaan"
+  },
+  "vision": "Mewujudkan generasi muda yang mandiri, tangguh, terampil, berakhlak, dan berkualitas dalam pembangunan kesejahteraan sosial.",
+  "mission": [
+    "Mengembangkan potensi generasi muda dan wawasan kebangsaan.",
+    "Memperkuat kerjasama antar pemuda dan masyarakat.",
+    "Berperan aktif dalam kegiatan sosial dan kemanusiaan."
+  ]
+}

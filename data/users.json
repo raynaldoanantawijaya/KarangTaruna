@@ -1,0 +1,14 @@
+[
+  {
+    "id": "u1",
+    "name": "Super Admin",
+    "username": "admin",
+    "password": "$2b$10$x4WItAGeYGYrPTHPolgGIuRLKUdnCFFw2H2m74jP8ud18.kIZYUS2",
+    "role": "superadmin",
+    "permissions": [
+      "all"
+    ],
+    "isBlocked": false,
+    "createdAt": "2026-02-19T23:15:00.000Z"
+  }
+]

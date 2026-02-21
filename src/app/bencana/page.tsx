@@ -706,7 +706,7 @@ export default function BencanaPage() {
                                             <span className="font-semibold text-sm">{getAqiInfo(precisionAqi.aqi).label}</span>
                                         </div>
                                         <p className="text-[10px] text-white/70 truncate">{precisionAqi.source}</p>
-                                        <p className="text-[10px] text-white/60 mt-0.5">Update: {precisionAqi.time}</p>
+                                        <p className="text-[10px] text-white/60 mt-0.5">Update: {new Date(precisionAqi.time.replace(" ", "T")).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB</p>
                                     </div>
                                 )}
                             </div>

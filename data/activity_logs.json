@@ -1,0 +1,72 @@
+[
+  {
+    "id": "1771572898316",
+    "userId": "TvcE6223KVYpDVghsIgPfjVBkHk2",
+    "userName": "anantawijaya212@gmail.com",
+    "action": "LOGIN",
+    "details": "Masuk via Firebase Auth",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+    "timestamp": "2026-02-20T07:34:58.316Z"
+  },
+  {
+    "id": "1771570845311",
+    "userId": "TvcE6223KVYpDVghsIgPfjVBkHk2",
+    "userName": "anantawijaya212@gmail.com",
+    "action": "LOGIN",
+    "details": "Masuk via Firebase Auth",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+    "timestamp": "2026-02-20T07:00:45.311Z"
+  },
+  {
+    "id": "1771570842073",
+    "userId": "TvcE6223KVYpDVghsIgPfjVBkHk2",
+    "userName": "anantawijaya212@gmail.com",
+    "action": "LOGIN",
+    "details": "Masuk via Firebase Auth",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+    "timestamp": "2026-02-20T07:00:42.073Z"
+  },
+  {
+    "id": "1771517681813",
+    "userId": "u1",
+    "userName": "admin",
+    "action": "DELETE_USER",
+    "details": "Deleted user: testuser",
+    "ip": "::1",
+    "userAgent": "node",
+    "timestamp": "2026-02-19T16:14:41.813Z"
+  },
+  {
+    "id": "1771517681763",
+    "userId": "u1",
+    "userName": "admin",
+    "action": "UPDATE_USER",
+    "details": "Updated user: testuser",
+    "ip": "::1",
+    "userAgent": "node",
+    "timestamp": "2026-02-19T16:14:41.763Z"
+  },
+  {
+    "id": "1771517680444",
+    "userId": "u1",
+    "userName": "admin",
+    "action": "CREATE_USER",
+    "details": "Created user: testuser (Test User)",
+    "ip": "::1",
+    "userAgent": "node",
+    "timestamp": "2026-02-19T16:14:40.444Z"
+  },
+  {
+    "id": "1771517679619",
+    "userId": "u1",
+    "userName": "admin",
+    "action": "LOGIN",
+    "details": "User logged in successfully",
+    "ip": "::1",
+    "userAgent": "node",
+    "timestamp": "2026-02-19T16:14:39.619Z"
+  }
+]
