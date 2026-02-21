@@ -110,7 +110,6 @@ import { Suspense } from "react";
 import LatestNewsSection from "@/components/home/LatestNewsSection";
 import { LatestNewsSkeleton } from "@/components/home/LatestNewsSkeleton";
 import { Metadata } from "next";
-import AntiScrape from "@/components/AntiScrape";
 
 // Internal news (static) does not block, but was part of the refactored section.
 // I need to add the Internal News section back since I removed it in the previous step's range.
@@ -174,7 +173,6 @@ export default async function Home() {
 
   return (
     <div className="w-full">
-      <AntiScrape />
       {/* Hero Section */}
       <div className="relative overflow-hidden transition-colors duration-500 min-h-[280px] sm:min-h-[350px] md:min-h-[450px] flex flex-col justify-start pt-8 sm:pt-10 md:pt-14 pb-8 sm:pb-12 md:pb-16">
         {/* Texture removed as requested for pure CSS styling */}
