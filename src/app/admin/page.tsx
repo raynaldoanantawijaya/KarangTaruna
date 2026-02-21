@@ -22,6 +22,7 @@ function AdminDashboardContent() {
     });
     const [loading, setLoading] = React.useState(true);
     const [viewType, setViewType] = React.useState<'weekly' | 'yearly'>('weekly');
+    const [activeTooltip, setActiveTooltip] = React.useState<number | null>(null);
 
     React.useEffect(() => {
         const fetchStats = async () => {
@@ -179,7 +180,11 @@ function AdminDashboardContent() {
                                         const isMax = data.visitors === maxVisitors && maxVisitors > 0;
 
                                         return (
-                                            <div key={index} className="flex flex-col items-center flex-1 h-full justify-end group relative">
+                                            <div
+                                                key={index}
+                                                className="flex flex-col items-center flex-1 h-full justify-end group relative"
+                                                onClick={() => setActiveTooltip(activeTooltip === index ? null : index)}
+                                            >
                                                 {/* Bar */}
                                                 <div
                                                     className={`w-full max-w-[50px] rounded-t sm:rounded-t-md transition-all duration-300 relative cursor-pointer shadow-sm hover:shadow-md hover:scale-105 transform origin-bottom
@@ -188,8 +193,8 @@ function AdminDashboardContent() {
                                                             : 'bg-gradient-to-t from-primary/60 to-primary/30 dark:from-primary/80 dark:to-primary/40 hover:from-primary hover:to-primary/80'}`}
                                                     style={{ height: `${heightPercentage}%` }}
                                                 >
-                                                    {/* Value Label (Visible on hover or if space permits) */}
-                                                    <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-[10px] sm:text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-20 shadow-lg pointer-events-none z-50">
+                                                    {/* Value Label (Visible on hover or if space permits/clicked) */}
+                                                    <div className={`absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-[10px] sm:text-xs py-1 px-2 rounded transition-opacity duration-200 whitespace-nowrap z-50 shadow-lg pointer-events-none ${activeTooltip === index ? 'opacity-100' : 'opacity-0 lg:group-hover:opacity-100'}`}>
                                                         <div className="font-bold text-center">{data.visitors}</div>
                                                         <div className="text-[9px] opacity-80 text-center">{data.label}</div>
                                                         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>

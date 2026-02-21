@@ -30,7 +30,11 @@ const defaultAppearance = {
         "Mengembangkan potensi generasi muda dan wawasan kebangsaan.",
         "Memperkuat kerjasama antar pemuda dan masyarakat.",
         "Berperan aktif dalam kegiatan sosial dan kemanusiaan."
-    ]
+    ],
+    contact: {
+        email: "astawiradipta@gmail.com",
+        phone: "+62 812-3456-7890"
+    }
 };
 
 export async function GET() {

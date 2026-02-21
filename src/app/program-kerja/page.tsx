@@ -2,7 +2,7 @@
 import { Calendar, ChevronRight, Check, Clock } from "lucide-react";
 import type { Metadata } from "next";
 
-export const revalidate = 60; // ISR: regenerate every 60 seconds
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     title: "Program Kerja Karang Taruna Asta Wira Dipta - Kegiatan Pemuda di Solo",
@@ -76,10 +76,22 @@ async function getVideoItems(limitCount: number = 4) {
         return [];
     }
 }
+async function getProkerData() {
+    try {
+        const docRef = adminDb.collection('settings').doc('proker');
+        const doc = await docRef.get();
+        if (doc.exists) return doc.data();
+        return { programs: [], agendas: [] };
+    } catch (error) {
+        console.error("Error reading proker config:", error);
+        return { programs: [], agendas: [] };
+    }
+}
 
 export default async function ProgramKerja() {
     const galleryItems = await getGalleryItems(12);
     const videoItems = await getVideoItems(4);
+    const proker = await getProkerData() as { programs: any[], agendas: any[] };
 
     return (
         <div className="w-full">
@@ -100,81 +112,46 @@ export default async function ProgramKerja() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full space-y-20">
 
                 {/* Featured Programs - Kegiatan Unggulan */}
-                <section className="bg-gray-50 dark:bg-gray-800/50 rounded-3xl p-8 md:p-12">
-                    <div className="text-center mb-12">
-                        <span className="text-primary font-semibold tracking-wider uppercase text-sm">Program & Kegiatan</span>
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">Kegiatan Unggulan</h2>
-                        <div className="w-24 h-1 bg-secondary mx-auto mt-4 rounded-full"></div>
-                        <p className="text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
-                            Berbagai inisiatif dan kegiatan nyata yang telah kami laksanakan untuk kesejahteraan sosial dan pemberdayaan masyarakat.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {/* Item 1 - Program Pelatihan */}
-                        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 dark:border-gray-700 flex flex-col h-full">
-                            <div className="relative h-56 overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 group-hover:from-black/40 transition-colors"></div>
-                                <img
-                                    alt="Program Pelatihan"
-                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                    src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop"
-                                />
-                                <div className="absolute top-4 left-4 z-20">
-                                    <span className="bg-secondary text-primary-dark text-xs font-bold px-3 py-1 rounded-full shadow-md">Pendidikan</span>
-                                </div>
-                            </div>
-                            <div className="p-6 flex flex-col flex-grow relative">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors mt-2">Program Pelatihan</h3>
-                                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
-                                    Pelatihan keterampilan kerja dan pengembangan potensi diri bagi pemuda untuk meningkatkan daya saing di dunia kerja.
-                                </p>
-                            </div>
+                {proker?.programs?.length > 0 && (
+                    <section className="bg-gray-50 dark:bg-gray-800/50 rounded-3xl p-8 md:p-12">
+                        <div className="text-center mb-12">
+                            <span className="text-primary font-semibold tracking-wider uppercase text-sm">Program & Kegiatan</span>
+                            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">Kegiatan Unggulan</h2>
+                            <div className="w-24 h-1 bg-secondary mx-auto mt-4 rounded-full"></div>
+                            <p className="text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
+                                Berbagai inisiatif dan kegiatan nyata yang telah kami laksanakan untuk kesejahteraan sosial dan pemberdayaan masyarakat.
+                            </p>
                         </div>
 
-                        {/* Item 2 - Sahur on the Road */}
-                        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 dark:border-gray-700 flex flex-col h-full">
-                            <div className="relative h-56 overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 group-hover:from-black/40 transition-colors"></div>
-                                <img
-                                    alt="Sahur on the Road"
-                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                    src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=800&auto=format&fit=crop"
-                                />
-                                <div className="absolute top-4 left-4 z-20">
-                                    <span className="bg-secondary text-primary-dark text-xs font-bold px-3 py-1 rounded-full shadow-md">Sosial</span>
+                        <div className={`grid gap-8 ${proker.programs.length === 1 ? 'grid-cols-1 max-w-lg mx-auto'
+                            : proker.programs.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto'
+                                : proker.programs.length === 4 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+                                    : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'
+                            }`}>
+                            {proker.programs.map((program: any, idx: number) => (
+                                <div key={idx} className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 dark:border-gray-700 flex flex-col h-full">
+                                    <div className="relative h-56 overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 group-hover:from-black/40 transition-colors"></div>
+                                        <img
+                                            alt={program.title}
+                                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                            src={program.imageUrl || "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop"}
+                                        />
+                                        <div className="absolute top-4 left-4 z-20">
+                                            <span className="bg-secondary text-primary-dark text-xs font-bold px-3 py-1 rounded-full shadow-md">{program.category}</span>
+                                        </div>
+                                    </div>
+                                    <div className="p-6 flex flex-col flex-grow relative">
+                                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors mt-2">{program.title}</h3>
+                                        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
+                                            {program.description}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="p-6 flex flex-col flex-grow relative">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors mt-2">Sahur on the Road</h3>
-                                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
-                                    Kegiatan sedekah makanan sahur bagi masyarakat yang membutuhkan selama bulan Ramadhan sebagai bentuk kepedulian sosial.
-                                </p>
-                            </div>
+                            ))}
                         </div>
-
-                        {/* Item 3 - Sosialisasi */}
-                        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 dark:border-gray-700 flex flex-col h-full">
-                            <div className="relative h-56 overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 group-hover:from-black/40 transition-colors"></div>
-                                <img
-                                    alt="Sosialisasi"
-                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                    src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=800&auto=format&fit=crop"
-                                />
-                                <div className="absolute top-4 left-4 z-20">
-                                    <span className="bg-secondary text-primary-dark text-xs font-bold px-3 py-1 rounded-full shadow-md">Edukasi</span>
-                                </div>
-                            </div>
-                            <div className="p-6 flex flex-col flex-grow relative">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors mt-2">Sosialisasi</h3>
-                                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
-                                    Kegiatan penyuluhan dan edukasi kepada masyarakat mengenai berbagai program pemerintah dan informasi penting lainnya.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                )}
 
                 {/* Main Programs */}
                 <section>
@@ -264,76 +241,60 @@ export default async function ProgramKerja() {
                 </section>
 
                 {/* Timeline Agenda */}
-                <section className="bg-gray-900 dark:bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 dark:border-gray-700">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
-                        <div>
-                            <span className="text-primary font-semibold tracking-wider uppercase text-sm">Jadwal Kegiatan</span>
-                            <h2 className="text-3xl font-bold text-white dark:text-gray-900 mt-1">Agenda Mendatang</h2>
-                        </div>
-                        <button className="hidden md:inline-flex items-center text-primary font-semibold hover:text-primary-dark mt-4 md:mt-0">
-                            Lihat Kalender Penuh <ChevronRight className="h-5 w-5 ml-1" />
-                        </button>
-                    </div>
-
-                    <div className="relative border-l-2 border-white dark:border-gray-900 ml-3 md:ml-6 space-y-12">
-                        {/* Event 1 */}
-                        <div className="relative pl-8 md:pl-12">
-                            <span className="absolute -left-[11px] top-0 bg-gray-900 dark:bg-white border-2 border-primary w-5 h-5 rounded-full"></span>
-                            <div className="flex flex-col sm:flex-row sm:items-center mb-2">
-                                <span className="text-sm font-bold text-primary mb-1 sm:mb-0 sm:mr-4 bg-primary/20 bg-opacity-20 px-3 py-1 rounded-full">10 Des 2023</span>
-                                <h3 className="text-xl font-bold text-white dark:text-gray-900">Rapat Pleno Akhir Tahun</h3>
+                {proker?.agendas?.length > 0 && (
+                    <section className="bg-gray-900 dark:bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 dark:border-gray-700">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+                            <div>
+                                <span className="text-primary font-semibold tracking-wider uppercase text-sm">Jadwal Kegiatan</span>
+                                <h2 className="text-3xl font-bold text-white dark:text-gray-900 mt-1">Agenda Mendatang</h2>
                             </div>
-                            <div className="flex items-center text-gray-400 dark:text-gray-500 text-sm mb-3">
-                                <Clock className="h-4 w-4 mr-1" /> 19:30 - Selesai
-                                <span className="mx-2">•</span>
-                                <span>Sekretariat RW 05</span>
-                            </div>
-                            <p className="text-gray-300 dark:text-gray-600">
-                                Evaluasi laporan pertanggungjawaban kegiatan tahun 2023 dan penyusunan rancangan anggaran belanja organisasi tahun 2024.
-                            </p>
+                            <button className="hidden md:inline-flex items-center text-primary font-semibold hover:text-primary-dark mt-4 md:mt-0">
+                                Lihat Kalender Penuh <ChevronRight className="h-5 w-5 ml-1" />
+                            </button>
                         </div>
 
-                        {/* Event 2 */}
-                        <div className="relative pl-8 md:pl-12">
-                            <span className="absolute -left-[11px] top-0 bg-gray-900 dark:bg-white border-2 border-secondary w-5 h-5 rounded-full"></span>
-                            <div className="flex flex-col sm:flex-row sm:items-center mb-2">
-                                <span className="text-sm font-bold text-yellow-500 dark:text-yellow-600 mb-1 sm:mb-0 sm:mr-4 bg-secondary/20 px-3 py-1 rounded-full">17 Des 2023</span>
-                                <h3 className="text-xl font-bold text-white dark:text-gray-900">Peringatan Hari Ibu</h3>
-                            </div>
-                            <div className="flex items-center text-gray-400 dark:text-gray-500 text-sm mb-3">
-                                <Clock className="h-4 w-4 mr-1" /> 08:00 - 12:00
-                                <span className="mx-2">•</span>
-                                <span>Lapangan Bulutangkis RW 05</span>
-                            </div>
-                            <p className="text-gray-300 dark:text-gray-600">
-                                Lomba memasak dan senam sehat bersama ibu-ibu PKK dan warga lingkungan.
-                            </p>
+                        <div className={`relative border-l-2 border-white dark:border-gray-900 ml-3 md:ml-6 space-y-12 ${proker.agendas.length > 3 ? 'text-sm' : ''}`}>
+                            {proker.agendas.map((agenda: any, idx: number) => {
+                                let markerBg = 'border-primary';
+                                let textBadge = 'text-primary bg-primary/20 bg-opacity-20';
+
+                                if (agenda.markerColor === 'secondary') {
+                                    markerBg = 'border-secondary';
+                                    textBadge = 'text-yellow-500 dark:text-yellow-600 bg-secondary/20';
+                                } else if (agenda.markerColor === 'gray') {
+                                    markerBg = 'border-gray-600 dark:border-gray-400';
+                                    textBadge = 'text-gray-400 dark:text-gray-600 bg-gray-800 dark:bg-gray-200';
+                                }
+
+                                return (
+                                    <div key={idx} className="relative pl-8 md:pl-12">
+                                        <span className={`absolute -left-[11px] top-0 bg-gray-900 dark:bg-white border-2 ${markerBg} w-5 h-5 rounded-full`}></span>
+                                        <div className="flex flex-col sm:flex-row sm:items-center mb-2">
+                                            <span className={`text-sm font-bold mb-1 sm:mb-0 sm:mr-4 px-3 py-1 rounded-full ${textBadge}`}>
+                                                {agenda.date}
+                                            </span>
+                                            <h3 className="text-xl font-bold text-white dark:text-gray-900">{agenda.title}</h3>
+                                        </div>
+                                        <div className="flex items-center text-gray-400 dark:text-gray-500 text-sm mb-3">
+                                            <Clock className="h-4 w-4 mr-1" /> {agenda.time}
+                                            <span className="mx-2">•</span>
+                                            <span>{agenda.location}</span>
+                                        </div>
+                                        <p className="text-gray-300 dark:text-gray-600">
+                                            {agenda.description}
+                                        </p>
+                                    </div>
+                                );
+                            })}
                         </div>
 
-                        {/* Event 3 */}
-                        <div className="relative pl-8 md:pl-12">
-                            <span className="absolute -left-[11px] top-0 bg-gray-900 dark:bg-white border-2 border-gray-600 dark:border-gray-400 w-5 h-5 rounded-full"></span>
-                            <div className="flex flex-col sm:flex-row sm:items-center mb-2">
-                                <span className="text-sm font-bold text-gray-400 dark:text-gray-600 mb-1 sm:mb-0 sm:mr-4 bg-gray-800 dark:bg-gray-200 px-3 py-1 rounded-full">31 Des 2023</span>
-                                <h3 className="text-xl font-bold text-white dark:text-gray-900">Malam Keakraban Tahun Baru</h3>
-                            </div>
-                            <div className="flex items-center text-gray-400 dark:text-gray-500 text-sm mb-3">
-                                <Clock className="h-4 w-4 mr-1" /> 20:00 - Selesai
-                                <span className="mx-2">•</span>
-                                <span>Area Parkir RT 02</span>
-                            </div>
-                            <p className="text-gray-300 dark:text-gray-600">
-                                Acara bakar jagung dan pentas seni pemuda untuk menyambut tahun baru 2024.
-                            </p>
+                        <div className="mt-8 text-center md:hidden">
+                            <button className="inline-flex items-center text-primary font-semibold hover:text-primary-dark">
+                                Lihat Kalender Penuh <ChevronRight className="h-5 w-5 ml-1" />
+                            </button>
                         </div>
-                    </div>
-
-                    <div className="mt-8 text-center md:hidden">
-                        <button className="inline-flex items-center text-primary font-semibold hover:text-primary-dark">
-                            Lihat Kalender Penuh <ChevronRight className="h-5 w-5 ml-1" />
-                        </button>
-                    </div>
-                </section>
+                    </section>
+                )}
 
                 {/* Documentation Gallery */}
                 <section>

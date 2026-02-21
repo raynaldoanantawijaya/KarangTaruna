@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-import { Save, Loader2, Layout, Target, Plus, Trash2 } from 'lucide-react';
+import { Save, Loader2, Layout, Target, Plus, Trash2, Mail } from 'lucide-react';
 import PermissionGate from '@/components/admin/PermissionGate';
 import { useToast } from '@/components/admin/ToastContext';
 
@@ -26,6 +26,10 @@ interface AppearanceData {
     };
     vision?: string;
     mission?: string[];
+    contact?: {
+        email: string;
+        phone: string;
+    };
 }
 
 export default function AppearancePage() {
@@ -64,12 +68,12 @@ function AppearancePageContent() {
         }
     };
 
-    const handleChange = (section: 'hero' | 'stats', field: string, value: string) => {
+    const handleChange = (section: 'hero' | 'stats' | 'contact', field: string, value: string) => {
         if (!data) return;
         setData({
             ...data,
             [section]: {
-                ...data[section],
+                ...(data[section] || {}),
                 [field]: value
             }
         });
@@ -296,14 +300,44 @@ function AppearancePageContent() {
                             </div>
                         </div>
 
+                        {/* Contact Information Section */}
+                        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 border border-gray-100 dark:border-gray-700">
+                            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                <Mail className="w-5 h-5 text-blue-600" /> Kontak & Informasi
+                            </h3>
+                            <p className="text-sm text-gray-500 mb-4">Informasi ini akan ditampilkan pada bagian Footer dan halaman Kontak.</p>
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                                    <input
+                                        type="email"
+                                        value={data.contact?.email || ''}
+                                        onChange={(e) => handleChange('contact', 'email', e.target.value)}
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary sm:text-sm dark:bg-gray-700 dark:text-white p-2 border"
+                                        placeholder="contoh: email@domain.com"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Telepon / WhatsApp</label>
+                                    <input
+                                        type="text"
+                                        value={data.contact?.phone || ''}
+                                        onChange={(e) => handleChange('contact', 'phone', e.target.value)}
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary sm:text-sm dark:bg-gray-700 dark:text-white p-2 border font-mono"
+                                        placeholder="contoh: +62 812-3456-7890"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="flex justify-end">
                             <button
                                 type="submit"
                                 disabled={isSaving}
-                                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors"
+                                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors"
                             >
-                                {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
-                                Save Changes
+                                {isSaving ? <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" /> : <Save className="w-5 h-5 flex-shrink-0" />}
+                                <span>Save Changes</span>
                             </button>
                         </div>
                     </form>

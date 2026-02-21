@@ -56,8 +56,8 @@ export default function AdminNavbar({ user }: { user?: { name: string; email: st
 
                         {/* Logo Left */}
                         <div className="flex-shrink-0 flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                                <Settings className="text-white w-5 h-5" />
+                            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
+                                <Settings className="text-white w-5 h-5 flex-shrink-0" />
                             </div>
                             <span className="font-bold text-lg sm:text-xl tracking-tight text-white dark:text-slate-900 hidden sm:block">Admin Astawiradipta</span>
                             <span className="font-bold text-lg tracking-tight text-white dark:text-slate-900 sm:hidden">Admin</span>
@@ -106,6 +106,9 @@ export default function AdminNavbar({ user }: { user?: { name: string; email: st
                         <Link className={`${isActive('/admin/appearance')} inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors h-16`} href="/admin/appearance">
                             Tampilan
                         </Link>
+                        <Link className={`${isActive('/admin/proker')} inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors h-16`} href="/admin/proker">
+                            Proker
+                        </Link>
                         <Link className={`${isActive('/admin/users')} inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors h-16`} href="/admin/users">
                             Users
                         </Link>
@@ -118,7 +121,7 @@ export default function AdminNavbar({ user }: { user?: { name: string; email: st
                                 await fetch('/api/auth/logout', { method: 'POST' });
                                 window.location.href = '/login';
                             }}
-                            className="p-1 sm:p-2 rounded-full text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-gray-700 dark:hover:bg-gray-100 focus:outline-none transition-colors"
+                            className="p-1 sm:p-2 mr-2 sm:mr-0 rounded-full text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-gray-700 dark:hover:bg-gray-100 focus:outline-none transition-colors"
                             title="Logout"
                         >
                             <span className="sr-only">Logout</span>
@@ -138,7 +141,7 @@ export default function AdminNavbar({ user }: { user?: { name: string; email: st
             </div>
 
             {/* Mobile Menu Panel */}
-            <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-96 border-b border-gray-700 dark:border-gray-200' : 'max-h-0'}`}>
+            <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-[600px] border-b border-gray-700 dark:border-gray-200' : 'max-h-0'}`}>
                 <div className="px-2 pt-2 pb-3 space-y-1 bg-gray-800 dark:bg-white shadow-inner sm:px-3">
                     <Link href="/admin" className={`${isMobileActive('/admin')} block px-3 py-2.5 rounded-md text-base font-medium`}>
                         Dashboard
@@ -158,6 +161,9 @@ export default function AdminNavbar({ user }: { user?: { name: string; email: st
                     <Link href="/admin/appearance" className={`${isMobileActive('/admin/appearance')} block px-3 py-2.5 rounded-md text-base font-medium`}>
                         Tampilan
                     </Link>
+                    <Link href="/admin/proker" className={`${isMobileActive('/admin/proker')} block px-3 py-2.5 rounded-md text-base font-medium`}>
+                        Proker
+                    </Link>
                     <Link href="/admin/users" className={`${isMobileActive('/admin/users')} block px-3 py-2.5 rounded-md text-base font-medium`}>
                         Users
                     </Link>
@@ -172,9 +178,9 @@ export default function AdminNavbar({ user }: { user?: { name: string; email: st
                                 alt="User Profile"
                             />
                         </div>
-                        <div className="ml-3">
-                            <div className="text-base font-bold leading-none text-white dark:text-gray-800">{displayName}</div>
-                            <div className="text-sm font-medium leading-none text-gray-400 mt-1">{user?.email || 'admin@example.com'}</div>
+                        <div className="ml-3 flex-1 min-w-0">
+                            <div className="text-base font-bold text-white dark:text-gray-800 truncate">{displayName}</div>
+                            <div className="text-sm font-medium text-gray-400 mt-1 truncate">{user?.email || 'admin@example.com'}</div>
                         </div>
                     </div>
                 </div>

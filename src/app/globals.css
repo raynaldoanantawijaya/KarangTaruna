@@ -765,3 +765,23 @@ html {
 .editor-content ol.list-preset-roman-paren ol ol {
   list-style-type: decimal !important;
 }
+
+/* ==================== ADMIN MOBILE GLOBAL SCALE ==================== */
+/* Scaled down UI specifically for Admin layout on mobile (Android/iOS) */
+@media screen and (max-width: 768px) {
+  .admin-mobile-scale {
+    transform: scale(0.8);
+    transform-origin: top left;
+    width: 125vw;
+    /* 100 / 0.8 */
+    min-height: 125vh;
+    /* 100 / 0.8 */
+    overflow-x: hidden;
+  }
+
+  /* Prevent horizontal scrolling on the body from the scaled element */
+  body:has(.admin-mobile-scale) {
+    overflow-x: hidden;
+    /* Optional: match background color so padded areas look continuous if needed */
+  }
+}

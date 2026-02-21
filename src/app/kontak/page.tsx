@@ -2,6 +2,9 @@
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import type { Metadata } from "next";
+import { adminDb } from '@/lib/firebase-admin';
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
     title: "Kontak Karang Taruna Asta Wira Dipta - Alamat & Sekretariat di Mojo, Solo",
@@ -20,7 +23,25 @@ export const metadata: Metadata = {
     },
 };
 
-export default function Kontak() {
+async function getAppearanceData() {
+    try {
+        const docRef = adminDb.collection('settings').doc('appearance');
+        const doc = await docRef.get();
+        if (doc.exists) return doc.data();
+        return null;
+    } catch (error) {
+        console.error("Error fetching appearance:", error);
+        return null;
+    }
+}
+
+export default async function Kontak() {
+    const appearance = await getAppearanceData();
+    const contact = appearance?.contact || {
+        email: "astawiradipta@gmail.com",
+        phone: "+62 87 888 2 666 99"
+    };
+
     return (
         <div className="w-full">
             {/* Header */}
@@ -68,7 +89,7 @@ export default function Kontak() {
                                     <div>
                                         <h3 className="font-bold text-gray-900 dark:text-white">Email</h3>
                                         <p className="text-gray-600 dark:text-gray-300 mt-1">
-                                            astawiradipta@gmail.com
+                                            {contact.email}
                                         </p>
                                     </div>
                                 </div>
@@ -80,7 +101,7 @@ export default function Kontak() {
                                     <div>
                                         <h3 className="font-bold text-gray-900 dark:text-white">Telepon</h3>
                                         <p className="text-gray-600 dark:text-gray-300 mt-1">
-                                            +62 87 888 2 666 99
+                                            {contact.phone}
                                         </p>
                                     </div>
                                 </div>

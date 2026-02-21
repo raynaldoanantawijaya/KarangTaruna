@@ -254,9 +254,9 @@ function MediaPageContent() {
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors"
+                                        className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors"
                                     >
-                                        {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Plus className="w-5 h-5 mr-1" /> Add Image</>}
+                                        {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin flex-shrink-0" /> : <><Plus className="w-5 h-5 flex-shrink-0" /> <span>Add Image</span></>}
                                     </button>
                                 </form>
                             </div>
@@ -309,7 +309,7 @@ function MediaPageContent() {
                                                             className="flex items-center justify-center w-8 h-8 rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
                                                             title="Hapus"
                                                         >
-                                                            <Trash2 className="h-4 w-4" />
+                                                            <Trash2 className="h-4 w-4 flex-shrink-0" />
                                                         </button>
                                                     </div>
                                                 </div>

@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { ArrowRight, Calendar, Users, MapPin, Award, CheckCircle } from "lucide-react";
+import { ArrowRight, Calendar, Users, MapPin, Award, CheckCircle, Clock } from "lucide-react";
 import NewsImage from "@/components/NewsImage";
 import { INTERNAL_ARTICLES } from "@/app/berita/read/page";
+import { Footer } from "@/components/Footer";
 
 import GalleryImage from '@/components/GalleryImage';
 import { adminDb } from '@/lib/firebase-admin';
@@ -105,6 +106,17 @@ async function getAppearanceData() {
   }
 }
 
+async function getProkerData() {
+  try {
+    const docRef = adminDb.collection('settings').doc('proker');
+    const doc = await docRef.get();
+    if (doc.exists) return doc.data();
+    return { programs: [], agendas: [] };
+  } catch (error) {
+    console.error("Error reading proker config:", error);
+    return { programs: [], agendas: [] };
+  }
+}
 
 import { Suspense } from "react";
 import LatestNewsSection from "@/components/home/LatestNewsSection";
@@ -119,7 +131,7 @@ import { Metadata } from "next";
 // Creating LatestNewsSection ONLY included the external news.
 // So I need to put the Internal News section BACK into page.tsx below the Suspense.
 
-export const revalidate = 60; // ISR: regenerate every 60 seconds
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "Karang Taruna Asta Wira Dipta - Kelurahan Mojo, Surakarta",
@@ -135,6 +147,7 @@ export default async function Home() {
   const galleryItems = await getGalleryItems(6); // Limit to 6 for homepage
   const videoItems = await getVideoItems(2); // Limit to 2 for homepage
   const appearance = await getAppearanceData(); // Fetch Appearance Data
+  const proker = await getProkerData() as { programs: any[], agendas: any[] };
 
   // Default values if data missing
   const hero = appearance?.hero || {
@@ -357,91 +370,114 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Featured Programs */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-gray-50 dark:bg-transparent rounded-3xl mb-12">
-          <div className="text-center mb-16">
-            <span className="text-primary font-semibold tracking-wider uppercase text-sm">Program & Kegiatan</span>
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">Kegiatan Unggulan</h2>
-            <div className="w-24 h-1 bg-secondary mx-auto mt-4 rounded-full"></div>
-            <p className="text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
-              Berbagai inisiatif dan kegiatan nyata yang telah kami laksanakan untuk kesejahteraan sosial dan pemberdayaan masyarakat.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Item 1 - Program Pelatihan */}
-            <div className="bg-card-light dark:bg-card-dark rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 dark:border-gray-700 flex flex-col h-full">
-              <div className="relative h-56 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 group-hover:from-black/40 transition-colors"></div>
-                <img
-                  alt="Program Pelatihan"
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                  src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop"
-                />
-                <div className="absolute top-4 left-4 z-20">
-                  <span className="bg-secondary text-primary-dark text-xs font-bold px-3 py-1 rounded-full shadow-md">Pendidikan</span>
-                </div>
-              </div>
-              <div className="p-6 flex flex-col flex-grow relative">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors mt-2">Program Pelatihan</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
-                  Pelatihan keterampilan kerja dan pengembangan potensi diri bagi pemuda untuk meningkatkan daya saing di dunia kerja.
-                </p>
-              </div>
+        {/* Featured Programs & Agenda Mapped Dynamic Component */}
+        {proker?.programs?.length > 0 && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 bg-gray-50 dark:bg-gray-800/50 rounded-3xl mb-12">
+            <div className="text-center mb-12">
+              <span className="text-primary font-semibold tracking-wider uppercase text-sm">Program & Kegiatan</span>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">Kegiatan Unggulan</h2>
+              <div className="w-24 h-1 bg-secondary mx-auto mt-4 rounded-full"></div>
+              <p className="text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
+                Berbagai inisiatif dan kegiatan nyata yang telah kami laksanakan untuk kesejahteraan sosial dan pemberdayaan masyarakat.
+              </p>
             </div>
 
-            {/* Item 2 - Sahur on the Road */}
-            <div className="bg-card-light dark:bg-card-dark rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 dark:border-gray-700 flex flex-col h-full">
-              <div className="relative h-56 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 group-hover:from-black/40 transition-colors"></div>
-                <img
-                  alt="Sahur on the Road"
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                  src="https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=800&auto=format&fit=crop"
-                />
-                <div className="absolute top-4 left-4 z-20">
-                  <span className="bg-secondary text-primary-dark text-xs font-bold px-3 py-1 rounded-full shadow-md">Sosial</span>
+            <div className={`grid gap-8 ${proker.programs.length === 1 ? 'grid-cols-1 max-w-lg mx-auto'
+              : proker.programs.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto'
+                : proker.programs.length === 4 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+                  : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'
+              }`}>
+              {proker.programs.map((program: any, idx: number) => (
+                <div key={idx} className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 dark:border-gray-700 flex flex-col h-full">
+                  <div className="relative h-56 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 group-hover:from-black/40 transition-colors"></div>
+                    <img
+                      alt={program.title}
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                      src={program.imageUrl || "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop"}
+                    />
+                    <div className="absolute top-4 left-4 z-20">
+                      <span className="bg-secondary text-primary-dark text-xs font-bold px-3 py-1 rounded-full shadow-md">{program.category}</span>
+                    </div>
+                  </div>
+                  <div className="p-6 flex flex-col flex-grow relative">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors mt-2">{program.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
+                      {program.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="p-6 flex flex-col flex-grow relative">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors mt-2">Sahur on the Road</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
-                  Kegiatan sedekah makanan sahur bagi masyarakat yang membutuhkan selama bulan Ramadhan sebagai bentuk kepedulian sosial.
-                </p>
-              </div>
+              ))}
             </div>
 
-            {/* Item 3 - Sosialisasi */}
-            <div className="bg-card-light dark:bg-card-dark rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 dark:border-gray-700 flex flex-col h-full">
-              <div className="relative h-56 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 group-hover:from-black/40 transition-colors"></div>
-                <img
-                  alt="Sosialisasi"
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                  src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=800&auto=format&fit=crop"
-                />
-                <div className="absolute top-4 left-4 z-20">
-                  <span className="bg-secondary text-primary-dark text-xs font-bold px-3 py-1 rounded-full shadow-md">Edukasi</span>
+            <div className="text-center mt-12">
+              <Link
+                href="/program-kerja"
+                className="inline-block border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold py-3 px-8 rounded-full transition-all duration-300"
+              >
+                Lihat Semua Program
+              </Link>
+            </div>
+          </section>
+        )}
+
+        {/* Agenda Mendatang Dynamic Section */}
+        {proker?.agendas?.length > 0 && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+            <div className="bg-gray-900 dark:bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 dark:border-gray-700">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+                <div>
+                  <span className="text-primary font-semibold tracking-wider uppercase text-sm">Jadwal Kegiatan</span>
+                  <h2 className="text-3xl font-bold text-white dark:text-gray-900 mt-1">Agenda Mendatang</h2>
                 </div>
+                <button className="hidden md:inline-flex items-center text-primary font-semibold hover:text-primary-dark mt-4 md:mt-0">
+                  Lihat Kalender Penuh <ArrowRight className="h-5 w-5 ml-1" />
+                </button>
               </div>
-              <div className="p-6 flex flex-col flex-grow relative">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors mt-2">Sosialisasi</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
-                  Kegiatan penyuluhan dan edukasi kepada masyarakat mengenai berbagai program pemerintah dan informasi penting lainnya.
-                </p>
+
+              <div className={`relative border-l-2 border-white dark:border-gray-900 ml-3 md:ml-6 space-y-12 ${proker.agendas.length > 3 ? 'text-sm' : ''}`}>
+                {proker.agendas.map((agenda: any, idx: number) => {
+                  let markerBg = 'border-primary';
+                  let textBadge = 'text-primary bg-primary/20 bg-opacity-20';
+
+                  if (agenda.markerColor === 'secondary') {
+                    markerBg = 'border-secondary';
+                    textBadge = 'text-yellow-500 dark:text-yellow-600 bg-secondary/20';
+                  } else if (agenda.markerColor === 'gray') {
+                    markerBg = 'border-gray-600 dark:border-gray-400';
+                    textBadge = 'text-gray-400 dark:text-gray-600 bg-gray-800 dark:bg-gray-200';
+                  }
+
+                  return (
+                    <div key={idx} className={`relative pl-8 md:pl-12 ${proker.agendas.length > 5 ? 'transform scale-95 origin-left' : ''}`}>
+                      <span className={`absolute -left-[11px] top-0 bg-gray-900 dark:bg-white border-2 ${markerBg} w-5 h-5 rounded-full`}></span>
+                      <div className="flex flex-col sm:flex-row sm:items-center mb-2 mt-[-2px]">
+                        <span className={`text-sm font-bold mb-1 sm:mb-0 sm:mr-4 px-3 py-1 rounded-full ${textBadge}`}>
+                          {agenda.date}
+                        </span>
+                        <h3 className={`${proker.agendas.length > 4 ? 'text-lg' : 'text-xl'} font-bold text-white dark:text-gray-900`}>{agenda.title}</h3>
+                      </div>
+                      <div className="flex items-center text-gray-400 dark:text-gray-500 text-sm mb-3">
+                        <Clock className="h-4 w-4 mr-1" /> {agenda.time}
+                        <span className="mx-2">•</span>
+                        <span>{agenda.location}</span>
+                      </div>
+                      <p className="text-gray-300 dark:text-gray-600 max-w-3xl">
+                        {agenda.description}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-8 text-center md:hidden">
+                <button className="inline-flex items-center text-primary font-semibold hover:text-primary-dark">
+                  Lihat Kalender Penuh <ArrowRight className="h-5 w-5 ml-1" />
+                </button>
               </div>
             </div>
-          </div>
-
-          <div className="text-center mt-12">
-            <Link
-              href="/program-kerja"
-              className="inline-block border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold py-3 px-8 rounded-full transition-all duration-300"
-            >
-              Lihat Semua Program
-            </Link>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Gallery Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -552,6 +588,8 @@ export default async function Home() {
           </div>
         </section>
       </main>
+
+      <Footer contact={appearance?.contact} />
     </div>
   );
 }

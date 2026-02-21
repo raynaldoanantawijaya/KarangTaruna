@@ -3,7 +3,14 @@
 import Link from "next/link"
 import { Instagram, Youtube, MapPin, Mail, Phone } from "lucide-react"
 
-export function Footer() {
+interface FooterProps {
+    contact?: {
+        email?: string;
+        phone?: string;
+    };
+}
+
+export function Footer({ contact }: FooterProps = {}) {
     return (
         <footer className="bg-gray-900 dark:bg-gray-950 text-white py-12 border-t-4 border-primary transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -61,11 +68,11 @@ export function Footer() {
                             </li>
                             <li className="flex items-center">
                                 <Mail className="h-5 w-5 mr-3 text-primary flex-shrink-0" />
-                                <span>astawiradipta@gmail.com</span>
+                                <span>{contact?.email || 'astawiradipta@gmail.com'}</span>
                             </li>
                             <li className="flex items-center">
                                 <Phone className="h-5 w-5 mr-3 text-primary flex-shrink-0" />
-                                <span>+62 87 888 2 666 99</span>
+                                <span>{contact?.phone || '+62 87 888 2 666 99'}</span>
                             </li>
                         </ul>
                     </div>

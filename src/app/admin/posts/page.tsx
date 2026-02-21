@@ -103,9 +103,9 @@ function PostsPageContent() {
                             <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">Manage, edit, and publish your website content.</p>
                         </div>
                         <div className="mt-4 flex md:mt-0 md:ml-4">
-                            <Link href="/admin/editor" className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-95">
-                                <Plus className="w-5 h-5 mr-2" />
-                                Add New Post
+                            <Link href="/admin/editor" className="inline-flex items-center justify-center gap-2 px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-95">
+                                <Plus className="w-5 h-5 flex-shrink-0" />
+                                <span>Add New Post</span>
                             </Link>
                         </div>
                     </div>
@@ -192,15 +192,15 @@ function PostsPageContent() {
                                                             href={`/berita/read?slug=${post.slug}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="text-slate-400 hover:text-primary transition-colors"
+                                                            className="text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors w-8 h-8 flex items-center justify-center rounded-full"
                                                             title="Preview"
                                                         >
                                                             <Eye className="w-4 h-4" />
                                                         </a>
-                                                        <Link href={`/admin/editor?id=${post.id}`} className="text-slate-400 hover:text-primary transition-colors" title="Edit">
+                                                        <Link href={`/admin/editor?id=${post.id}`} className="text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 transition-colors w-8 h-8 flex items-center justify-center rounded-full" title="Edit">
                                                             <Edit className="w-4 h-4" />
                                                         </Link>
-                                                        <button onClick={() => handleDeleteClick(post.id)} className="text-slate-400 hover:text-red-500 transition-colors" title="Hapus">
+                                                        <button onClick={() => handleDeleteClick(post.id)} className="text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors w-8 h-8 flex items-center justify-center rounded-full" title="Hapus">
                                                             <Trash2 className="w-4 h-4" />
                                                         </button>
                                                     </div>
