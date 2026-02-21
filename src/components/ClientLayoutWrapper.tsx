@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -8,6 +8,7 @@ import PersistentHeaderBg from "@/components/PersistentHeaderBg";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import VisitorTracker from "@/components/VisitorTracker";
+import NavigationProgress from "@/components/NavigationProgress";
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -17,6 +18,9 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
     return (
         <>
+            <Suspense fallback={null}>
+                <NavigationProgress />
+            </Suspense>
             <VisitorTracker />
             {!shouldHideLayout &&
                 <>
