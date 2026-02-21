@@ -4,7 +4,7 @@ import { ContactForm } from "@/components/ContactForm";
 import type { Metadata } from "next";
 import { adminDb } from '@/lib/firebase-admin';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     title: "Kontak Karang Taruna Asta Wira Dipta - Alamat & Sekretariat di Mojo, Solo",
@@ -39,7 +39,9 @@ export default async function Kontak() {
     const appearance = await getAppearanceData();
     const contact = appearance?.contact || {
         email: "astawiradipta@gmail.com",
-        phone: "+62 87 888 2 666 99"
+        phone: "+62 87 888 2 666 99",
+        address: "Jl. Sungai Serang I No.313, Mojo\nKec. Ps. Kliwon, Kota Surakarta\nJawa Tengah 57191",
+        operatingHours: "Senin - Minggu: 09.00 - 21.00 WIB"
     };
 
     return (
@@ -75,9 +77,11 @@ export default async function Kontak() {
                                     <div>
                                         <h3 className="font-bold text-gray-900 dark:text-white">Alamat</h3>
                                         <p className="text-gray-600 dark:text-gray-300 mt-1">
-                                            Jl. Sungai Serang I No.313, Mojo<br />
-                                            Kec. Ps. Kliwon, Kota Surakarta<br />
-                                            Jawa Tengah 57191
+                                            {contact.address
+                                                ? contact.address.split('\n').map((line: string, i: number) => (
+                                                    <span key={i}>{line}{i < contact.address.split('\n').length - 1 && <br />}</span>
+                                                ))
+                                                : <><span>Jl. Sungai Serang I No.313, Mojo</span><br /><span>Kec. Ps. Kliwon, Kota Surakarta</span><br /><span>Jawa Tengah 57191</span></>}
                                         </p>
                                     </div>
                                 </div>
@@ -113,7 +117,7 @@ export default async function Kontak() {
                                     <div>
                                         <h3 className="font-bold text-gray-900 dark:text-white">Jam Operasional</h3>
                                         <p className="text-gray-600 dark:text-gray-300 mt-1">
-                                            Senin - Minggu: 09.00 - 21.00 WIB
+                                            {contact.operatingHours || 'Senin - Minggu: 09.00 - 21.00 WIB'}
                                         </p>
                                     </div>
                                 </div>

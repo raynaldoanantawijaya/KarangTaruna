@@ -29,6 +29,8 @@ interface AppearanceData {
     contact?: {
         email: string;
         phone: string;
+        address?: string;
+        operatingHours?: string;
     };
 }
 
@@ -325,6 +327,27 @@ function AppearancePageContent() {
                                         onChange={(e) => handleChange('contact', 'phone', e.target.value)}
                                         className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary sm:text-sm dark:bg-gray-700 dark:text-white p-2 border font-mono"
                                         placeholder="contoh: +62 812-3456-7890"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Alamat Sekretariat</label>
+                                    <textarea
+                                        rows={3}
+                                        value={data.contact?.address || ''}
+                                        onChange={(e) => handleChange('contact', 'address', e.target.value)}
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary sm:text-sm dark:bg-gray-700 dark:text-white p-2 border"
+                                        placeholder="contoh: Jl. Sungai Serang I No.313, Mojo..."
+                                    />
+                                    <p className="text-xs text-gray-400 mt-1">Gunakan baris baru untuk pemisah baris di halaman kontak.</p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Jam Operasional</label>
+                                    <input
+                                        type="text"
+                                        value={data.contact?.operatingHours || ''}
+                                        onChange={(e) => handleChange('contact', 'operatingHours', e.target.value)}
+                                        className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring-primary sm:text-sm dark:bg-gray-700 dark:text-white p-2 border"
+                                        placeholder="contoh: Senin - Minggu: 09.00 - 21.00 WIB"
                                     />
                                 </div>
                             </div>

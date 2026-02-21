@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
+import FooterServer from "@/components/FooterServer";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -259,7 +260,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ClientLayoutWrapper>
+          <ClientLayoutWrapper footer={<FooterServer />}>
             {children}
           </ClientLayoutWrapper>
         </ThemeProvider>

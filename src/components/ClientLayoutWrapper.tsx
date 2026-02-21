@@ -10,7 +10,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import VisitorTracker from "@/components/VisitorTracker";
 import NavigationProgress from "@/components/NavigationProgress";
 
-export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
+export default function ClientLayoutWrapper({ children, footer }: { children: React.ReactNode; footer?: React.ReactNode }) {
     const pathname = usePathname();
     const isAdmin = pathname.startsWith("/admin");
     const isAuthPage = pathname === "/login";
@@ -32,7 +32,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
                 {!shouldHideLayout && <PersistentHeaderBg />}
                 {children}
             </div>
-            {!shouldHideLayout && <Footer />}
+            {!shouldHideLayout && (footer || null)}
 
             {/* Floating Theme Toggle for Admin/Auth Pages */}
             {shouldHideLayout && (

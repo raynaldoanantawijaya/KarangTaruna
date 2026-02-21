@@ -7,6 +7,7 @@ interface FooterProps {
     contact?: {
         email?: string;
         phone?: string;
+        address?: string;
     };
 }
 
@@ -64,7 +65,7 @@ export function Footer({ contact }: FooterProps = {}) {
                         <ul className="space-y-4 text-sm text-gray-400">
                             <li className="flex items-start">
                                 <MapPin className="h-5 w-5 mr-3 text-primary flex-shrink-0 mt-0.5" />
-                                <span className="leading-relaxed">Jl. Sungai Serang I No.313, Mojo, Kec. Ps. Kliwon, Kota Surakarta, Jawa Tengah 57191</span>
+                                <span className="leading-relaxed">{contact?.address || 'Jl. Sungai Serang I No.313, Mojo, Kec. Ps. Kliwon, Kota Surakarta, Jawa Tengah 57191'}</span>
                             </li>
                             <li className="flex items-center">
                                 <Mail className="h-5 w-5 mr-3 text-primary flex-shrink-0" />
