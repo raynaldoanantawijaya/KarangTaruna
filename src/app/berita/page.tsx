@@ -5,7 +5,7 @@ import NewsImage from "@/components/NewsImage";
 import Pagination from "@/components/Pagination";
 import { adminDb } from '@/lib/firebase-admin';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: regenerate every 60 seconds
 
 // Define Types for API Response
 interface NewsItem {

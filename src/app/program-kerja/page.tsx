@@ -2,7 +2,7 @@
 import { Calendar, ChevronRight, Check, Clock } from "lucide-react";
 import type { Metadata } from "next";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: regenerate every 60 seconds
 
 export const metadata: Metadata = {
     title: "Program Kerja Karang Taruna Asta Wira Dipta - Kegiatan Pemuda di Solo",

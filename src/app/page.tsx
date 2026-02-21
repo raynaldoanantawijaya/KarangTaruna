@@ -120,7 +120,7 @@ import AntiScrape from "@/components/AntiScrape";
 // Creating LatestNewsSection ONLY included the external news.
 // So I need to put the Internal News section BACK into page.tsx below the Suspense.
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: regenerate every 60 seconds
 
 export const metadata: Metadata = {
   title: "Karang Taruna Asta Wira Dipta - Kelurahan Mojo, Surakarta",
