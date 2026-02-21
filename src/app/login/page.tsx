@@ -16,6 +16,7 @@ function LoginForm() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [isMaxSessions, setIsMaxSessions] = useState(false);
 
     useEffect(() => {
         const errParam = searchParams.get('error');
@@ -28,6 +29,7 @@ function LoginForm() {
         e.preventDefault();
         setIsLoading(true);
         setError('');
+        setIsMaxSessions(false);
 
         try {
             // --- 1. Require GPS Location ---
@@ -118,12 +120,18 @@ function LoginForm() {
                 }
                 router.push('/admin');
                 router.refresh();
+            } else if (data.code === 'MAX_SESSIONS_REACHED') {
+                throw new Error('__MAX_SESSIONS__:' + data.error);
             } else {
                 throw new Error(data.error || 'Login failed');
             }
         } catch (err: any) {
             console.error('Login error:', err);
-            if (err.code === 'auth/invalid-credential') {
+            const msg: string = err.message || '';
+            if (msg.startsWith('__MAX_SESSIONS__:')) {
+                setIsMaxSessions(true);
+                setError(msg.replace('__MAX_SESSIONS__:', ''));
+            } else if (err.code === 'auth/invalid-credential') {
                 setError('Email atau password salah.');
             } else if (err.code === 'auth/too-many-requests') {
                 setError('Terlalu banyak percobaan gagal. Silakan coba lagi nanti.');
@@ -158,10 +166,20 @@ function LoginForm() {
                 <div className="p-8">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {error && (
-                            <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm flex items-start gap-2 animate-in slide-in-from-top-2">
-                                <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                                <span>{error}</span>
-                            </div>
+                            isMaxSessions ? (
+                                <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 p-4 rounded-xl text-sm animate-in slide-in-from-top-2">
+                                    <div className="flex items-start gap-2 font-semibold mb-1">
+                                        <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-600" />
+                                        <span>Batas Perangkat Tercapai</span>
+                                    </div>
+                                    <p className="ml-7 leading-relaxed">{error}</p>
+                                </div>
+                            ) : (
+                                <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm flex items-start gap-2 animate-in slide-in-from-top-2">
+                                    <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                                    <span>{error}</span>
+                                </div>
+                            )
                         )}
 
                         <div className="space-y-1.5 pt-2">

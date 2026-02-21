@@ -112,6 +112,9 @@ export default function AdminNavbar({ user }: { user?: { name: string; email: st
                         <Link className={`${isActive('/admin/users')} inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors h-16`} href="/admin/users">
                             Users
                         </Link>
+                        <Link className={`${isActive('/admin/sessions')} inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors h-16`} href="/admin/sessions">
+                            Sesi Aktif
+                        </Link>
                     </div>
 
                     {/* Right Side Actions */}
