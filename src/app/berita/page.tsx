@@ -46,8 +46,15 @@ async function getNews(query?: string, category?: string): Promise<NewsItem[]> {
     }
 
     try {
-        // Revalidate every hour
-        const res = await fetch(url, { next: { revalidate: 3600 } });
+        // Timeout after 5 seconds to prevent slow external API from blocking page
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+
+        const res = await fetch(url, {
+            next: { revalidate: 3600 },
+            signal: controller.signal
+        });
+        clearTimeout(timeout);
 
         if (!res.ok) {
             console.error("Failed to fetch news:", res.status, res.statusText);
@@ -67,8 +74,12 @@ async function getNews(query?: string, category?: string): Promise<NewsItem[]> {
         }
 
         return data;
-    } catch (error) {
-        console.error("Error fetching news:", error);
+    } catch (error: any) {
+        if (error.name === 'AbortError') {
+            console.warn('External news API timed out after 5s');
+        } else {
+            console.error("Error fetching news:", error);
+        }
         return [];
     }
 }
@@ -118,11 +129,7 @@ export default async function Berita({
     const endIndex = startIndex + itemsPerPage;
     const displayedNews = allNews.slice(startIndex, endIndex);
 
-    // Debugging logs
-    console.log(`[BeritaPage] Current Page: ${currentPage}, Displaying ${displayedNews.length} items, Admin Posts: ${adminPosts.length}`);
-    if (displayedNews.length > 0) {
-        console.log(`[BeritaPage] First Item: ${displayedNews[0].title}`);
-    }
+
 
     return (
         <div className="w-full">
