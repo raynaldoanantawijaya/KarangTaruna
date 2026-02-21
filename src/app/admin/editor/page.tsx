@@ -491,6 +491,17 @@ function PostEditorContent() {
             return; // Skip default execCommand
         }
 
+        // Enable CSS inline styles instead of deprecated HTML tags for fonts and colors
+        if (['fontName', 'fontSize', 'foreColor', 'hiliteColor'].includes(command)) {
+            try {
+                document.execCommand('styleWithCSS', false, 'true');
+            } catch (e) {
+                try {
+                    document.execCommand('useCSS', false, 'false');
+                } catch (e2) { }
+            }
+        }
+
         document.execCommand(command, false, value);
 
         // Special handling for Numbering: Remove multilevel class if reapplying simple numbering
