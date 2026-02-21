@@ -21,15 +21,63 @@ export default function LoginPage() {
         setError('');
 
         try {
-            // 1. Sign in with Firebase Client SDK
+            // --- 1. Require GPS Location ---
+            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    reject(new Error('Browser Anda tidak mendukung GPS/Location.'));
+                } else {
+                    navigator.geolocation.getCurrentPosition(resolve, (err) => {
+                        reject(new Error('Akses ditolak: Anda wajib memberikan izin GPS/Lokasi untuk login ke sistem Admin.'));
+                    }, { enableHighAccuracy: true, timeout: 10000 });
+                }
+            }).catch(err => {
+                throw err; // Re-throw to be caught by the outer catch block
+            });
+
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            let address = `${lat}, ${lon}`;
+
+            // Try reverse geocoding (best effort, don't block login if it fails)
+            try {
+                const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
+                if (geoRes.ok) {
+                    const geoData = await geoRes.json();
+                    address = geoData.display_name || address;
+                }
+            } catch (e) {
+                console.warn("Reverse geocoding failed", e);
+            }
+
+            // --- 2. Get Advanced Device Info (Client Hints) ---
+            let clientDevice = null;
+            const nav = navigator as any;
+            if (nav.userAgentData && nav.userAgentData.getHighEntropyValues) {
+                try {
+                    const hints = await nav.userAgentData.getHighEntropyValues(["model", "platform", "architecture"]);
+                    clientDevice = {
+                        brand: nav.userAgentData.brands?.[0]?.brand,
+                        model: hints.model,
+                        os: hints.platform
+                    };
+                } catch (e) {
+                    console.warn("Client Hints failed", e);
+                }
+            }
+
+            // --- 3. Sign in with Firebase Client SDK ---
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const idToken = await userCredential.user.getIdToken();
 
-            // 2. Send ID token to backend to create session cookie
+            // --- 4. Send ID token to backend to create session cookie & log activity ---
             const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ idToken }),
+                body: JSON.stringify({
+                    idToken,
+                    location: { latitude: lat, longitude: lon, address },
+                    clientDevice
+                }),
             });
 
             const data = await res.json();

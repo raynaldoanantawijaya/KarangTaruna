@@ -7,7 +7,7 @@ import { signSession } from '@/lib/session';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { idToken } = body;
+        const { idToken, location, clientDevice } = body;
 
         if (!idToken || typeof idToken !== 'string') {
             return NextResponse.json({ error: 'Valid ID Token string required' }, { status: 400 });
@@ -46,7 +46,9 @@ export async function POST(request: Request) {
             username: decodedToken.email || 'Admin',
             role,
             permissions,
-            name: userName
+            name: userName,
+            location: location || null,
+            clientDevice: clientDevice || null
         };
 
         const cookieStore = await cookies();
@@ -60,7 +62,7 @@ export async function POST(request: Request) {
         });
 
         // Log login activity
-        await logActivity(uid, sessionData.username, 'LOGIN', 'Masuk via Firebase Auth', request);
+        await logActivity(uid, sessionData.username, 'LOGIN', 'Masuk via Firebase Auth', request, { location, clientDevice });
 
         return NextResponse.json({ success: true, user: sessionData });
 

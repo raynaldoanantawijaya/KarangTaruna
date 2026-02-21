@@ -1,6 +1,7 @@
 import { adminDb } from '@/lib/firebase-admin';
 import { cookies } from 'next/headers';
 import { verifySession } from '@/lib/session';
+import { UAParser } from 'ua-parser-js';
 
 const LOGS_COLLECTION = 'activity_logs';
 
@@ -16,16 +17,16 @@ export async function checkAuth(request: Request) {
     return verifySession(session.value);
 }
 
-function getDeviceType(userAgent: string): string {
-    const ua = userAgent.toLowerCase();
-    if (ua.includes('windows phone')) return 'Windows Phone';
-    if (ua.includes('windows')) return 'Windows PC';
-    if (ua.includes('iphone')) return 'Apple iPhone';
-    if (ua.includes('ipad')) return 'Apple iPad';
-    if (ua.includes('macintosh') || ua.includes('mac os')) return 'Apple Mac';
-    if (ua.includes('android')) return 'Android Device';
-    if (ua.includes('linux')) return 'Linux PC';
-    return 'Unknown Device';
+interface LocationData {
+    latitude: number;
+    longitude: number;
+    address?: string;
+}
+
+interface DeviceInfo {
+    brand?: string;
+    model?: string;
+    os?: string;
 }
 
 /**
@@ -36,7 +37,8 @@ export async function logActivity(
     username: string,
     action: string,
     details: string,
-    request: Request
+    request: Request,
+    extraData?: { location?: LocationData | null, clientDevice?: DeviceInfo | null }
 ) {
     try {
         let ip = 'unknown';
@@ -53,18 +55,69 @@ export async function logActivity(
         }
 
         const userAgent = request.headers.get('user-agent') || 'unknown';
-        const device = getDeviceType(userAgent);
 
-        await adminDb.collection(LOGS_COLLECTION).add({
+        let loc = extraData?.location;
+        let cDevice = extraData?.clientDevice;
+
+        if (!loc || !cDevice) {
+            const session = await checkAuth(request);
+            if (session) {
+                if (!loc) loc = session.location;
+                if (!cDevice) cDevice = session.clientDevice;
+            }
+        }
+
+        // Advanced Device Parsing
+        const parser = new UAParser(userAgent);
+        const deviceResult = parser.getDevice();
+        const osResult = parser.getOS();
+        const browserResult = parser.getBrowser();
+
+        let deviceString = 'Unknown Device';
+
+        // 1. Prioritize High-Entropy Client Hints if provided by frontend
+        if (cDevice?.model || cDevice?.brand) {
+            const brand = cDevice.brand || '';
+            const model = cDevice.model || '';
+            const os = cDevice.os || osResult.name || '';
+            deviceString = `${brand} ${model} (${os})`.trim();
+        }
+        // 2. Fallback to UAParser (works well for older Androids, iOS, and Macs)
+        else if (deviceResult.vendor || deviceResult.model) {
+            const vendor = deviceResult.vendor || '';
+            const model = deviceResult.model || '';
+            const os = osResult.name ? ` (${osResult.name})` : '';
+            deviceString = `${vendor} ${model}${os}`.trim();
+        }
+        // 3. Fallback for Desktop/PC (where model is typically blank but OS is known)
+        else if (osResult.name) {
+            const browser = browserResult.name ? ` via ${browserResult.name}` : '';
+            deviceString = `${osResult.name} PC${browser}`;
+        }
+
+        // Clean up string
+        deviceString = deviceString.replace(/\s+/g, ' ').trim() || 'Unknown Device';
+
+        // If it's still missing essential info like 'Windows PC', make it prettier
+        if (deviceString === 'Windows PC') deviceString = 'Windows PC';
+        if (deviceString.includes('Mac OS')) deviceString = deviceString.replace('Mac OS', 'Apple Mac');
+
+        const logEntry: any = {
             userId,
             userName: username,
             action,
             details,
             ip,
             userAgent,
-            device,
+            device: deviceString,
             timestamp: new Date().toISOString()
-        });
+        };
+
+        if (loc) {
+            logEntry.location = loc;
+        }
+
+        await adminDb.collection(LOGS_COLLECTION).add(logEntry);
     } catch (error) {
         console.error('Failed to log activity:', error);
     }

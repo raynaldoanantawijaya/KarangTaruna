@@ -29,6 +29,11 @@ interface ActivityLog {
     ip: string;
     userAgent: string;
     device?: string;
+    location?: {
+        latitude: number;
+        longitude: number;
+        address?: string;
+    };
 }
 
 const PERMISSIONS_LIST = [
@@ -318,13 +323,14 @@ function UsersPageContent() {
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aktivitas</th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Detail</th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Perangkat</th>
+                                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Lokasi GPS</th>
                                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">IP Address</th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                             {logs.length === 0 ? (
                                                 <tr>
-                                                    <td colSpan={6} className="px-6 py-4 text-center text-gray-500 text-sm">Belum ada aktivitas.</td>
+                                                    <td colSpan={7} className="px-6 py-4 text-center text-gray-500 text-sm">Belum ada aktivitas.</td>
                                                 </tr>
                                             ) : (
                                                 logs.map((log) => {
@@ -371,7 +377,28 @@ function UsersPageContent() {
                                                                 {formatDetails(log.details)}
                                                             </td>
                                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                                                {log.device || '-'}
+                                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                                                    {log.device || '-'}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                                {log.location ? (
+                                                                    <div className="flex flex-col gap-1 items-start">
+                                                                        <span className="text-xs truncate max-w-[200px]" title={log.location.address || `${log.location.latitude}, ${log.location.longitude}`}>
+                                                                            {log.location.address || `${log.location.latitude}, ${log.location.longitude}`}
+                                                                        </span>
+                                                                        <a
+                                                                            href={`https://www.google.com/maps?q=${log.location.latitude},${log.location.longitude}`}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            className="text-[11px] text-primary hover:underline font-medium"
+                                                                        >
+                                                                            Lihat Maps
+                                                                        </a>
+                                                                    </div>
+                                                                ) : (
+                                                                    <span className="text-xs italic text-gray-400">-</span>
+                                                                )}
                                                             </td>
                                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 font-mono">
                                                                 {log.ip}
