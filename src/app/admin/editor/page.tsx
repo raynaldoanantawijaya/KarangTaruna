@@ -1127,7 +1127,7 @@ function PostEditorContent() {
 
                         {/* Content Area */}
                         {/* Content Area */}
-                        <div className="bg-gray-900 dark:bg-white min-h-[800px] shadow-sm rounded-xl border border-gray-700 dark:border-slate-300 focus-within:ring-2 focus-within:ring-primary/20 transition-shadow flex flex-col">
+                        <div className="bg-gray-900 dark:bg-white min-h-[400px] md:min-h-[800px] shadow-sm rounded-xl border border-gray-700 dark:border-slate-300 focus-within:ring-2 focus-within:ring-primary/20 transition-shadow flex flex-col">
                             {/* Ruler */}
                             <EditorRuler
                                 leftIndent={rulerState.leftIndent}
@@ -1136,7 +1136,7 @@ function PostEditorContent() {
                                 onChange={handleRulerChange}
                             />
 
-                            <div className="p-12 flex-1 relative">
+                            <div className="p-4 sm:p-6 md:p-12 flex-1 relative">
                                 <ImageResizer
                                     editorRef={editorRef}
                                     selectedImage={selectedImage}
@@ -1160,7 +1160,7 @@ function PostEditorContent() {
                                 {/* Editable Content */}
                                 <div
                                     ref={editorRef}
-                                    className="editor-content w-full max-w-none focus:outline-none min-h-[500px] text-lg text-slate-300 dark:text-slate-900"
+                                    className="editor-content w-full max-w-none focus:outline-none min-h-[250px] md:min-h-[500px] text-base md:text-lg text-slate-300 dark:text-slate-900"
                                     contentEditable={true}
                                     spellCheck={false}
                                     onKeyDown={handleKeyDown}

@@ -98,40 +98,13 @@ export default function ImageResizer({ editorRef, selectedImage, setSelectedImag
         if (!selectedImage) return;
 
         const startX = e.clientX;
-        const startY = e.clientY;
         const startWidth = selectedImage.offsetWidth;
         const startHeight = selectedImage.offsetHeight;
         const aspectRatio = startWidth / startHeight;
 
         const handleMouseMove = (moveEvent: MouseEvent) => {
             const deltaX = moveEvent.clientX - startX;
-            // const deltaY = moveEvent.clientY - startY; // Not used for aspect ratio lock
-
-            let newWidth = startWidth;
-            let newHeight = startHeight;
-
-            // Simple Logic: Drive everything by Width for aspect ratio preservation
-
-            // NE/SE: Moving right increases width
-            if (direction === 'ne' || direction === 'se') {
-                newWidth = startWidth + deltaX;
-            }
-            // NW/SW: Moving left increases width (delta is negative when moving left, so subtract)
-            else if (direction === 'nw' || direction === 'sw') {
-                newWidth = startWidth - deltaX;
-            }
-
-            // Minimum constraint
-            if (newWidth < 50) newWidth = 50;
-
-            // Calculate height based on aspect ratio
-            newHeight = newWidth / aspectRatio;
-
-            // Apply
-            selectedImage.style.width = `${newWidth}px`;
-            selectedImage.style.height = `${newHeight}px`;
-            // Keep max-width constraint
-            selectedImage.style.maxWidth = '100%';
+            handleResize(direction, startWidth, aspectRatio, deltaX);
         };
 
         const handleMouseUp = () => {
@@ -142,6 +115,51 @@ export default function ImageResizer({ editorRef, selectedImage, setSelectedImag
 
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
+    };
+
+    const handleTouchStart = (direction: string) => (e: React.TouchEvent) => {
+        e.stopPropagation(); // Prevent deselecting
+        setResizing(direction);
+
+        if (!selectedImage || e.touches.length === 0) return;
+
+        const startX = e.touches[0].clientX;
+        const startWidth = selectedImage.offsetWidth;
+        const startHeight = selectedImage.offsetHeight;
+        const aspectRatio = startWidth / startHeight;
+
+        const handleTouchMove = (moveEvent: TouchEvent) => {
+            if (moveEvent.touches.length === 0) return;
+            const deltaX = moveEvent.touches[0].clientX - startX;
+            handleResize(direction, startWidth, aspectRatio, deltaX);
+        };
+
+        const handleTouchEnd = () => {
+            setResizing(null);
+            document.removeEventListener('touchmove', handleTouchMove);
+            document.removeEventListener('touchend', handleTouchEnd);
+        };
+
+        document.addEventListener('touchmove', handleTouchMove, { passive: false });
+        document.addEventListener('touchend', handleTouchEnd);
+    };
+
+    const handleResize = (direction: string, startWidth: number, aspectRatio: number, deltaX: number) => {
+        if (!selectedImage) return;
+        let newWidth = startWidth;
+
+        if (direction === 'ne' || direction === 'se') {
+            newWidth = startWidth + deltaX;
+        } else if (direction === 'nw' || direction === 'sw') {
+            newWidth = startWidth - deltaX;
+        }
+
+        if (newWidth < 50) newWidth = 50;
+        const newHeight = newWidth / aspectRatio;
+
+        selectedImage.style.width = `${newWidth}px`;
+        selectedImage.style.height = `${newHeight}px`;
+        selectedImage.style.maxWidth = '100%';
     };
 
     if (!selectedImage) return null;
@@ -160,23 +178,27 @@ export default function ImageResizer({ editorRef, selectedImage, setSelectedImag
             {/* Handles - Pointer events enabled for these */}
             {/* NW */}
             <div
-                className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white dark:bg-slate-900 border border-primary dark:border-white cursor-nw-resize pointer-events-auto shadow-sm"
+                className="absolute -top-2.5 -left-2.5 sm:-top-1.5 sm:-left-1.5 w-6 h-6 sm:w-3 sm:h-3 bg-white dark:bg-slate-900 border border-primary dark:border-white cursor-nw-resize pointer-events-auto rounded-full sm:rounded-none shadow-sm flex items-center justify-center"
                 onMouseDown={handleMouseDown('nw')}
+                onTouchStart={handleTouchStart('nw')}
             />
             {/* NE */}
             <div
-                className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white dark:bg-slate-900 border border-primary dark:border-white cursor-ne-resize pointer-events-auto shadow-sm"
+                className="absolute -top-2.5 -right-2.5 sm:-top-1.5 sm:-right-1.5 w-6 h-6 sm:w-3 sm:h-3 bg-white dark:bg-slate-900 border border-primary dark:border-white cursor-ne-resize pointer-events-auto rounded-full sm:rounded-none shadow-sm flex items-center justify-center"
                 onMouseDown={handleMouseDown('ne')}
+                onTouchStart={handleTouchStart('ne')}
             />
             {/* SW */}
             <div
-                className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white dark:bg-slate-900 border border-primary dark:border-white cursor-sw-resize pointer-events-auto shadow-sm"
+                className="absolute -bottom-2.5 -left-2.5 sm:-bottom-1.5 sm:-left-1.5 w-6 h-6 sm:w-3 sm:h-3 bg-white dark:bg-slate-900 border border-primary dark:border-white cursor-sw-resize pointer-events-auto rounded-full sm:rounded-none shadow-sm flex items-center justify-center"
                 onMouseDown={handleMouseDown('sw')}
+                onTouchStart={handleTouchStart('sw')}
             />
             {/* SE */}
             <div
-                className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white dark:bg-slate-900 border border-primary dark:border-white cursor-se-resize pointer-events-auto shadow-sm"
+                className="absolute -bottom-2.5 -right-2.5 sm:-bottom-1.5 sm:-right-1.5 w-6 h-6 sm:w-3 sm:h-3 bg-white dark:bg-slate-900 border border-primary dark:border-white cursor-se-resize pointer-events-auto rounded-full sm:rounded-none shadow-sm flex items-center justify-center"
                 onMouseDown={handleMouseDown('se')}
+                onTouchStart={handleTouchStart('se')}
             />
         </div>
     );
