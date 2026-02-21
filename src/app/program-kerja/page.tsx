@@ -2,6 +2,8 @@
 import { Calendar, ChevronRight, Check, Clock } from "lucide-react";
 import type { Metadata } from "next";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
     title: "Program Kerja Karang Taruna Asta Wira Dipta - Kegiatan Pemuda di Solo",
     description: "Daftar program kerja dan kegiatan Karang Taruna Asta Wira Dipta Kelurahan Mojo, Surakarta. Pelatihan, aksi sosial, lingkungan hidup, dan agenda pemuda Solo.",

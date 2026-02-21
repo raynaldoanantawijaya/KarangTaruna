@@ -5,6 +5,8 @@ import NewsImage from "@/components/NewsImage";
 import Pagination from "@/components/Pagination";
 import { adminDb } from '@/lib/firebase-admin';
 
+export const dynamic = 'force-dynamic';
+
 // Define Types for API Response
 interface NewsItem {
     title: string;
