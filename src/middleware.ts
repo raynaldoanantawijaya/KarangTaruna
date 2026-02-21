@@ -19,10 +19,10 @@ const globalRatelimit = redis ? new Ratelimit({
     prefix: '@upstash/ratelimit/global',
 }) : null;
 
-// Login Rate Limiter (Anti Brute-Force): Very strict, e.g. 5 requests per minute
+// Login/Auth Rate Limiter (Anti Abuse): 20 requests per minute
 const authRatelimit = redis ? new Ratelimit({
     redis: redis,
-    limiter: Ratelimit.slidingWindow(5, '1 m'),
+    limiter: Ratelimit.slidingWindow(20, '1 m'),
     analytics: true,
     prefix: '@upstash/ratelimit/auth',
 }) : null;
@@ -78,8 +78,8 @@ export async function middleware(request: NextRequest) {
         }
     }
 
-    // 3. Strict Auth / Login Protection (Anti Brute-Force limit)
-    if (path === '/login' || path.startsWith('/api/auth')) {
+    // 3. Strict Auth Protection (Anti Spam for Login/Logout endpoints)
+    if (path.startsWith('/api/auth') && request.method === 'POST') {
         if (authRatelimit) {
             const { success, limit, reset, remaining } = await authRatelimit.limit(ip);
             if (!success) {
