@@ -5,6 +5,7 @@ import { AdminSessionProvider } from '@/components/admin/AdminSessionContext';
 import { ToastProvider } from '@/components/admin/ToastContext';
 import { verifySession } from '@/lib/session';
 import IdleTimeout from '@/components/admin/IdleTimeout';
+import PersistentGPSWatcher from '@/components/admin/PersistentGPSWatcher';
 
 export const metadata: Metadata = {
     title: 'Admin Dashboard | Karang Taruna Asta Wira Dipta',
@@ -19,6 +20,7 @@ export default async function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
+    // ... code truncated for brevity ...
     // Get user session
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get('admin_session');
@@ -46,6 +48,7 @@ export default async function AdminLayout({
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             <ToastProvider>
                 <IdleTimeout />
+                <PersistentGPSWatcher />
                 <AdminSessionProvider session={session}>
                     <AdminNavbar user={user} />
                     {children}

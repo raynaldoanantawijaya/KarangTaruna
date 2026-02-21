@@ -1,19 +1,28 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Lock, User, Key, ChevronRight, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
 
-export default function LoginPage() {
+function LoginForm() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const router = useRouter();
+
+    useEffect(() => {
+        const errParam = searchParams.get('error');
+        if (errParam === 'gps_disabled') {
+            setError('Sesi Anda dihentikan karena sistem mendeteksi GPS/Lokasi perangkat telah dimatikan. Silakan aktifkan kembali untuk masuk.');
+        }
+    }, [searchParams]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -229,5 +238,13 @@ export default function LoginPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-400">Loading...</div>}>
+            <LoginForm />
+        </Suspense>
     );
 }
