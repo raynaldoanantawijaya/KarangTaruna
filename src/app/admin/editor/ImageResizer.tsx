@@ -9,11 +9,12 @@ interface ImageResizerProps {
 export default function ImageResizer({ editorRef, selectedImage, setSelectedImage }: ImageResizerProps) {
     const [position, setPosition] = useState({ top: 0, left: 0, width: 0, height: 0 });
     const [resizing, setResizing] = useState<string | null>(null);
+    // Track whether a touch resize is in progress — used to block page scroll
+    const isTouchResizing = useRef(false);
 
     // Update overlay position based on selected image
     useEffect(() => {
         if (!selectedImage || !editorRef.current) {
-            // Hide if no selection
             if (position.width !== 0) setPosition({ top: 0, left: 0, width: 0, height: 0 });
             return;
         }
@@ -21,51 +22,48 @@ export default function ImageResizer({ editorRef, selectedImage, setSelectedImag
         const updatePosition = () => {
             if (!selectedImage || !editorRef.current) return;
 
-            // Check if image is still in DOM
             if (!editorRef.current.contains(selectedImage)) {
                 setSelectedImage(null);
                 return;
             }
 
-            // We need to position relative to our offsetParent (the detailed relative container)
-            // ImageResizer is absolutely positioned.
-            // We can find the offsetParent via the ref's parent or just assume structure.
-            // Best way: measure image relative to viewport, measure parent relative to viewport.
-
-            const parent = editorRef.current.parentElement; // div.p-12.relative
+            // ImageResizer is inside a scrollable `.relative` parent.
+            // getBoundingClientRect() gives viewport-relative coords.
+            // We need to subtract the parent's viewport rect AND add its scroll offset
+            // so that absolute positioning inside the parent is correct even when scrolled.
+            const parent = editorRef.current.parentElement;
             if (!parent) return;
 
             const parentRect = parent.getBoundingClientRect();
             const imgRect = selectedImage.getBoundingClientRect();
 
             setPosition({
-                top: imgRect.top - parentRect.top,
-                left: imgRect.left - parentRect.left,
+                // viewport offset + parent's own scroll position → correct local coords
+                top: imgRect.top - parentRect.top + parent.scrollTop,
+                left: imgRect.left - parentRect.left + parent.scrollLeft,
                 width: imgRect.width,
                 height: imgRect.height,
             });
         };
 
-        // Initial update
         updatePosition();
 
-        // Listen for scroll/resize to keep overlay in sync
         const editor = editorRef.current;
+        // Re-measure on window resize and any ancestor scroll
         window.addEventListener('resize', updatePosition);
         editor.addEventListener('scroll', updatePosition);
+        // Also listen on the scroll container (admin page body)
+        document.addEventListener('scroll', updatePosition, true);
 
-        // Also interaction observer for image load/resize?
         const resizeObserver = new ResizeObserver(updatePosition);
         resizeObserver.observe(selectedImage);
 
-        // MutationObserver to detect style/attribute changes (like margin updates from alignment)
         const mutationObserver = new MutationObserver(() => {
             updatePosition();
-            // Start a short animation loop to track potential CSS transitions (e.g. margin auto)
             let start = performance.now();
             const trackTransition = () => {
                 updatePosition();
-                if (performance.now() - start < 500) { // Track for 500ms (covering 300ms transition)
+                if (performance.now() - start < 500) {
                     requestAnimationFrame(trackTransition);
                 }
             };
@@ -76,7 +74,6 @@ export default function ImageResizer({ editorRef, selectedImage, setSelectedImag
             attributeFilter: ['style', 'class', 'width', 'height']
         });
 
-        // Add smooth transition to the image itself
         if (!selectedImage.style.transition) {
             selectedImage.style.transition = 'margin 0.3s ease, width 0.3s ease, height 0.3s ease';
         }
@@ -84,15 +81,16 @@ export default function ImageResizer({ editorRef, selectedImage, setSelectedImag
         return () => {
             window.removeEventListener('resize', updatePosition);
             editor.removeEventListener('scroll', updatePosition);
+            document.removeEventListener('scroll', updatePosition, true);
             resizeObserver.disconnect();
             mutationObserver.disconnect();
         };
-    }, [selectedImage, editorRef, setSelectedImage]); // Depend on selectedImage to re-measure
+    }, [selectedImage, editorRef, setSelectedImage]);
 
 
     const handleMouseDown = (direction: string) => (e: React.MouseEvent) => {
         e.preventDefault();
-        e.stopPropagation(); // Prevent deselecting
+        e.stopPropagation();
         setResizing(direction);
 
         if (!selectedImage) return;
@@ -118,8 +116,11 @@ export default function ImageResizer({ editorRef, selectedImage, setSelectedImag
     };
 
     const handleTouchStart = (direction: string) => (e: React.TouchEvent) => {
-        e.stopPropagation(); // Prevent deselecting
+        e.stopPropagation();
+        // Prevent triggering document click that would deselect the image
+        e.preventDefault();
         setResizing(direction);
+        isTouchResizing.current = true;
 
         if (!selectedImage || e.touches.length === 0) return;
 
@@ -129,6 +130,9 @@ export default function ImageResizer({ editorRef, selectedImage, setSelectedImag
         const aspectRatio = startWidth / startHeight;
 
         const handleTouchMove = (moveEvent: TouchEvent) => {
+            // CRITICAL: prevent page scroll while resizing the image
+            moveEvent.preventDefault();
+            moveEvent.stopPropagation();
             if (moveEvent.touches.length === 0) return;
             const deltaX = moveEvent.touches[0].clientX - startX;
             handleResize(direction, startWidth, aspectRatio, deltaX);
@@ -136,12 +140,14 @@ export default function ImageResizer({ editorRef, selectedImage, setSelectedImag
 
         const handleTouchEnd = () => {
             setResizing(null);
+            isTouchResizing.current = false;
             document.removeEventListener('touchmove', handleTouchMove);
             document.removeEventListener('touchend', handleTouchEnd);
         };
 
+        // { passive: false } is required to allow preventDefault() inside touchmove
         document.addEventListener('touchmove', handleTouchMove, { passive: false });
-        document.addEventListener('touchend', handleTouchEnd);
+        document.addEventListener('touchend', handleTouchEnd, { passive: true });
     };
 
     const handleResize = (direction: string, startWidth: number, aspectRatio: number, deltaX: number) => {
@@ -175,7 +181,6 @@ export default function ImageResizer({ editorRef, selectedImage, setSelectedImag
                 display: position.width ? 'block' : 'none'
             }}
         >
-            {/* Handles - Pointer events enabled for these */}
             {/* NW */}
             <div
                 className="absolute -top-2.5 -left-2.5 sm:-top-1.5 sm:-left-1.5 w-6 h-6 sm:w-3 sm:h-3 bg-white dark:bg-slate-900 border border-primary dark:border-white cursor-nw-resize pointer-events-auto rounded-full sm:rounded-none shadow-sm flex items-center justify-center"
