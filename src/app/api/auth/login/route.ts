@@ -4,13 +4,85 @@ import { adminAuth, adminDb } from '@/lib/firebase-admin';
 import { logActivity } from '@/lib/activity-logger';
 import { signSession } from '@/lib/session';
 import crypto from 'crypto';
+import { UAParser } from 'ua-parser-js';
 
 const MAX_SESSIONS = 2;
+
+/**
+ * Read the true device info from HTTP headers (server-side).
+ * Sec-CH-UA-* headers are sent by Chromium browsers and CANNOT be spoofed 
+ * by Desktop Mode — they always reflect the real hardware.
+ */
+function parseDeviceFromRequest(request: Request) {
+    const ua = request.headers.get('user-agent') || '';
+
+    // Authentic Chromium Client Hint headers (not affected by Desktop Mode)
+    const secPlatform = request.headers.get('sec-ch-ua-platform')?.replace(/"/g, '') || ''; // e.g. "Android"
+    const secMobile = request.headers.get('sec-ch-ua-mobile') || '';                       // e.g. "?1" means mobile
+    const secModel = request.headers.get('sec-ch-ua-model')?.replace(/"/g, '') || '';     // e.g. "iQOO I2218"
+    const secUaBrands = request.headers.get('sec-ch-ua') || '';                              // e.g. '"Chromium";v="124", "Google Chrome";v="124"'
+
+    const isMobileHeader = secMobile === '?1';
+
+    // Parse browser name from sec-ch-ua brands
+    let browserName = '';
+    const brandMatch = secUaBrands.match(/"([^"]+)";v="(\d+)"/g);
+    if (brandMatch) {
+        const realBrand = brandMatch.find(b =>
+            !b.toLowerCase().includes('not') &&
+            !b.toLowerCase().includes('brand') &&
+            !b.toLowerCase().includes('chromium')
+        );
+        if (realBrand) {
+            const m = realBrand.match(/"([^"]+)"/);
+            browserName = m ? m[1] : '';
+        }
+        if (!browserName) browserName = 'Chrome';
+    }
+
+    // Fallback to ua-parser-js for browser info
+    const parser = new UAParser(ua);
+    const uaBrowser = parser.getBrowser();
+    const uaOs = parser.getOS();
+    const uaDevice = parser.getDevice();
+
+    // Determine the true OS — Sec-CH-UA-Platform is authoritative
+    let trueOs = secPlatform || uaOs.name || 'Unknown';
+
+    // If sec-ch-ua-platform says "Linux" but sec-ch-ua-mobile says "?1",
+    // this is a Chromium quirk on Android — the real OS is Android
+    if (trueOs === 'Linux' && isMobileHeader) {
+        trueOs = 'Android';
+    }
+
+    // Build device model string
+    let brand = '';
+    let model = secModel; // The most accurate source
+
+    if (!model && uaDevice.vendor) {
+        brand = uaDevice.vendor;
+        model = uaDevice.model || '';
+    }
+
+    // Browser label
+    const finalBrowser = browserName || uaBrowser.name || 'Browser';
+
+    return {
+        brand,
+        model,
+        os: trueOs,
+        browser: finalBrowser,
+        isMobile: isMobileHeader || uaDevice.type === 'mobile' || uaDevice.type === 'tablet',
+    };
+}
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { idToken, location, clientDevice } = body;
+        const { idToken, location } = body;
+
+        // Always detect device server-side from HTTP headers (cannot be spoofed by Desktop Mode)
+        const serverDevice = parseDeviceFromRequest(request);
 
         if (!idToken || typeof idToken !== 'string') {
             return NextResponse.json({ error: 'Valid ID Token string required' }, { status: 400 });
@@ -71,13 +143,13 @@ export async function POST(request: Request) {
         // Generate unique session ID for this login
         const sessionId = crypto.randomUUID();
 
-        // Register this session in Firestore
+        // Register this session in Firestore (use server-detected device info)
         await sessionsRef.doc(sessionId).set({
             userId: uid,
             sessionId,
             userName,
             role,
-            deviceInfo: clientDevice || null,
+            deviceInfo: serverDevice,
             location: location || null,
             createdAt: Date.now(),
             lastActive: Date.now(),
@@ -93,7 +165,7 @@ export async function POST(request: Request) {
             permissions,
             name: userName,
             location: location || null,
-            clientDevice: clientDevice || null
+            clientDevice: serverDevice
         };
 
         const cookieStore = await cookies();
@@ -106,8 +178,8 @@ export async function POST(request: Request) {
             path: '/',
         });
 
-        // Log login activity
-        await logActivity(uid, sessionData.username, 'LOGIN', 'Masuk via Firebase Auth', request, { location, clientDevice });
+        // Log login activity (use server device)
+        await logActivity(uid, sessionData.username, 'LOGIN', 'Masuk via Firebase Auth', request, { location, clientDevice: serverDevice });
 
         return NextResponse.json({ success: true, user: sessionData });
 
@@ -116,3 +188,4 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Authentication failed' }, { status: 401 });
     }
 }
+
