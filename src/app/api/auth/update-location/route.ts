@@ -4,20 +4,24 @@ import { adminDb } from '@/lib/firebase-admin';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { sessionId, address } = body;
+        const { sessionId, address, latitude, longitude, accuracy } = body;
 
-        if (!sessionId || !address) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        if (!sessionId) {
+            return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 });
         }
 
         const sessionRef = adminDb.collection('active_sessions').doc(sessionId);
 
-        // Use set with merge: true or update to just update the location field
-        await sessionRef.set({
-            location: {
-                address: address
-            }
-        }, { merge: true });
+        // Build the update — merge only the fields that are provided
+        const locationUpdate: Record<string, any> = {};
+        if (address) locationUpdate['location.address'] = address;
+        if (latitude !== undefined) locationUpdate['location.latitude'] = latitude;
+        if (longitude !== undefined) locationUpdate['location.longitude'] = longitude;
+        if (accuracy !== undefined) locationUpdate['location.accuracy'] = accuracy;
+
+        if (Object.keys(locationUpdate).length > 0) {
+            await sessionRef.update(locationUpdate);
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

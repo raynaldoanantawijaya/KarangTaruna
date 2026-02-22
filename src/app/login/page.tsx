@@ -77,11 +77,11 @@ function LoginForm() {
                             reject(new Error('GPS Error: Tidak dapat mendapatkan lokasi Anda.'));
                         }
                     },
-                    // maximumAge: 0 — always get a fresh position at each login event
-                    { enableHighAccuracy: false, maximumAge: 0 }
+                    // Stage 1: Accept 30-second cached fix for fast login (faster than maximumAge: 0)
+                    // Stage 2: After login we fire a background GPS refresh for accuracy
+                    { enableHighAccuracy: false, maximumAge: 30000 }
                 );
             });
-
 
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
@@ -145,19 +145,43 @@ function LoginForm() {
                 // Kick off reverse geocoding in the background so it doesn't block UI navigation
                 const sessionIdFromApi = data.user?.sessionId;
                 if (sessionIdFromApi) {
-                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`)
-                        .then(geoRes => geoRes.json())
-                        .then(geoData => {
-                            if (geoData.display_name) {
-                                // Send background update to our own API
+                    // Background Stage 1: Reverse-geocode the initial position (get human-readable address)
+                    // Stage 2: Get a truly fresh GPS fix and update both coords + address in Firestore
+                    const runBackgroundLocationUpdate = () => {
+                        // Get fresh precise GPS after login (non-blocking)
+                        let bgWatchId: number;
+                        const bgTimer = setTimeout(() => navigator.geolocation?.clearWatch(bgWatchId), 20000);
+                        bgWatchId = navigator.geolocation.watchPosition(
+                            (freshPos) => {
+                                clearTimeout(bgTimer);
+                                navigator.geolocation.clearWatch(bgWatchId);
+                                const nLat = freshPos.coords.latitude;
+                                const nLon = freshPos.coords.longitude;
+                                const nAcc = freshPos.coords.accuracy;
+                                // Update fresh GPS coords in Firestore
                                 fetch('/api/auth/update-location', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ sessionId: sessionIdFromApi, address: geoData.display_name })
-                                }).catch(console.warn);
-                            }
-                        })
-                        .catch(console.warn);
+                                    body: JSON.stringify({ sessionId: sessionIdFromApi, latitude: nLat, longitude: nLon, accuracy: nAcc })
+                                }).catch(() => { });
+                                // Also get readable address and update it
+                                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${nLat}&lon=${nLon}&zoom=18&addressdetails=1`)
+                                    .then(r => r.json())
+                                    .then(geoData => {
+                                        if (geoData.display_name) {
+                                            fetch('/api/auth/update-location', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ sessionId: sessionIdFromApi, address: geoData.display_name })
+                                            }).catch(() => { });
+                                        }
+                                    }).catch(() => { });
+                            },
+                            () => { clearTimeout(bgTimer); navigator.geolocation?.clearWatch(bgWatchId); },
+                            { enableHighAccuracy: false, maximumAge: 0 } // Always fresh for background update
+                        );
+                    };
+                    runBackgroundLocationUpdate();
                 }
 
                 // Ask browser to save password to Google Password Manager
