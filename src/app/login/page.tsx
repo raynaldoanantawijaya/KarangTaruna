@@ -1,6 +1,7 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
+
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -18,6 +19,30 @@ function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [isMaxSessions, setIsMaxSessions] = useState(false);
 
+    // Store the latest GPS position in a ref so login submit never has to wait
+    const gpsPositionRef = useRef<GeolocationPosition | null>(null);
+    const gpsWatchIdRef = useRef<number | null>(null);
+
+    // Start GPS watch immediately on page load (before user clicks login)
+    // By the time they type email + password, GPS is already warm and ready
+    useEffect(() => {
+        if (!navigator.geolocation) return;
+
+        let watchId: number;
+        watchId = navigator.geolocation.watchPosition(
+            (pos) => {
+                gpsPositionRef.current = pos; // Store every update
+            },
+            () => { /* Ignore errors in background GPS watch */ },
+            { enableHighAccuracy: false, maximumAge: 30000 }
+        );
+        gpsWatchIdRef.current = watchId;
+
+        return () => {
+            navigator.geolocation.clearWatch(watchId);
+        };
+    }, []);
+
     useEffect(() => {
         const errParam = searchParams.get('error');
         if (errParam === 'gps_disabled') {
@@ -27,6 +52,7 @@ function LoginForm() {
         }
     }, [searchParams]);
 
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -34,8 +60,9 @@ function LoginForm() {
         setIsMaxSessions(false);
 
         try {
-            // --- 1. Require GPS Location ---
-            // Check permission state first (fast path, no hardware required)
+            // --- 1. Get GPS Location ---
+            // GPS was pre-warmed on page load. Try to read from ref first (instant).
+            // If not ready yet, wait up to 10 seconds via watchPosition.
             let permissionState: PermissionState = 'prompt';
             try {
                 const perm = await navigator.permissions.query({ name: 'geolocation' });
@@ -46,42 +73,43 @@ function LoginForm() {
                 throw new Error('GPS Diblokir: Izin lokasi diblokir di pengaturan browser Anda. Ketuk ikon 🔒 di address bar → Izinkan Lokasi, lalu coba lagi.');
             }
 
-            // Use watchPosition (no hard timeout) instead of getCurrentPosition.
-            // watchPosition keeps trying until it gets a fix, then we clear it immediately.
-            // This is much more reliable after logout when the GPS subsystem needs to warm up.
-            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-                if (!navigator.geolocation) {
-                    reject(new Error('Browser Anda tidak mendukung GPS/Location.'));
-                    return;
-                }
+            // Use pre-warmed GPS position if available (should be instant)
+            let position = gpsPositionRef.current;
 
-                let watchId: number;
-                // Manual 15-second deadline — much more generous than browser's hard timeout
-                const deadline = setTimeout(() => {
-                    navigator.geolocation.clearWatch(watchId);
-                    reject(new Error('GPS Timeout: Sinyal lokasi tidak dapat diperoleh dalam 15 detik. Pastikan GPS aktif lalu coba lagi.'));
-                }, 15000);
+            if (!position) {
+                // Not yet available — wait up to 10 seconds as a fallback
+                position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                    if (!navigator.geolocation) {
+                        reject(new Error('Browser Anda tidak mendukung GPS/Location.'));
+                        return;
+                    }
+                    let fallbackWatchId: number;
+                    const deadline = setTimeout(() => {
+                        navigator.geolocation.clearWatch(fallbackWatchId);
+                        reject(new Error('GPS Timeout: Sinyal lokasi tidak dapat diperoleh. Pastikan GPS aktif, lalu coba lagi.'));
+                    }, 10000);
+                    fallbackWatchId = navigator.geolocation.watchPosition(
+                        (pos) => {
+                            clearTimeout(deadline);
+                            navigator.geolocation.clearWatch(fallbackWatchId);
+                            gpsPositionRef.current = pos;
+                            resolve(pos);
+                        },
+                        (err) => {
+                            clearTimeout(deadline);
+                            navigator.geolocation.clearWatch(fallbackWatchId);
+                            if (err.code === err.PERMISSION_DENIED) {
+                                reject(new Error('GPS Diblokir: Anda wajib memberikan izin Lokasi untuk login. Ketuk ikon 🔒 di address bar → Izinkan Lokasi.'));
+                            } else {
+                                reject(new Error('GPS Error: Tidak dapat mendapatkan lokasi Anda.'));
+                            }
+                        },
+                        { enableHighAccuracy: false, maximumAge: 0 }
+                    );
+                });
+            }
 
-                watchId = navigator.geolocation.watchPosition(
-                    (pos) => {
-                        clearTimeout(deadline);
-                        navigator.geolocation.clearWatch(watchId);
-                        resolve(pos);
-                    },
-                    (err) => {
-                        clearTimeout(deadline);
-                        navigator.geolocation.clearWatch(watchId);
-                        if (err.code === err.PERMISSION_DENIED) {
-                            reject(new Error('GPS Diblokir: Anda wajib memberikan izin Lokasi untuk login. Ketuk ikon 🔒 di address bar → Izinkan Lokasi.'));
-                        } else {
-                            reject(new Error('GPS Error: Tidak dapat mendapatkan lokasi Anda.'));
-                        }
-                    },
-                    // Stage 1: Accept 30-second cached fix for fast login (faster than maximumAge: 0)
-                    // Stage 2: After login we fire a background GPS refresh for accuracy
-                    { enableHighAccuracy: false, maximumAge: 30000 }
-                );
-            });
+
 
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
