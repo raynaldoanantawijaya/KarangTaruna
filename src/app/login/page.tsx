@@ -39,7 +39,7 @@ function LoginForm() {
                 } else {
                     navigator.geolocation.getCurrentPosition(resolve, (err) => {
                         reject(new Error('Akses ditolak: Anda wajib memberikan izin GPS/Lokasi untuk login ke sistem Admin.'));
-                    }, { enableHighAccuracy: true, timeout: 10000 });
+                    }, { enableHighAccuracy: false, timeout: 5000, maximumAge: 60000 }); // Fast GPS (cached allowed)
                 }
             }).catch(err => {
                 throw err; // Re-throw to be caught by the outer catch block
@@ -48,18 +48,7 @@ function LoginForm() {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
             const accuracy = position.coords.accuracy;
-            let address = `${lat}, ${lon}`;
-
-            // Try reverse geocoding (best effort, don't block login if it fails)
-            try {
-                const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
-                if (geoRes.ok) {
-                    const geoData = await geoRes.json();
-                    address = geoData.display_name || address;
-                }
-            } catch (e) {
-                console.warn("Reverse geocoding failed", e);
-            }
+            let address = `${lat}, ${lon}`; // Default address fallback
 
             // --- 2. Get Advanced Device Info (Client Hints) ---
             let clientDevice = null;
@@ -105,6 +94,24 @@ function LoginForm() {
             const data = await res.json();
 
             if (res.ok) {
+                // Kick off reverse geocoding in the background so it doesn't block UI navigation
+                const sessionIdFromApi = data.user?.sessionId;
+                if (sessionIdFromApi) {
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`)
+                        .then(geoRes => geoRes.json())
+                        .then(geoData => {
+                            if (geoData.display_name) {
+                                // Send background update to our own API
+                                fetch('/api/auth/update-location', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ sessionId: sessionIdFromApi, address: geoData.display_name })
+                                }).catch(console.warn);
+                            }
+                        })
+                        .catch(console.warn);
+                }
+
                 // Ask browser to save password to Google Password Manager
                 if ((window as any).PasswordCredential) {
                     try {
@@ -118,8 +125,7 @@ function LoginForm() {
                         // Silently ignore if browser doesn't support or user declines
                     }
                 }
-                router.push('/admin');
-                router.refresh();
+                window.location.href = '/admin';
             } else if (data.code === 'MAX_SESSIONS_REACHED') {
                 throw new Error('__MAX_SESSIONS__:' + data.error);
             } else {
