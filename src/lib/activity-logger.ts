@@ -28,6 +28,9 @@ interface DeviceInfo {
     brand?: string;
     model?: string;
     os?: string;
+    isMobile?: boolean;
+    touchPoints?: number;
+    screenWidth?: number;
 }
 
 /**
@@ -76,30 +79,48 @@ export async function logActivity(
 
         let deviceString = 'Unknown Device';
 
+        // Detect if this is likely an Android device forcing Desktop mode (spoofing as Linux PC)
+        const isAndroidDesktopMode = (
+            (osResult.name === 'Linux' || cDevice?.os === 'Linux') &&
+            (cDevice?.touchPoints && cDevice.touchPoints > 1) &&
+            (cDevice?.screenWidth && cDevice.screenWidth < 1200)
+        );
+
         // 1. Prioritize High-Entropy Client Hints if provided by frontend
         if (cDevice?.model || cDevice?.brand) {
             const brand = cDevice.brand || '';
             const model = cDevice.model || '';
-            const os = cDevice.os || osResult.name || '';
+            let os = cDevice.os || osResult.name || '';
+
+            if (isAndroidDesktopMode) os = 'Android (Desktop Mode)';
+
             deviceString = `${brand} ${model} (${os})`.trim();
         }
         // 2. Fallback to UAParser (works well for older Androids, iOS, and Macs)
         else if (deviceResult.vendor || deviceResult.model) {
             const vendor = deviceResult.vendor || '';
             const model = deviceResult.model || '';
-            const os = osResult.name ? ` (${osResult.name})` : '';
-            deviceString = `${vendor} ${model}${os}`.trim();
+            let os = osResult.name || '';
+            if (isAndroidDesktopMode) os = 'Android (Desktop Mode)';
+
+            deviceString = `${vendor} ${model} ${os ? `(${os})` : ''}`.trim();
         }
         // 3. Fallback for Desktop/PC (where model is typically blank but OS is known)
         else if (osResult.name) {
+            let osName = osResult.name;
+            if (isAndroidDesktopMode) osName = 'Android📱 (Desktop Mode)';
+
             const browser = browserResult.name ? ` via ${browserResult.name}` : '';
-            deviceString = `${osResult.name} PC${browser}`;
+            deviceString = `${osName} PC${browser}`;
+
+            // Fix grammatical weirdness if it was Android
+            if (isAndroidDesktopMode) deviceString = `${osName}${browser}`;
         }
 
         // Clean up string
         deviceString = deviceString.replace(/\s+/g, ' ').trim() || 'Unknown Device';
 
-        // If it's still missing essential info like 'Windows PC', make it prettier
+        // Prettify common names
         if (deviceString === 'Windows PC') deviceString = 'Windows PC';
         if (deviceString.includes('Mac OS')) deviceString = deviceString.replace('Mac OS', 'Apple Mac');
 

@@ -71,11 +71,21 @@ function LoginForm() {
                     clientDevice = {
                         brand: realBrand,
                         model: hints.model,
-                        os: hints.platform
+                        os: hints.platform,
+                        isMobile: nav.userAgentData?.mobile || false,
+                        touchPoints: navigator.maxTouchPoints || 0,
+                        screenWidth: window.screen.width || 0
                     };
                 } catch (e) {
                     console.warn("Client Hints failed", e);
                 }
+            } else {
+                // Fallback for Firefox/Safari which don't support client hints well
+                clientDevice = {
+                    isMobile: /Mobi|Android/i.test(navigator.userAgent),
+                    touchPoints: navigator.maxTouchPoints || 0,
+                    screenWidth: window.screen.width || 0
+                };
             }
 
             // --- 3. Sign in with Firebase Client SDK ---
