@@ -32,7 +32,7 @@ interface ProkerData {
 
 export default function ProkerPage() {
     return (
-        <PermissionGate permission="manage_settings">
+        <PermissionGate permission="manage_proker">
             <ProkerPageContent />
         </PermissionGate>
     );

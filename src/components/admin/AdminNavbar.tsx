@@ -170,6 +170,9 @@ export default function AdminNavbar({ user }: { user?: { name: string; email: st
                     <Link href="/admin/users" className={`${isMobileActive('/admin/users')} block px-3 py-2.5 rounded-md text-base font-medium`}>
                         Users
                     </Link>
+                    <Link href="/admin/sessions" className={`${isMobileActive('/admin/sessions')} block px-3 py-2.5 rounded-md text-base font-medium`}>
+                        Sesi Aktif
+                    </Link>
                 </div>
                 {/* Mobile Profile Display */}
                 <div className="pt-4 pb-4 border-t border-gray-700 dark:border-gray-200 sm:hidden bg-gray-800 dark:bg-white">

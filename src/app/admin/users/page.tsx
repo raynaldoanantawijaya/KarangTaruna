@@ -42,7 +42,8 @@ const PERMISSIONS_LIST = [
     { id: 'manage_posts', label: 'Kelola Berita (Buat, Edit, Hapus Berita)' },
     { id: 'manage_media', label: 'Kelola Media (Foto & Video)' },
     { id: 'manage_appearance', label: 'Kelola Tampilan (Appearance Website)' },
-    { id: 'manage_users', label: 'Kelola Pengguna (Tambah, Edit, Blokir User)' },
+    { id: 'manage_proker', label: 'Kelola Proker (Program Kerja & Agenda)' },
+    { id: 'manage_users', label: 'Kelola Pengguna (Tambah User, Log Aktivitas, Sesi Aktif)' },
 ];
 
 export default function UsersPage() {

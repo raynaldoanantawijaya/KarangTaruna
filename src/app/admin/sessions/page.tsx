@@ -31,7 +31,17 @@ function timeAgo(ms: number) {
     return `${Math.floor(hrs / 24)} hari lalu`;
 }
 
+import PermissionGate from '@/components/admin/PermissionGate';
+
 export default function ActiveSessionsPage() {
+    return (
+        <PermissionGate permission="manage_users">
+            <ActiveSessionsPageContent />
+        </PermissionGate>
+    );
+}
+
+function ActiveSessionsPageContent() {
     const [sessions, setSessions] = useState<ActiveSession[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [revokingId, setRevokingId] = useState<string | null>(null);
