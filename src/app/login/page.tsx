@@ -35,42 +35,52 @@ function LoginForm() {
 
         try {
             // --- 1. Require GPS Location ---
-            // First check the current permission state to give a precise error message
+            // Check permission state first (fast path, no hardware required)
             let permissionState: PermissionState = 'prompt';
             try {
                 const perm = await navigator.permissions.query({ name: 'geolocation' });
                 permissionState = perm.state;
-            } catch { /* permissions API not supported (Firefox) */ }
+            } catch { /* Firefox may not support Permissions API */ }
 
             if (permissionState === 'denied') {
-                throw new Error('GPS Diblokir: Izin lokasi diblokir di pengaturan browser Anda. Pergi ke ikon kunci 🔒 di address bar → Izinkan Lokasi, lalu coba lagi.');
+                throw new Error('GPS Diblokir: Izin lokasi diblokir di pengaturan browser Anda. Ketuk ikon 🔒 di address bar → Izinkan Lokasi, lalu coba lagi.');
             }
 
+            // Use watchPosition (no hard timeout) instead of getCurrentPosition.
+            // watchPosition keeps trying until it gets a fix, then we clear it immediately.
+            // This is much more reliable after logout when the GPS subsystem needs to warm up.
             const position = await new Promise<GeolocationPosition>((resolve, reject) => {
                 if (!navigator.geolocation) {
                     reject(new Error('Browser Anda tidak mendukung GPS/Location.'));
                     return;
                 }
-                navigator.geolocation.getCurrentPosition(
-                    resolve,
+
+                let watchId: number;
+                // Manual 15-second deadline — much more generous than browser's hard timeout
+                const deadline = setTimeout(() => {
+                    navigator.geolocation.clearWatch(watchId);
+                    reject(new Error('GPS Timeout: Sinyal lokasi tidak dapat diperoleh dalam 15 detik. Pastikan GPS aktif lalu coba lagi.'));
+                }, 15000);
+
+                watchId = navigator.geolocation.watchPosition(
+                    (pos) => {
+                        clearTimeout(deadline);
+                        navigator.geolocation.clearWatch(watchId);
+                        resolve(pos);
+                    },
                     (err) => {
+                        clearTimeout(deadline);
+                        navigator.geolocation.clearWatch(watchId);
                         if (err.code === err.PERMISSION_DENIED) {
-                            reject(new Error('GPS Diblokir: Anda wajib memberikan izin Lokasi untuk login. Ketuk ikon kunci 🔒 di address bar → Izinkan Lokasi.'));
-                        } else if (err.code === err.TIMEOUT || err.code === err.POSITION_UNAVAILABLE) {
-                            // Timeout or signal weak — retry once with lower accuracy + longer timeout
-                            navigator.geolocation.getCurrentPosition(
-                                resolve,
-                                () => reject(new Error('GPS Timeout: Sinyal lokasi tidak dapat diperoleh. Pastikan GPS aktif dan coba lagi.')),
-                                { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
-                            );
+                            reject(new Error('GPS Diblokir: Anda wajib memberikan izin Lokasi untuk login. Ketuk ikon 🔒 di address bar → Izinkan Lokasi.'));
                         } else {
                             reject(new Error('GPS Error: Tidak dapat mendapatkan lokasi Anda.'));
                         }
                     },
-                    { enableHighAccuracy: false, timeout: 7000, maximumAge: 300000 } // Allow 5-min cached position
+                    // maximumAge: 10 min — if user just logged out and back in, use cached fix instantly
+                    { enableHighAccuracy: false, maximumAge: 600000 }
                 );
             });
-
 
 
             const lat = position.coords.latitude;
