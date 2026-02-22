@@ -9,22 +9,30 @@ import { UAParser } from 'ua-parser-js';
 const MAX_SESSIONS = 2;
 
 /**
- * Read the true device info from HTTP headers (server-side).
- * Sec-CH-UA-* headers are sent by Chromium browsers and CANNOT be spoofed 
- * by Desktop Mode — they always reflect the real hardware.
+ * Read the true device info from HTTP headers (server-side) combined with
+ * client-side touch signals that Desktop Mode cannot spoof.
+ *
+ * Chrome Desktop Mode fakes: User-Agent, Sec-CH-UA-Platform, Sec-CH-UA-Mobile
+ * Chrome Desktop Mode CANNOT fake: navigator.maxTouchPoints, navigator.platform (armv8)
+ * 
+ * Strategy: Use server headers for browser name + partial OS, then override 
+ * "Linux" to "Android" when client reports touch capability.
  */
-function parseDeviceFromRequest(request: Request) {
+function parseDeviceFromRequest(
+    request: Request,
+    clientHints?: { touchPoints?: number; isMobile?: boolean; screenWidth?: number; model?: string; brand?: string }
+) {
     const ua = request.headers.get('user-agent') || '';
 
-    // Authentic Chromium Client Hint headers (not affected by Desktop Mode)
-    const secPlatform = request.headers.get('sec-ch-ua-platform')?.replace(/"/g, '') || ''; // e.g. "Android"
-    const secMobile = request.headers.get('sec-ch-ua-mobile') || '';                       // e.g. "?1" means mobile
-    const secModel = request.headers.get('sec-ch-ua-model')?.replace(/"/g, '') || '';     // e.g. "iQOO I2218"
-    const secUaBrands = request.headers.get('sec-ch-ua') || '';                              // e.g. '"Chromium";v="124", "Google Chrome";v="124"'
+    // Sec-CH-UA headers — ONLY reliable when NOT in Desktop Mode
+    const secPlatform = request.headers.get('sec-ch-ua-platform')?.replace(/"/g, '') || '';
+    const secMobile = request.headers.get('sec-ch-ua-mobile') || '';
+    const secModel = request.headers.get('sec-ch-ua-model')?.replace(/"/g, '') || '';
+    const secUaBrands = request.headers.get('sec-ch-ua') || '';
 
     const isMobileHeader = secMobile === '?1';
 
-    // Parse browser name from sec-ch-ua brands
+    // Parse browser name from sec-ch-ua brands (reliable even in Desktop Mode)
     let browserName = '';
     const brandMatch = secUaBrands.match(/"([^"]+)";v="(\d+)"/g);
     if (brandMatch) {
@@ -40,49 +48,46 @@ function parseDeviceFromRequest(request: Request) {
         if (!browserName) browserName = 'Chrome';
     }
 
-    // Fallback to ua-parser-js for browser info
+    // Use ua-parser-js as fallback for browser / os / device info
     const parser = new UAParser(ua);
     const uaBrowser = parser.getBrowser();
     const uaOs = parser.getOS();
     const uaDevice = parser.getDevice();
 
-    // Determine the true OS — Sec-CH-UA-Platform is authoritative
+    // Determine OS — Sec-CH-UA-Platform header + client hints combo
     let trueOs = secPlatform || uaOs.name || 'Unknown';
 
-    // If sec-ch-ua-platform says "Linux" but sec-ch-ua-mobile says "?1",
-    // this is a Chromium quirk on Android — the real OS is Android
+    // touchPoints > 0 is the ONLY reliable signal from a touch device surviving Desktop Mode
+    const hasTouchFromClient = (clientHints?.touchPoints ?? 0) > 0 || clientHints?.isMobile === true;
+    const isMobile = isMobileHeader || hasTouchFromClient || uaDevice.type === 'mobile' || uaDevice.type === 'tablet';
+
+    // Fix Chromium's Android-in-Desktop-Mode reporting Linux
+    if ((trueOs === 'Linux' || trueOs === 'Unknown') && hasTouchFromClient) {
+        trueOs = 'Android';
+    }
+    // Normal Chromium on real Android sends platform=Linux but mobile=?1
     if (trueOs === 'Linux' && isMobileHeader) {
         trueOs = 'Android';
     }
 
-    // Build device model string
-    let brand = '';
-    let model = secModel; // The most accurate source
-
-    if (!model && uaDevice.vendor) {
-        brand = uaDevice.vendor;
-        model = uaDevice.model || '';
-    }
-
-    // Browser label
+    // Device model — prefer client hint model (from userAgentData.getHighEntropyValues)
+    // then sec-ch-ua-model, then UAParser
+    const model = clientHints?.model || secModel || uaDevice.model || '';
+    const brand = clientHints?.brand || uaDevice.vendor || '';
     const finalBrowser = browserName || uaBrowser.name || 'Browser';
 
-    return {
-        brand,
-        model,
-        os: trueOs,
-        browser: finalBrowser,
-        isMobile: isMobileHeader || uaDevice.type === 'mobile' || uaDevice.type === 'tablet',
-    };
+    return { brand, model, os: trueOs, browser: finalBrowser, isMobile };
 }
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { idToken, location } = body;
+        const { idToken, location, clientDevice } = body;
 
-        // Always detect device server-side from HTTP headers (cannot be spoofed by Desktop Mode)
-        const serverDevice = parseDeviceFromRequest(request);
+        // clientDevice contains touch signals sent by the login form JS
+        // (touchPoints, isMobile, screenWidth, model, brand)
+        const serverDevice = parseDeviceFromRequest(request, clientDevice || undefined);
+
 
         if (!idToken || typeof idToken !== 'string') {
             return NextResponse.json({ error: 'Valid ID Token string required' }, { status: 400 });

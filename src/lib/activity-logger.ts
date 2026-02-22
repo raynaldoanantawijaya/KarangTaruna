@@ -79,45 +79,31 @@ export async function logActivity(
 
         let deviceString = 'Unknown Device';
 
-        // Detect if this is likely an Android device forcing Desktop mode (spoofing as Linux PC)
-        const isAndroidDesktopMode = (
-            (osResult.name === 'Linux' || cDevice?.os === 'Linux') &&
-            (cDevice?.touchPoints && cDevice.touchPoints > 1) &&
-            (cDevice?.screenWidth && cDevice.screenWidth < 1200)
-        );
+        // If cDevice.os is already resolved by login route (Android/Windows/etc), trust it
+        const resolvedOs = cDevice?.os || osResult.name || '';
+        const resolvedBrowser = (cDevice as any)?.browser || browserResult.name || '';
+        const resolvedModel = cDevice?.model || deviceResult.model || '';
+        const resolvedBrand = cDevice?.brand || deviceResult.vendor || '';
 
-        // 1. Prioritize High-Entropy Client Hints if provided by frontend
-        if (cDevice?.model || cDevice?.brand) {
-            const brand = cDevice.brand || '';
-            const model = cDevice.model || '';
-            let os = cDevice.os || osResult.name || '';
-
-            if (isAndroidDesktopMode) os = 'Android (Desktop Mode)';
-
-            deviceString = `${brand} ${model} (${os})`.trim();
-        }
-        // 2. Fallback to UAParser (works well for older Androids, iOS, and Macs)
-        else if (deviceResult.vendor || deviceResult.model) {
-            const vendor = deviceResult.vendor || '';
-            const model = deviceResult.model || '';
-            let os = osResult.name || '';
-            if (isAndroidDesktopMode) os = 'Android (Desktop Mode)';
-
-            deviceString = `${vendor} ${model} ${os ? `(${os})` : ''}`.trim();
-        }
-        // 3. Fallback for Desktop/PC (where model is typically blank but OS is known)
-        else if (osResult.name) {
-            let osName = osResult.name;
-            if (isAndroidDesktopMode) osName = 'Android📱 (Desktop Mode)';
-
-            const browser = browserResult.name ? ` via ${browserResult.name}` : '';
-            deviceString = `${osName} PC${browser}`;
-
-            // Fix grammatical weirdness if it was Android
-            if (isAndroidDesktopMode) deviceString = `${osName}${browser}`;
+        if (resolvedModel || resolvedBrand) {
+            // Has specific device model info
+            const parts = [resolvedBrand, resolvedModel].filter(Boolean).join(' ');
+            deviceString = resolvedOs ? `${parts} (${resolvedOs})` : parts;
+        } else if (resolvedOs === 'Android' || resolvedOs === 'iOS') {
+            // Mobile device without model name
+            deviceString = resolvedBrowser
+                ? `${resolvedOs} via ${resolvedBrowser}`
+                : resolvedOs;
+        } else if (resolvedOs) {
+            // Desktop OS
+            const suffix = resolvedOs.toLowerCase().includes('android') || (cDevice as any)?.isMobile ? '' : ' PC';
+            deviceString = resolvedBrowser
+                ? `${resolvedOs}${suffix} via ${resolvedBrowser}`
+                : `${resolvedOs}${suffix}`;
         }
 
-        // Clean up string
+        // Prettify common names
+
         deviceString = deviceString.replace(/\s+/g, ' ').trim() || 'Unknown Device';
 
         // Prettify common names
