@@ -22,6 +22,8 @@ function LoginForm() {
         const errParam = searchParams.get('error');
         if (errParam === 'gps_disabled') {
             setError('Sesi Anda dihentikan karena sistem mendeteksi GPS/Lokasi perangkat telah dimatikan. Silakan aktifkan kembali untuk masuk.');
+        } else if (errParam === 'session_revoked') {
+            setError('Sesi Anda pada perangkat ini telah dicabut/ditutup oleh sistem atau dari perangkat lain. Silakan login kembali jika ini adalah kesalahan.');
         }
     }, [searchParams]);
 

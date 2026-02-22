@@ -4,6 +4,7 @@ import React, { createContext, useContext } from 'react';
 
 interface AdminSession {
     id: string;
+    sessionId?: string;
     name: string;
     email: string;
     role: string;
