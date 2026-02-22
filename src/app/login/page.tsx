@@ -35,17 +35,43 @@ function LoginForm() {
 
         try {
             // --- 1. Require GPS Location ---
+            // First check the current permission state to give a precise error message
+            let permissionState: PermissionState = 'prompt';
+            try {
+                const perm = await navigator.permissions.query({ name: 'geolocation' });
+                permissionState = perm.state;
+            } catch { /* permissions API not supported (Firefox) */ }
+
+            if (permissionState === 'denied') {
+                throw new Error('GPS Diblokir: Izin lokasi diblokir di pengaturan browser Anda. Pergi ke ikon kunci 🔒 di address bar → Izinkan Lokasi, lalu coba lagi.');
+            }
+
             const position = await new Promise<GeolocationPosition>((resolve, reject) => {
                 if (!navigator.geolocation) {
                     reject(new Error('Browser Anda tidak mendukung GPS/Location.'));
-                } else {
-                    navigator.geolocation.getCurrentPosition(resolve, (err) => {
-                        reject(new Error('Akses ditolak: Anda wajib memberikan izin GPS/Lokasi untuk login ke sistem Admin.'));
-                    }, { enableHighAccuracy: false, timeout: 5000, maximumAge: 60000 }); // Fast GPS (cached allowed)
+                    return;
                 }
-            }).catch(err => {
-                throw err; // Re-throw to be caught by the outer catch block
+                navigator.geolocation.getCurrentPosition(
+                    resolve,
+                    (err) => {
+                        if (err.code === err.PERMISSION_DENIED) {
+                            reject(new Error('GPS Diblokir: Anda wajib memberikan izin Lokasi untuk login. Ketuk ikon kunci 🔒 di address bar → Izinkan Lokasi.'));
+                        } else if (err.code === err.TIMEOUT || err.code === err.POSITION_UNAVAILABLE) {
+                            // Timeout or signal weak — retry once with lower accuracy + longer timeout
+                            navigator.geolocation.getCurrentPosition(
+                                resolve,
+                                () => reject(new Error('GPS Timeout: Sinyal lokasi tidak dapat diperoleh. Pastikan GPS aktif dan coba lagi.')),
+                                { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+                            );
+                        } else {
+                            reject(new Error('GPS Error: Tidak dapat mendapatkan lokasi Anda.'));
+                        }
+                    },
+                    { enableHighAccuracy: false, timeout: 7000, maximumAge: 300000 } // Allow 5-min cached position
+                );
             });
+
+
 
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
