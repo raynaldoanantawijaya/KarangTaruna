@@ -9,6 +9,13 @@ export async function POST(request: Request) {
         const cookieStore = await cookies();
         const cookieValue = cookieStore.get('admin_session')?.value;
 
+        // Read GPS location captured by the client at logout time
+        let logoutLocation = null;
+        try {
+            const body = await request.json();
+            logoutLocation = body.location || null;
+        } catch { /* body is empty or not JSON */ }
+
         if (cookieValue) {
             const session = verifySession(cookieValue);
 
@@ -21,7 +28,7 @@ export async function POST(request: Request) {
                 }
             }
 
-            // Log logout activity
+            // Log logout activity with the captured GPS location
             if (session?.id) {
                 try {
                     await logActivity(
@@ -29,7 +36,8 @@ export async function POST(request: Request) {
                         session.username || session.name || 'Admin',
                         'LOGOUT',
                         'Keluar dari sistem',
-                        request
+                        request,
+                        { location: logoutLocation }
                     );
                 } catch (err) {
                     console.error('Failed to log logout activity:', err);
@@ -48,3 +56,4 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: true });
     }
 }
+

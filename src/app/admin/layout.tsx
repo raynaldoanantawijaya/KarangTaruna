@@ -7,7 +7,7 @@ import { ToastProvider } from '@/components/admin/ToastContext';
 import { verifySession } from '@/lib/session';
 import { adminDb } from '@/lib/firebase-admin';
 import IdleTimeout from '@/components/admin/IdleTimeout';
-import PersistentGPSWatcher from '@/components/admin/PersistentGPSWatcher';
+
 
 export const metadata: Metadata = {
     title: 'Admin Dashboard | Karang Taruna Asta Wira Dipta',
@@ -75,7 +75,7 @@ export default async function AdminLayout({
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 admin-mobile-scale">
             <ToastProvider>
                 <IdleTimeout />
-                <PersistentGPSWatcher />
+
                 <AdminSessionProvider session={session}>
                     <AdminNavbar user={user} />
                     {children}

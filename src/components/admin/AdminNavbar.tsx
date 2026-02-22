@@ -121,7 +121,32 @@ export default function AdminNavbar({ user }: { user?: { name: string; email: st
                     <div className="flex items-center gap-2 sm:gap-4">
                         <button
                             onClick={async () => {
-                                await fetch('/api/auth/logout', { method: 'POST' });
+                                // Capture fresh GPS location at logout for security audit
+                                let logoutLocation: { latitude: number; longitude: number; accuracy: number } | null = null;
+                                try {
+                                    logoutLocation = await new Promise((resolve) => {
+                                        let watchId: number;
+                                        const deadline = setTimeout(() => {
+                                            navigator.geolocation?.clearWatch(watchId);
+                                            resolve(null); // Timeout — log out anyway
+                                        }, 8000);
+                                        watchId = navigator.geolocation.watchPosition(
+                                            (pos) => {
+                                                clearTimeout(deadline);
+                                                navigator.geolocation.clearWatch(watchId);
+                                                resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude, accuracy: pos.coords.accuracy });
+                                            },
+                                            () => { clearTimeout(deadline); navigator.geolocation.clearWatch(watchId); resolve(null); },
+                                            { enableHighAccuracy: false, maximumAge: 60000 }
+                                        );
+                                    });
+                                } catch { /* GPS not available, log out anyway */ }
+
+                                await fetch('/api/auth/logout', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ location: logoutLocation }),
+                                });
                                 window.location.href = '/login';
                             }}
                             className="p-1 sm:p-2 mr-2 sm:mr-0 rounded-full text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-gray-700 dark:hover:bg-gray-100 focus:outline-none transition-colors"

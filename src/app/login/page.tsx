@@ -77,8 +77,8 @@ function LoginForm() {
                             reject(new Error('GPS Error: Tidak dapat mendapatkan lokasi Anda.'));
                         }
                     },
-                    // maximumAge: 10 min — if user just logged out and back in, use cached fix instantly
-                    { enableHighAccuracy: false, maximumAge: 600000 }
+                    // maximumAge: 0 — always get a fresh position at each login event
+                    { enableHighAccuracy: false, maximumAge: 0 }
                 );
             });
 
