@@ -107,8 +107,8 @@ function PostEditorContent() {
     const [selectedImage, setSelectedImage] = React.useState<HTMLImageElement | null>(null);
 
     // Categories State
-    const [categories, setCategories] = React.useState<string[]>(['Design', 'Development', 'Marketing', 'Tutorials']);
-    const [selectedCategories, setSelectedCategories] = React.useState<string[]>(['Design']);
+    const [categories, setCategories] = React.useState<string[]>(['Berita', 'Kegiatan', 'Pengumuman', 'Program Kerja']);
+    const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
     const [newCategory, setNewCategory] = React.useState('');
     const [isAddingCategory, setIsAddingCategory] = React.useState(false);
 
@@ -130,8 +130,13 @@ function PostEditorContent() {
     };
 
     // Tags State
-    const [tags, setTags] = React.useState<string[]>(['ui-design', 'minimalism']);
+    const [tags, setTags] = React.useState<string[]>([]);
     const [newTag, setNewTag] = React.useState('');
+
+    // SEO State
+    const [metaTitle, setMetaTitle] = React.useState('');
+    const [metaDesc, setMetaDesc] = React.useState('');
+
 
     const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -797,6 +802,8 @@ function PostEditorContent() {
                         // Set other states if needed (categories, tags)
                         if (post.categories) setSelectedCategories(post.categories);
                         if (post.tags) setTags(post.tags);
+                        if (post.metaTitle) setMetaTitle(post.metaTitle);
+                        if (post.metaDesc) setMetaDesc(post.metaDesc);
                     }
                 })
                 .catch(err => console.error("Failed to load post", err));
@@ -828,10 +835,12 @@ function PostEditorContent() {
             title,
             content,
             status,
-            image: featuredImage, // Use the state we have
+            image: featuredImage,
             categories: selectedCategories,
-            tags: tags,
-            date: new Date().toISOString() // Or use the input date if connected
+            tags,
+            metaTitle: metaTitle || title,   // fallback to post title if empty
+            metaDesc,                         // stored for <meta name="description">
+            date: new Date().toISOString()
         };
 
         if (currentPostId) {
@@ -1400,11 +1409,26 @@ function PostEditorContent() {
                             </h3>
                             <div>
                                 <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Meta Title</label>
-                                <input className="w-full bg-slate-800 dark:bg-slate-100 border-slate-700 dark:border-slate-300 rounded-lg text-sm text-slate-200 dark:text-slate-700 focus:ring-primary focus:border-primary px-3 py-2 outline-none" placeholder="Page title in search results" />
+                                <input
+                                    className="w-full bg-slate-800 dark:bg-slate-100 border-slate-700 dark:border-slate-300 rounded-lg text-sm text-slate-200 dark:text-slate-700 focus:ring-primary focus:border-primary px-3 py-2 outline-none"
+                                    placeholder="Page title in search results"
+                                    value={metaTitle}
+                                    onChange={(e) => setMetaTitle(e.target.value)}
+                                    maxLength={70}
+                                />
+                                <p className="text-[10px] text-slate-500 mt-1">{metaTitle.length}/70 karakter</p>
                             </div>
                             <div>
                                 <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Meta Description</label>
-                                <textarea className="w-full bg-slate-800 dark:bg-slate-100 border-slate-700 dark:border-slate-300 rounded-lg text-sm text-slate-200 dark:text-slate-700 focus:ring-primary focus:border-primary px-3 py-2 resize-none outline-none" placeholder="Brief description for search engines" rows={3}></textarea>
+                                <textarea
+                                    className="w-full bg-slate-800 dark:bg-slate-100 border-slate-700 dark:border-slate-300 rounded-lg text-sm text-slate-200 dark:text-slate-700 focus:ring-primary focus:border-primary px-3 py-2 resize-none outline-none"
+                                    placeholder="Brief description for search engines"
+                                    rows={3}
+                                    value={metaDesc}
+                                    onChange={(e) => setMetaDesc(e.target.value)}
+                                    maxLength={160}
+                                />
+                                <p className="text-[10px] text-slate-500 mt-1">{metaDesc.length}/160 karakter</p>
                             </div>
                         </div>
 

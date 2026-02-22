@@ -189,7 +189,7 @@ function PostsPageContent() {
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                     <div className="flex items-center justify-end gap-2">
                                                         <a
-                                                            href={`/berita/read?slug=${post.slug}`}
+                                                            href={`/artikel/${post.slug}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-slate-400 hover:text-primary hover:bg-primary/10 transition-colors w-8 h-8 flex items-center justify-center rounded-full"
