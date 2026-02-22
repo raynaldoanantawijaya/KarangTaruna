@@ -1,7 +1,8 @@
 'use client';
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 
+// ... (interface left alone via replace)
 interface AdminSession {
     id: string;
     sessionId?: string;
@@ -20,6 +21,29 @@ export function AdminSessionProvider({
     session: AdminSession | null;
     children: React.ReactNode;
 }) {
+    useEffect(() => {
+        if (!session) return;
+
+        // Poll every 15 seconds to check if session is still valid
+        const interval = setInterval(async () => {
+            try {
+                const res = await fetch('/api/auth/session-status');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.valid === false) {
+                        // Session revoked from somewhere else, immediately kick out
+                        window.location.href = '/api/auth/handle-revoked-session';
+                    }
+                }
+            } catch (err) {
+                // Ignore network errors so we don't accidentally log out users who 
+                // temporarily lose internet connection
+            }
+        }, 15000);
+
+        return () => clearInterval(interval);
+    }, [session]);
+
     return (
         <AdminSessionContext.Provider value={session}>
             {children}
