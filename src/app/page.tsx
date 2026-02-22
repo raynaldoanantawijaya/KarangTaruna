@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Calendar, Users, MapPin, Award, CheckCircle, Clock } from "lucide-react";
 import NewsImage from "@/components/NewsImage";
 import { INTERNAL_ARTICLES } from "@/app/berita/read/page";
-import { Footer } from "@/components/Footer";
+
 
 import GalleryImage from '@/components/GalleryImage';
 import { adminDb } from '@/lib/firebase-admin';
@@ -588,8 +588,6 @@ export default async function Home() {
           </div>
         </section>
       </main>
-
-      <Footer contact={appearance?.contact} />
     </div>
   );
 }
