@@ -32,26 +32,16 @@ export async function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
 
     // --- SEO: Canonical URL Enforcement ---
-    // 1. Force HTTPS (HTTP → HTTPS)
-    // 2. Force non-www (www → non-www)
-    // Both are 301 Permanent Redirects for SEO
-    const url = request.nextUrl;
-    const host = request.headers.get('host') || '';
-    const proto = request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '');
+    // Redirect www → non-www (301 Permanent Redirect untuk SEO)
+    // CATATAN: Vercel sudah menangani HTTP→HTTPS secara otomatis di level CDN,
+    // jadi kita hanya perlu menangani www → non-www di sini.
+    const hostname = request.nextUrl.hostname; // lebih reliable daripada host header di Vercel
 
-    const isHttp = proto === 'http';
-    const isWww = host.startsWith('www.');
-
-    if (isHttp || isWww) {
-        const canonicalHost = isWww ? host.slice(4) : host; // strip "www."
-        const redirectUrl = new URL(request.url);
-        redirectUrl.protocol = 'https:';
-        redirectUrl.host = canonicalHost;
-        return NextResponse.redirect(redirectUrl, {
+    if (hostname.startsWith('www.')) {
+        const newUrl = request.nextUrl.clone();
+        newUrl.hostname = hostname.slice(4); // strip "www."
+        return NextResponse.redirect(newUrl, {
             status: 301,
-            headers: {
-                'Cache-Control': 'public, max-age=31536000, immutable',
-            },
         });
     }
     // --- End SEO Canonical Enforcement ---
