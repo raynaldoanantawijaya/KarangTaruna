@@ -1,0 +1,15 @@
+{
+    "redirects": [
+        {
+            "source": "/:path*",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "www.astawiradipta.my.id"
+                }
+            ],
+            "destination": "https://astawiradipta.my.id/:path*",
+            "permanent": true
+        }
+    ]
+}
