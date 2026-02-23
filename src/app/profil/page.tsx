@@ -6,6 +6,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Profil Karang Taruna Asta Wira Dipta - Visi, Misi & Struktur Organisasi | Solo",
     description: "Profil lengkap Karang Taruna Asta Wira Dipta Kelurahan Mojo, Surakarta. Visi, misi, struktur organisasi, sejarah, dan arti lambang. Organisasi kepemudaan terbaik di Solo.",
+    alternates: {
+        canonical: 'https://astawiradipta.my.id/profil',
+    },
     keywords: [
         "profil karang taruna", "karang taruna mojo", "asta wira dipta",
         "struktur organisasi karang taruna", "visi misi karang taruna",

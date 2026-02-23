@@ -4,8 +4,18 @@ import SearchInput from "@/components/SearchInput";
 import NewsImage from "@/components/NewsImage";
 import Pagination from "@/components/Pagination";
 import { adminDb } from '@/lib/firebase-admin';
+import type { Metadata } from 'next';
 
 export const revalidate = 60; // ISR: regenerate every 60 seconds
+
+export const metadata: Metadata = {
+    title: "Berita & Artikel - Karang Taruna Asta Wira Dipta",
+    description: "Berita terkini, informasi kegiatan, dan artikel inspiratif dari Karang Taruna Asta Wira Dipta Kelurahan Mojo, Surakarta.",
+    alternates: {
+        canonical: 'https://astawiradipta.my.id/berita',
+    },
+};
+
 
 // Define Types for API Response
 interface NewsItem {

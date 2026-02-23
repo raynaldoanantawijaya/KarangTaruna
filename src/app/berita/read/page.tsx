@@ -1658,8 +1658,8 @@ async function getLocalNews(slug: string): Promise<NewsDetail | null> {
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }): Promise<Metadata> {
     const resolvedSearchParams = await searchParams;
     const url = resolvedSearchParams.url as string;
-    const id = resolvedSearchParams.id as string; // Support ID param too
-    const slug = resolvedSearchParams.slug as string; // Support Slug param
+    const id = resolvedSearchParams.id as string;
+    const slug = resolvedSearchParams.slug as string;
 
     // Check Internal dictionary
     const target = url || id || slug;
@@ -1668,9 +1668,13 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     if (internalArticle) {
         return {
             title: `${internalArticle.title} - Karang Taruna Asta Wira Dipta`,
-            description: internalArticle.title, // Use title as description or truncate body in real app
+            description: internalArticle.title,
             alternates: {
                 canonical: `https://astawiradipta.my.id/berita/read?url=${encodeURIComponent(target)}`
+            },
+            robots: {
+                index: true,
+                follow: true,
             },
             openGraph: {
                 title: internalArticle.title,
@@ -1702,11 +1706,23 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
         }
     }
 
+    // URL adalah berita eksternal (url=https://...) → noindex karena kontennya dari domain lain
+    if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+        return {
+            title: "Baca Berita - Karang Taruna Asta Wira Dipta",
+            description: "Portal Berita dan Informasi Terkini Karang Taruna Asta Wira Dipta.",
+            robots: {
+                index: false,
+                follow: false,
+            },
+        }
+    }
+
     return {
         title: "Baca Berita - Karang Taruna Asta Wira Dipta",
         description: "Portal Berita dan Informasi Terkini Karang Taruna Asta Wira Dipta.",
         alternates: {
-            canonical: url ? `https://astawiradipta.my.id/berita/read?url=${encodeURIComponent(url)}` : "https://astawiradipta.my.id/berita"
+            canonical: "https://astawiradipta.my.id/berita"
         }
     }
 }

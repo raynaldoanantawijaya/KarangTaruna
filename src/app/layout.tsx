@@ -13,6 +13,9 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://astawiradipta.my.id'),
+  alternates: {
+    canonical: 'https://astawiradipta.my.id',
+  },
   title: {
     default: "Karang Taruna Asta Wira Dipta - Kelurahan Mojo, Surakarta",
     template: "%s | Karang Taruna Kelurahan Mojo"
@@ -249,11 +252,6 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} font-sans antialiased bg-background text-foreground transition-colors duration-300 overflow-x-hidden w-full relative`}
       >
-        {/* Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

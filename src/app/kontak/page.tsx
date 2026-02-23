@@ -9,6 +9,9 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
     title: "Kontak Karang Taruna Asta Wira Dipta - Alamat & Sekretariat di Mojo, Solo",
     description: "Hubungi Karang Taruna Asta Wira Dipta. Alamat sekretariat: Jl. Sungai Serang I No.313, Mojo, Pasar Kliwon, Surakarta. Email, telepon, dan peta lokasi.",
+    alternates: {
+        canonical: 'https://astawiradipta.my.id/kontak',
+    },
     keywords: [
         "kontak karang taruna", "alamat karang taruna mojo", "sekretariat asta wira dipta",
         "hubungi karang taruna solo", "email karang taruna", "telepon karang taruna",
@@ -22,6 +25,7 @@ export const metadata: Metadata = {
         url: "https://astawiradipta.my.id/kontak",
     },
 };
+
 
 async function getAppearanceData() {
     try {
