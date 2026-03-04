@@ -10,8 +10,8 @@ interface GalleryImageProps {
 }
 
 /**
- * GalleryImage — optimized with next/image for automatic WebP conversion,
- * lazy loading, and responsive sizing. Falls back to placeholder on error.
+ * GalleryImage — uses next/image fill mode to perfectly cover the parent container.
+ * Parent must have `position: relative` and explicit height.
  */
 export default function GalleryImage({ src, alt, className }: GalleryImageProps) {
     const fallback = '/logo-kt.webp';
@@ -22,9 +22,8 @@ export default function GalleryImage({ src, alt, className }: GalleryImageProps)
         <Image
             src={hasError ? fallback : imgSrc}
             alt={alt}
-            className={className}
-            width={800}
-            height={600}
+            className={`object-cover ${className || ''}`}
+            fill
             quality={75}
             loading="lazy"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
