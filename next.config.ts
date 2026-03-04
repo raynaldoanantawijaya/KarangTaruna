@@ -68,6 +68,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'img.youtube.com',  // YouTube thumbnails (YouTubeFacade)
+      },
+      {
+        protocol: 'https',
         hostname: 'via.placeholder.com',  // Placeholder fallbacks
       },
     ],

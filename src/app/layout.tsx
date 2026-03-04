@@ -8,7 +8,8 @@ import FooterServer from "@/components/FooterServer";
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -248,6 +249,13 @@ export default function RootLayout({
         <meta name="ICBM" content="-7.5755, 110.8243" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1a56db" />
+        {/* Preconnect hints for faster external resource loading */}
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://img.youtube.com" />
+        <link rel="dns-prefetch" href="https://img.youtube.com" />
+        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
+        <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
       </head>
       <body
         className={`${poppins.variable} font-sans antialiased bg-background text-foreground transition-colors duration-300 overflow-x-hidden w-full relative`}

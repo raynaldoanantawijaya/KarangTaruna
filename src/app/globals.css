@@ -785,3 +785,41 @@ html {
     /* Optional: match background color so padded areas look continuous if needed */
   }
 }
+
+/* ==================== PERFORMANCE: REDUCE ANIMATIONS ==================== */
+
+/* Respect user's motion preference (accessibility + battery saving) */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Reduce heavy animations on mobile to save CPU/battery */
+@media (max-width: 768px) {
+
+  .animate-blob,
+  .shape-blob {
+    animation: none !important;
+  }
+
+  .gemerlap-container::before {
+    animation: none !important;
+  }
+
+  .animate-sparkle {
+    animation: none !important;
+  }
+
+  /* Simpler transitions on mobile */
+  .transition-all {
+    transition-property: opacity, transform !important;
+    transition-duration: 0.15s !important;
+  }
+}

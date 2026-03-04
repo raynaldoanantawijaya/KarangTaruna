@@ -6,6 +6,7 @@ import { INTERNAL_ARTICLES } from "@/app/berita/read/page";
 
 
 import GalleryImage from '@/components/GalleryImage';
+import YouTubeFacade from '@/components/YouTubeFacade';
 import { adminDb } from '@/lib/firebase-admin';
 
 interface NewsItem {
@@ -131,7 +132,7 @@ import { Metadata } from "next";
 // Creating LatestNewsSection ONLY included the external news.
 // So I need to put the Internal News section BACK into page.tsx below the Suspense.
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: cache halaman 60 detik, lalu refresh dari Firestore
 
 export const metadata: Metadata = {
   title: "Karang Taruna Asta Wira Dipta - Kelurahan Mojo, Surakarta",
@@ -495,14 +496,11 @@ export default async function Home() {
             {videoItems.map((video: VideoItem) => (
               <div key={video.id} className="relative rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all h-[250px] md:h-[300px] border border-gray-100 dark:border-gray-800">
                 {video.isYouTube && video.youtubeId ? (
-                  <iframe
-                    className="w-full h-full object-cover"
-                    src={`https://www.youtube.com/embed/${video.youtubeId}?modestbranding=1&rel=0`}
+                  <YouTubeFacade
+                    youtubeId={video.youtubeId}
                     title={video.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
+                    className="w-full h-full"
+                  />
                 ) : video.videoUrl ? (
                   <video
                     className="w-full h-full object-cover"
