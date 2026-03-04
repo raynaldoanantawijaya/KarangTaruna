@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
+import GoogleMapFacade from "@/components/GoogleMapFacade";
 import type { Metadata } from "next";
 import { adminDb } from '@/lib/firebase-admin';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: cache 60 detik
 
 export const metadata: Metadata = {
     title: "Kontak Karang Taruna Asta Wira Dipta - Alamat & Sekretariat di Mojo, Solo",
@@ -130,16 +131,10 @@ export default async function Kontak() {
 
                         {/* Map Embed */}
                         <div className="w-full h-64 md:h-80 bg-gray-200 rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700">
-                            <iframe
+                            <GoogleMapFacade
                                 src="https://maps.google.com/maps?q=Kantor+Kelurahan+Mojo,+Surakarta&t=&z=17&ie=UTF8&iwloc=&output=embed"
-                                width="100%"
-                                height="100%"
-                                style={{ border: 0 }}
-                                allowFullScreen
-                                loading="lazy"
-                                referrerPolicy="no-referrer-when-downgrade"
                                 title="Google Map Karang Taruna"
-                            ></iframe>
+                            />
                         </div>
                     </div>
 

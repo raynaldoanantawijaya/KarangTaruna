@@ -2,7 +2,7 @@
 import { Calendar, ChevronRight, Check, Clock } from "lucide-react";
 import type { Metadata } from "next";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: cache 60 detik
 
 export const metadata: Metadata = {
     title: "Program Kerja Karang Taruna Asta Wira Dipta - Kegiatan Pemuda di Solo",
@@ -23,6 +23,7 @@ export const metadata: Metadata = {
 
 import { adminDb } from '@/lib/firebase-admin';
 import GalleryImage from '@/components/GalleryImage';
+import YouTubeFacade from '@/components/YouTubeFacade';
 
 interface GalleryItem {
     id: string;
@@ -132,7 +133,7 @@ export default async function ProgramKerja() {
                                 <div key={idx} className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group border border-gray-100 dark:border-gray-700 flex flex-col h-full">
                                     <div className="relative h-56 overflow-hidden">
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 group-hover:from-black/40 transition-colors"></div>
-                                        <img
+                                        <GalleryImage
                                             alt={program.title}
                                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                                             src={program.imageUrl || "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=800&auto=format&fit=crop"}
@@ -312,14 +313,11 @@ export default async function ProgramKerja() {
                         {videoItems.map((video: VideoItem) => (
                             <div key={video.id} className="relative rounded-2xl overflow-hidden group shadow-lg hover:shadow-2xl transition-all h-[250px] md:h-[300px] border border-gray-100 dark:border-gray-800">
                                 {video.isYouTube && video.youtubeId ? (
-                                    <iframe
-                                        className="w-full h-full object-cover"
-                                        src={`https://www.youtube.com/embed/${video.youtubeId}?modestbranding=1&rel=0`}
+                                    <YouTubeFacade
+                                        youtubeId={video.youtubeId}
                                         title={video.title}
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                    ></iframe>
+                                        className="w-full h-full"
+                                    />
                                 ) : video.videoUrl ? (
                                     <video
                                         className="w-full h-full object-cover"
