@@ -25,16 +25,37 @@ export async function POST(request: Request) {
         const isImage = IMAGE_EXTENSIONS.includes(ext);
 
         if (isImage) {
-            // Convert to WebP with quality reduction and resize
-            buffer = await sharp(buffer)
+            // Convert to WebP with iterative compression to ensure < 100KB
+            // Step 1: Resize to max 1200px (good enough for web display)
+            let sharpInstance = sharp(buffer)
                 .resize({
-                    width: 1920,
-                    height: 1920,
-                    fit: 'inside',           // Keep aspect ratio, fit within bounds
-                    withoutEnlargement: true  // Don't upscale small images
+                    width: 1200,
+                    height: 1200,
+                    fit: 'inside',
+                    withoutEnlargement: true,
                 })
-                .webp({ quality: 80 })
-                .toBuffer() as Buffer;
+                .webp({ quality: 80 });
+
+            buffer = await sharpInstance.toBuffer() as Buffer;
+
+            // Step 2: If still > 100KB, reduce quality progressively
+            const MAX_SIZE = 100 * 1024; // 100KB
+            const qualities = [70, 60, 50, 40, 30];
+
+            for (const q of qualities) {
+                if (buffer.length <= MAX_SIZE) break;
+                buffer = await sharp(buffer)
+                    .webp({ quality: q })
+                    .toBuffer() as Buffer;
+            }
+
+            // Step 3: If STILL > 100KB (very rare), resize smaller
+            if (buffer.length > MAX_SIZE) {
+                buffer = await sharp(buffer)
+                    .resize({ width: 800, height: 800, fit: 'inside', withoutEnlargement: true })
+                    .webp({ quality: 40 })
+                    .toBuffer() as Buffer;
+            }
         }
 
         // Upload to Cloudinary explicitly providing the 'karangtaruna' folder

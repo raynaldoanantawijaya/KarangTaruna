@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface NewsImageProps {
     src: string;
@@ -8,16 +9,30 @@ interface NewsImageProps {
     className?: string;
 }
 
+/**
+ * NewsImage — optimized with next/image for automatic WebP conversion,
+ * lazy loading, and responsive sizing. Falls back to placeholder on error.
+ */
 export default function NewsImage({ src, alt, className }: NewsImageProps) {
-    const [imgSrc, setImgSrc] = useState(src);
+    const fallback = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=800&auto=format&fit=crop";
+    const [imgSrc, setImgSrc] = useState(src || fallback);
+    const [hasError, setHasError] = useState(false);
 
     return (
-        <img
-            src={imgSrc || "https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=800&auto=format&fit=crop"}
+        <Image
+            src={hasError ? fallback : imgSrc}
             alt={alt}
             className={className}
+            width={800}
+            height={450}
+            quality={75}
+            loading="lazy"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
             onError={() => {
-                setImgSrc("https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=800&auto=format&fit=crop");
+                if (!hasError) {
+                    setImgSrc(fallback);
+                    setHasError(true);
+                }
             }}
         />
     );
