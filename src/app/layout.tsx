@@ -249,6 +249,12 @@ export default function RootLayout({
         <meta name="ICBM" content="-7.5755, 110.8243" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1a56db" />
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7274114510778054"
+          crossOrigin="anonymous"
+        ></script>
         {/* Preconnect hints for faster external resource loading */}
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
