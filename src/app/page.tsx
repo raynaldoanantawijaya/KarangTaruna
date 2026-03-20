@@ -243,6 +243,10 @@ export default async function Home() {
                   alt="Logo Karang Taruna"
                   className="rounded-xl w-full h-full object-contain aspect-[4/3] bg-gray-100 dark:bg-gray-800 p-4"
                   src="/visi-misi.webp"
+                  width={800}
+                  height={751}
+                  // @ts-ignore
+                  fetchpriority="high"
                 />
               </div>
             </div>
@@ -356,7 +360,7 @@ export default async function Home() {
                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
                         <Link href="/berita/internal-sejarah-kelurahan-mojo">
                             <NewsImage alt="Sejarah Kelurahan Mojo" className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105" src="/kelurahan-mojo-history.webp" />
-                            <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Sejarah</div>
+                            <div className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Sejarah</div>
                         </Link>
                     </div>
                     <div className="md:w-7/12 p-6 flex flex-col justify-between">
@@ -381,7 +385,7 @@ export default async function Home() {
                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
                         <Link href="/berita/internal-profil-pasar-kliwon">
                             <NewsImage alt="Kecamatan Pasar Kliwon" className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105" src="/pasarkliwon.webp" />
-                            <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Profil Wilayah</div>
+                            <div className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Profil Wilayah</div>
                         </Link>
                     </div>
                     <div className="md:w-7/12 p-6 flex flex-col justify-between">
@@ -406,7 +410,7 @@ export default async function Home() {
                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
                         <Link href="/berita/internal-profil-kota-surakarta">
                             <NewsImage alt="Kota Surakarta" className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105" src="/surakarta.webp" />
-                            <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Profil Kota</div>
+                            <div className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Profil Kota</div>
                         </Link>
                     </div>
                     <div className="md:w-7/12 p-6 flex flex-col justify-between">
@@ -486,10 +490,10 @@ export default async function Home() {
             <div className="bg-gray-900 dark:bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 dark:border-gray-700">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
                 <div>
-                  <span className="text-primary font-semibold tracking-wider uppercase text-sm">Jadwal Kegiatan</span>
+                  <span className="text-blue-400 dark:text-primary font-semibold tracking-wider uppercase text-sm">Jadwal Kegiatan</span>
                   <h2 className="text-3xl font-bold text-white dark:text-gray-900 mt-1">Agenda Mendatang</h2>
                 </div>
-                <button className="hidden md:inline-flex items-center text-primary font-semibold hover:text-primary-dark mt-4 md:mt-0">
+                <button className="hidden md:inline-flex items-center text-blue-400 dark:text-primary font-semibold hover:text-blue-300 dark:hover:text-primary-dark mt-4 md:mt-0">
                   Lihat Kalender Penuh <ArrowRight className="h-5 w-5 ml-1" />
                 </button>
               </div>

@@ -23,13 +23,15 @@ export function Footer({ contact }: FooterProps = {}) {
                                 alt="Logo Karang Taruna Footer"
                                 className="h-16 w-16 md:h-20 md:w-20 object-contain"
                                 src="/icon-192.webp"
+                                width={80}
+                                height={80}
                             />
                             <div>
                                 <span className="font-bold text-lg sm:text-xl tracking-tight block leading-tight">Asta Wira Dipta</span>
-                                <span className="text-xs text-gray-400 block">Kelurahan Mojo - Surakarta</span>
+                                <span className="text-xs text-gray-300 block">Kelurahan Mojo - Surakarta</span>
                             </div>
                         </div>
-                        <p className="text-gray-400 text-sm max-w-sm mb-6">
+                        <p className="text-gray-300 text-sm max-w-sm mb-6">
                             Website Resmi Karang Taruna Kelurahan Mojo (Asta Wira Dipta), Kecamatan Pasar Kliwon, Kota Surakarta. Wadah pengembangan generasi muda yang aktif, kreatif, dan berjiwa sosial.
                         </p>
                         <div className="flex space-x-3 sm:space-x-4">
@@ -80,8 +82,8 @@ export function Footer({ contact }: FooterProps = {}) {
                 </div>
 
                 <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-                    <p className="text-gray-500 text-sm">© 2026 Van Helsing. All rights reserved.</p>
-                    <p className="text-gray-600 text-xs mt-2 md:mt-0">Asta Wira Dipta</p>
+                    <p className="text-gray-400 text-sm">© 2026 Van Helsing. All rights reserved.</p>
+                    <p className="text-gray-400 text-xs mt-2 md:mt-0">Asta Wira Dipta</p>
                 </div>
             </div>
         </footer>

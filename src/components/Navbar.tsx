@@ -65,6 +65,8 @@ export function Navbar() {
                             alt="Logo Asta Wira Dipta"
                             className="h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 object-contain"
                             src="/icon-192.webp"
+                            width={48}
+                            height={48}
                         />
                         <span className="font-bold text-sm sm:text-base md:text-sm lg:text-xl tracking-tight text-gray-900 dark:text-white leading-tight whitespace-nowrap">
                             Asta Wira Dipta

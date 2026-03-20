@@ -248,7 +248,7 @@ export default async function Berita({
                                                 alt="Sejarah Kelurahan Mojo"
                                                 className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
                                             />
-                                            <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                            <div className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                                                 Sejarah
                                             </div>
                                         </Link>
@@ -286,7 +286,7 @@ export default async function Berita({
                                                 alt="Kecamatan Pasar Kliwon"
                                                 className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
                                             />
-                                            <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                            <div className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                                                 Profil Wilayah
                                             </div>
                                         </Link>
@@ -324,7 +324,7 @@ export default async function Berita({
                                                 alt="Kota Surakarta"
                                                 className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
                                             />
-                                            <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                            <div className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                                                 Profil Kota
                                             </div>
                                         </Link>

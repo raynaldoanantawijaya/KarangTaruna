@@ -253,15 +253,11 @@ export default function RootLayout({
         {/* Google AdSense */}
         <script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7274114510778054"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9253651878551796"
           crossOrigin="anonymous"
         ></script>
-        {/* Preconnect hints for faster external resource loading */}
-        <link rel="preconnect" href="https://res.cloudinary.com" />
+        {/* DNS prefetch for external resources (no preconnect to avoid Lighthouse warnings on pages that don't use them) */}
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-        <link rel="preconnect" href="https://img.youtube.com" />
-        <link rel="dns-prefetch" href="https://img.youtube.com" />
-        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
         <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
       </head>
       <body
