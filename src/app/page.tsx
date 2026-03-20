@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { ArrowRight, Calendar, Users, MapPin, Award, CheckCircle, Clock } from "lucide-react";
+import { ArrowRight, Calendar, Users, MapPin, Award, CheckCircle, Clock, User, ChevronRight } from "lucide-react";
 import NewsImage from "@/components/NewsImage";
 import { INTERNAL_ARTICLES } from "@/app/berita/[slug]/page";
 
@@ -320,54 +320,114 @@ export default async function Home() {
           <LatestNewsSection />
         </Suspense>
 
-        {/* Profil Karang Taruna Mojo Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-100 dark:border-gray-800">
-          <div className="flex justify-between items-end mb-8">
-            <div>
-              <span className="text-secondary font-semibold tracking-wider uppercase text-sm">
-                Mengenal Lebih Dekat
-              </span>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-                Profil Karang Taruna Mojo
-              </h2>
-            </div>
-          </div>
+        {/* Profil Wilayah & Organisasi Section */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-gray-100 dark:border-gray-700">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <span className="bg-secondary w-2 h-8 mr-3 rounded-full"></span>
+                Profil Wilayah & Organisasi
+            </h3>
+            <div className="space-y-6">
+                <article className="flex flex-col md:flex-row bg-yellow-50 dark:bg-yellow-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-yellow-100 dark:border-yellow-900/30 group">
+                    <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
+                        <Link href="/berita/internal-profil-mojo">
+                            <NewsImage alt="Profil Karang Taruna Mojo" className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105" src="/visi-misi.webp" />
+                            <div className="absolute top-4 left-4 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full shadow-sm">Featured</div>
+                        </Link>
+                    </div>
+                    <div className="md:w-7/12 p-6 flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-2">
+                                <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> Baru saja</span><span>•</span><span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi Internal</span>
+                            </div>
+                            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                                <Link href="/berita/internal-profil-mojo">Mengenal Lebih Dekat Karang Taruna Asta Wira Dipta Kelurahan Mojo, Surakarta</Link>
+                            </h2>
+                            <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">Profil lengkap organisasi kepemudaan resmi Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta. Visi, misi, dan program kerja unggulan untuk pemuda Solo.</p>
+                        </div>
+                        <div className="mt-auto pt-4 border-t border-yellow-200 dark:border-yellow-800/30">
+                            <Link className="inline-flex items-center text-primary font-semibold text-sm hover:underline" href="/berita/internal-profil-mojo">
+                                Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
+                            </Link>
+                        </div>
+                    </div>
+                </article>
 
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col md:flex-row group transition-all hover:shadow-md">
-            <div className="md:w-1/2 relative h-64 md:h-auto overflow-hidden">
-              <NewsImage
-                alt="Profil Karang Taruna Mojo"
-                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
-                src="/profilktmojo.webp"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent pointer-events-none opacity-80 transition-opacity duration-500 group-hover:opacity-100"></div>
-              <div className="absolute bottom-6 left-6 right-6">
-                <div className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm inline-block mb-3">
-                  Profil Unggulan
-                </div>
-              </div>
+                <article className="flex flex-col md:flex-row bg-amber-50 dark:bg-amber-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-amber-100 dark:border-amber-900/30 group">
+                    <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
+                        <Link href="/berita/internal-sejarah-kelurahan-mojo">
+                            <NewsImage alt="Sejarah Kelurahan Mojo" className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105" src="/kelurahan-mojo-history.webp" />
+                            <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Sejarah</div>
+                        </Link>
+                    </div>
+                    <div className="md:w-7/12 p-6 flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-2">
+                                <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> Baru saja</span><span>•</span><span className="flex items-center"><User className="h-3 w-3 mr-1" /> Tim Redaksi</span>
+                            </div>
+                            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                                <Link href="/berita/internal-sejarah-kelurahan-mojo">Sejarah Kelurahan Mojo: Lahir dari Pemekaran Semanggi Tahun 2018</Link>
+                            </h2>
+                            <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">Kelurahan Mojo terbentuk tahun 2018 dari pemekaran Kelurahan Semanggi. Jalan Kyai Mojo menjadi batas pemisah. Fasilitas seperti RSUD Bung Karno dan Pasar Klithikan kini berada di Mojo.</p>
+                        </div>
+                        <div className="mt-auto pt-4 border-t border-amber-200 dark:border-amber-800/30">
+                            <Link className="inline-flex items-center text-primary font-semibold text-sm hover:underline" href="/berita/internal-sejarah-kelurahan-mojo">
+                                Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
+                            </Link>
+                        </div>
+                    </div>
+                </article>
+
+                <article className="flex flex-col md:flex-row bg-amber-50 dark:bg-amber-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-amber-100 dark:border-amber-900/30 group">
+                    <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
+                        <Link href="/berita/internal-profil-pasar-kliwon">
+                            <NewsImage alt="Kecamatan Pasar Kliwon" className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105" src="/pasarkliwon.webp" />
+                            <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Profil Wilayah</div>
+                        </Link>
+                    </div>
+                    <div className="md:w-7/12 p-6 flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-2">
+                                <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> Baru saja</span><span>•</span><span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi Internal</span>
+                            </div>
+                            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                                <Link href="/berita/internal-profil-pasar-kliwon">Menjelajahi Pasar Kliwon: Jantung Budaya dan Perdagangan Kota Surakarta</Link>
+                            </h2>
+                            <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">Kecamatan Pasar Kliwon, rumah bagi Keraton Kasunanan dan Kampung Arab. Pusat perdagangan batik (Klewer, PGS, BTC) dan wisata religi internasional Haul Habib Ali.</p>
+                        </div>
+                        <div className="mt-auto pt-4 border-t border-amber-200 dark:border-amber-800/30">
+                            <Link className="inline-flex items-center text-primary font-semibold text-sm hover:underline" href="/berita/internal-profil-pasar-kliwon">
+                                Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
+                            </Link>
+                        </div>
+                    </div>
+                </article>
+
+                <article className="flex flex-col md:flex-row bg-amber-50 dark:bg-amber-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-amber-100 dark:border-amber-900/30 group">
+                    <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
+                        <Link href="/berita/internal-profil-kota-surakarta">
+                            <NewsImage alt="Kota Surakarta" className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105" src="/surakarta.webp" />
+                            <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Profil Kota</div>
+                        </Link>
+                    </div>
+                    <div className="md:w-7/12 p-6 flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-2">
+                                <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> Baru saja</span><span>•</span><span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi Internal</span>
+                            </div>
+                            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                                <Link href="/berita/internal-profil-kota-surakarta">Profil Kota Surakarta (Solo) Lengkap: Sejarah, Wisata, & 54 Kelurahan</Link>
+                            </h2>
+                            <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">Panduan lengkap Kota Solo: Sejarah Mataram Islam, destinasi wisata, kuliner legendaris, dan profil detail 54 Kelurahan di 5 Kecamatan.</p>
+                        </div>
+                        <div className="mt-auto pt-4 border-t border-amber-200 dark:border-amber-800/30">
+                            <Link className="inline-flex items-center text-primary font-semibold text-sm hover:underline" href="/berita/internal-profil-kota-surakarta">
+                                Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
+                            </Link>
+                        </div>
+                    </div>
+                </article>
             </div>
-            
-            <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
-              <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                Wadah Pembinaan & Pengembangan Generasi Muda Terdepan
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                Karang Taruna Asta Wira Dipta Kelurahan Mojo tidak hanya sekadar wadah berkumpul, melainkan motor penggerak partisipasi pemuda dalam pembangunan kesejahteraan sosial masyarakat Mojo. Melalui berbagai program inovatif, pemberdayaan ekonomi kreatif, hingga pengabdian sosial, kami terus berkomitmen mencetak generasi bangsa yang tangguh dan berdaya saing dari Kota Surakarta.
-              </p>
-              
-              <div className="mt-2">
-                <Link
-                  href="/berita/internal-profil-karang-taruna-mojo-solo"
-                  className="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2"
-                >
-                  Baca Selengkapnya
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+        </div>
 
         {/* Featured Programs & Agenda Mapped Dynamic Component */}
         {proker?.programs?.length > 0 && (

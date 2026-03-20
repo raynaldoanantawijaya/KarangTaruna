@@ -20,7 +20,7 @@ async function getLatestInternalNews(): Promise<AdminPost[]> {
         const snapshot = await postsRef
             .where('status', '==', 'published')
             .orderBy('createdAt', 'desc')
-            .limit(2)
+            .limit(4)
             .get();
 
         return snapshot.docs.map(doc => ({
