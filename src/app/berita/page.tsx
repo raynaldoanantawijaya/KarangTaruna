@@ -108,7 +108,7 @@ export default async function Berita({
                 <div className="flex flex-col lg:flex-row gap-12 relative">
 
                     {/* Main Content: News Grid */}
-                    <div className="lg:w-2/3">
+                    <div className="w-full">
 
                         {displayedNews.length > 0 ? (
                             <div className="space-y-8">
@@ -337,31 +337,6 @@ export default async function Berita({
                             </div>
                         </div>
 
-                    </div>
-
-                    {/* Sidebar */}
-                    <div className="lg:w-1/3 relative">
-                        {/* Categories Widget - Static */}
-                        <div className="space-y-8">
-                            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center border-b border-gray-200 dark:border-gray-700 pb-2">
-                                    <Tag className="h-5 w-5 mr-2 text-primary" /> Kategori
-                                </h3>
-                                <ul className="space-y-2">
-                                    {[
-                                        { name: "Pendidikan & Sosial", slug: "pendidikan" },
-                                        { name: "Ekonomi Kreatif", slug: "ekonomi" },
-                                        { name: "Olahraga & Seni", slug: "olahraga" },
-                                    ].map((cat) => (
-                                        <li key={cat.slug}>
-                                            <Link href={`/berita`} className={`flex justify-between items-center px-4 py-3 rounded-lg text-sm transition-all duration-300 ${category === cat.slug ? 'bg-primary text-white shadow-md transform scale-105' : 'bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:pl-6'}`}>
-                                                <span className="font-medium">{cat.name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -320,54 +320,52 @@ export default async function Home() {
           <LatestNewsSection />
         </Suspense>
 
-        {/* Internal News Grid (4 Items) */}
+        {/* Profil Karang Taruna Mojo Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-100 dark:border-gray-800">
           <div className="flex justify-between items-end mb-8">
             <div>
               <span className="text-secondary font-semibold tracking-wider uppercase text-sm">
-                Kabar Asta Wira Dipta
+                Mengenal Lebih Dekat
               </span>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-                Kegiatan & Artikel Internal (Mojo)
+                Profil Karang Taruna Mojo
               </h2>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-            {displayNews.slice(0, 4).map((article: any) => (
-              <div key={article.id} className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col h-full">
-                <div className="relative h-40 overflow-hidden">
-                  <NewsImage
-                    alt={article.title}
-                    className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
-                    src={article.image || '/logo-kt.webp'} // Fallback image
-                  />
-                  <div className="absolute top-2 right-2 bg-white/90 dark:bg-black/80 backdrop-blur-sm text-xs font-bold px-2 py-1 rounded-lg shadow-sm">
-                    Internal
-                  </div>
-                </div>
-                <div className="p-4 flex flex-col flex-grow">
-                  <div className="text-[10px] text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
-                    {new Date(article.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-                  </div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                    <Link href={`/berita/${article.slug}`}>
-                      {article.title}
-                    </Link>
-                  </h3>
-                  <div className="mt-auto pt-3">
-                    <Link
-                      href={`/berita/${article.slug}`}
-                      className="text-sm font-semibold text-primary hover:text-primary-dark inline-flex items-center gap-1"
-                    >
-                      Baca <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  </div>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col md:flex-row group transition-all hover:shadow-md">
+            <div className="md:w-1/2 relative h-64 md:h-auto overflow-hidden">
+              <NewsImage
+                alt="Profil Karang Taruna Mojo"
+                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                src="/profilktmojo.webp"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent pointer-events-none opacity-80 transition-opacity duration-500 group-hover:opacity-100"></div>
+              <div className="absolute bottom-6 left-6 right-6">
+                <div className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm inline-block mb-3">
+                  Profil Unggulan
                 </div>
               </div>
-            ))}
+            </div>
+            
+            <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
+              <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Wadah Pembinaan & Pengembangan Generasi Muda Terdepan
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                Karang Taruna Asta Wira Dipta Kelurahan Mojo tidak hanya sekadar wadah berkumpul, melainkan motor penggerak partisipasi pemuda dalam pembangunan kesejahteraan sosial masyarakat Mojo. Melalui berbagai program inovatif, pemberdayaan ekonomi kreatif, hingga pengabdian sosial, kami terus berkomitmen mencetak generasi bangsa yang tangguh dan berdaya saing dari Kota Surakarta.
+              </p>
+              
+              <div className="mt-2">
+                <Link
+                  href="/berita/internal-profil-karang-taruna-mojo-solo"
+                  className="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-8 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2"
+                >
+                  Baca Selengkapnya
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
