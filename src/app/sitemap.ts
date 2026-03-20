@@ -1,12 +1,15 @@
 import { MetadataRoute } from 'next'
+import { adminDb } from '@/lib/firebase-admin';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600; // revalidate at most every hour
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://astawiradipta.my.id'
 
-    return [
+    const staticRoutes: MetadataRoute.Sitemap = [
         {
             url: baseUrl,
-            lastModified: new Date('2026-02-20'),
+            lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 1,
         },
@@ -24,7 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/berita`,
-            lastModified: new Date('2026-02-23'),
+            lastModified: new Date(),
             changeFrequency: 'daily',
             priority: 0.8,
         },
@@ -52,7 +55,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'monthly',
             priority: 0.5,
         },
-        // Internal Articles Only (artikel internal saja, bukan berita eksternal)
+        // Internal Articles Only (artikel internal profil)
         {
             url: `${baseUrl}/berita/internal-profil-kota-surakarta`,
             lastModified: new Date('2026-02-10'),
@@ -77,5 +80,38 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'monthly',
             priority: 0.7,
         },
-    ]
+    ];
+
+    let dynamicRoutes: MetadataRoute.Sitemap = [];
+
+    try {
+        const postsRef = adminDb.collection('posts');
+        const snapshot = await postsRef
+            .where('status', '==', 'published')
+            .orderBy('createdAt', 'desc')
+            .get();
+
+        dynamicRoutes = snapshot.docs.map(doc => {
+            const data = doc.data();
+            let lastModDate = new Date();
+            if (data.updatedAt) {
+                lastModDate = new Date(data.updatedAt);
+            } else if (data.createdAt) {
+                lastModDate = new Date(data.createdAt);
+            } else if (data.date) {
+                lastModDate = new Date(data.date);
+            }
+
+            return {
+                url: `${baseUrl}/berita/${data.slug || doc.id}`,
+                lastModified: lastModDate,
+                changeFrequency: 'weekly',
+                priority: 0.8,
+            };
+        });
+    } catch (error) {
+        console.error("Error fetching dynamic sitemap pages from Firebase:", error);
+    }
+
+    return [...staticRoutes, ...dynamicRoutes];
 }
