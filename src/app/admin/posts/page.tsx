@@ -174,9 +174,9 @@ function PostsPageContent() {
                                     ) : (
                                         filteredPosts.map((post) => (
                                             <tr key={post.id} className="hover:bg-gray-700/50 dark:hover:bg-slate-50 transition-colors">
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="text-sm font-medium text-white dark:text-slate-900">{post.title}</div>
-                                                    <div className="text-xs text-slate-500">/{post.slug}</div>
+                                                <td className="px-6 py-4 max-w-[200px] sm:max-w-[300px] md:max-w-md lg:max-w-lg">
+                                                    <div className="text-sm font-medium text-white dark:text-slate-900 truncate" title={post.title}>{post.title}</div>
+                                                    <div className="text-xs text-slate-500 truncate" title={`/${post.slug}`}>/{post.slug}</div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${post.status === 'published' ? 'bg-green-900/30 text-green-400 dark:bg-green-100 dark:text-green-800' : 'bg-yellow-900/30 text-yellow-400 dark:bg-yellow-100 dark:text-yellow-800'}`}>
