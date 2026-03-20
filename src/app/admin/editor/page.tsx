@@ -31,7 +31,8 @@ import {
     Highlighter,
     MoveVertical,
     PaintBucket,
-    ListTree
+    ListTree,
+    Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -136,6 +137,97 @@ function PostEditorContent() {
     // SEO State
     const [metaTitle, setMetaTitle] = React.useState('');
     const [metaDesc, setMetaDesc] = React.useState('');
+
+    const autoGenerateSeoAndTags = () => {
+        if (!editorRef.current || !titleRef.current) return;
+
+        const titleText = titleRef.current.innerText.trim();
+        const contentText = editorRef.current.innerText.trim();
+
+        if (!titleText && !contentText) {
+            showToast('Judul dan isi artikel kosong!', 'error');
+            return;
+        }
+
+        // 1. Meta Title
+        setMetaTitle(titleText);
+
+        // 2. Meta Description
+        // Clean up excessive newlines and spaces
+        const cleanContent = contentText.replace(/\s+/g, ' ').trim();
+        const desc = cleanContent.substring(0, 155);
+        setMetaDesc(desc.length === 155 ? desc + '...' : desc);
+
+        // 3. Auto Categories (Basic Keyword Matching)
+        const textToAnalyze = (titleText + ' ' + cleanContent).toLowerCase();
+        const detectedCategories = new Set(selectedCategories);
+
+        const categoryKeywords: Record<string, string[]> = {
+            'Berita': ['berita', 'kabar', 'info', 'terkini', 'hari ini', 'bencana', 'banjir', 'kebakaran', 'gempa', 'warga'],
+            'Kegiatan': ['rapat', 'pertemuan', 'musyawarah', 'pelatihan', 'lomba', 'acara', 'kegiatan', 'sosialisasi', 'jalan sehat', 'buka bersama', 'sahur', 'puasa', 'festival'],
+            'Pengumuman': ['pengumuman', 'diberitahukan', 'informasi penting', 'undangan', 'himbauan', 'wajib'],
+            'Program Kerja': ['program kerja', 'proker', 'rencana', 'evaluasi', 'target', 'agenda']
+        };
+
+        let newCatsAdded = 0;
+        for (const [catName, keywords] of Object.entries(categoryKeywords)) {
+            if (keywords.some(kw => textToAnalyze.includes(kw))) {
+                if (!detectedCategories.has(catName) && categories.includes(catName)) {
+                    detectedCategories.add(catName);
+                    newCatsAdded++;
+                }
+            }
+        }
+        setSelectedCategories(Array.from(detectedCategories));
+
+        // 4. Auto Tags Extraction
+        const stopWords = ['dan', 'atau', 'di', 'ke', 'dari', 'yang', 'untuk', 'dengan', 'pada', 'dalam', 'ini', 'itu', 'adalah', 'sebagai', 'oleh', 'kepada', 'bagi', 'agar', 'supaya', 'karena', 'sebab', 'jika', 'kalau', 'saat', 'ketika', 'setelah', 'sebelum', 'lalu', 'kemudian', 'namun', 'tetapi', 'sedangkan', 'melainkan', 'bahkan', 'juga', 'hanya', 'saja', 'sudah', 'telah', 'sedang', 'akan', 'masih', 'bisa', 'dapat', 'harus', 'tidak', 'bukan', 'jangan', 'belum', 'sangat', 'paling', 'lebih', 'kurang', 'serta', 'suatu', 'sebuah', 'seorang', 'mereka', 'kita', 'kami', 'saya', 'dia', 'ia', 'kamu', 'kalian', 'anda', 'tersebut', 'tentang', 'menjadi', 'ada', 'atas', 'bawah', 'samping', 'depan', 'belakang', 'seperti', 'cara', 'buat', 'tahun', 'hari', 'jam', 'waktu', 'banyak'];
+
+        // Extract words (4+ chars to be safer for meaning)
+        const words = textToAnalyze.match(/\b([a-zA-Z]{4,})\b/g) || [];
+        const wordCounts: Record<string, number> = {};
+
+        // Give extra weight to words in the title
+        const titleWords = titleText.toLowerCase().match(/\b([a-zA-Z]{4,})\b/g) || [];
+        
+        words.forEach(word => {
+            if (!stopWords.includes(word)) {
+                wordCounts[word] = (wordCounts[word] || 0) + 1;
+            }
+        });
+
+        titleWords.forEach(word => {
+            if (!stopWords.includes(word)) {
+                wordCounts[word] = (wordCounts[word] || 0) + 3; // Title words get +3 points
+            }
+        });
+
+        // Sort by frequency
+        const sortedWords = Object.entries(wordCounts)
+            .sort((a, b) => b[1] - a[1])
+            .map(entry => entry[0]);
+
+        // Take top 5 unique words not already in tags
+        const currentLowercaseTags = tags.map(t => t.toLowerCase());
+        const suggestedTags: string[] = [];
+        let addedCount = 0;
+        
+        for (const w of sortedWords) {
+            if (addedCount >= 5) break;
+            if (!currentLowercaseTags.includes(w)) {
+                // Capitalize first letter
+                const formattedTag = w.charAt(0).toUpperCase() + w.slice(1);
+                suggestedTags.push(formattedTag);
+                addedCount++;
+            }
+        }
+
+        if (suggestedTags.length > 0) {
+            setTags(prev => [...prev, ...suggestedTags]);
+        }
+
+        showToast(`SEO & Tags berhasil di-generate! (${newCatsAdded} Kategori, ${suggestedTags.length} Tags)`, 'success');
+    };
 
 
     const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -1312,6 +1404,24 @@ function PostEditorContent() {
                                     </div>
                                 )}
                             </div>
+                        </div>
+
+                        <div className="w-full h-px bg-gray-800 dark:bg-slate-200"></div>
+
+                        {/* Auto Generate SEO & Tags */}
+                        <div className="space-y-3 bg-gradient-to-r from-sky-900/40 to-indigo-900/40 dark:from-sky-100 dark:to-indigo-50 border border-sky-500/30 dark:border-sky-200 rounded-xl p-4 shadow-sm">
+                            <div className="flex justify-between items-center">
+                                <h3 className="text-xs font-semibold text-sky-400 dark:text-sky-600 uppercase tracking-wider flex items-center gap-2">
+                                    <Sparkles className="w-3 h-3" /> AI Assistant
+                                </h3>
+                            </div>
+                            <p className="text-xs text-slate-400 dark:text-slate-600 leading-relaxed">Otomatis ekstraksi Tags, Meta Description, dan Kategori dari judul & isi artikel.</p>
+                            <button
+                                onClick={autoGenerateSeoAndTags}
+                                className="w-full py-2.5 bg-sky-600 hover:bg-sky-500 dark:bg-sky-500 dark:hover:bg-sky-600 text-white text-sm font-medium rounded-lg shadow transition-all flex justify-center items-center gap-2 active:scale-95"
+                            >
+                                <Sparkles className="w-4 h-4" /> Generate Magic
+                            </button>
                         </div>
 
                         <div className="w-full h-px bg-gray-800 dark:bg-slate-200"></div>
