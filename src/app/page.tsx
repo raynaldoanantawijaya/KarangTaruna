@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { ArrowRight, Calendar, Users, MapPin, Award, CheckCircle, Clock } from "lucide-react";
 import NewsImage from "@/components/NewsImage";
-import { INTERNAL_ARTICLES } from "@/app/berita/read/page";
+import { INTERNAL_ARTICLES } from "@/app/berita/[slug]/page";
 
 
 import GalleryImage from '@/components/GalleryImage';
@@ -353,13 +353,13 @@ export default async function Home() {
                     {new Date(article.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </div>
                   <h3 className="text-base font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                    <Link href={`/berita/read?slug=${article.slug}`}>
+                    <Link href={`/berita/${article.slug}`}>
                       {article.title}
                     </Link>
                   </h3>
                   <div className="mt-auto pt-3">
                     <Link
-                      href={`/berita/read?slug=${article.slug}`}
+                      href={`/berita/${article.slug}`}
                       className="text-sm font-semibold text-primary hover:text-primary-dark inline-flex items-center gap-1"
                     >
                       Baca <ArrowRight className="w-3 h-3" />

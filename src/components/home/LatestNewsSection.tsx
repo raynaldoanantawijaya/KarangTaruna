@@ -78,7 +78,7 @@ export default async function LatestNewsSection() {
                                         <span className="flex items-center">{item.source}</span>
                                     </div>
                                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 hover:text-primary transition-colors cursor-pointer line-clamp-2">
-                                        <Link href={`/berita/read?url=${encodeURIComponent(item.link)}`}>
+                                        <Link href={item.link} target="_blank" rel="noopener noreferrer">
                                             {item.title}
                                         </Link>
                                     </h3>
@@ -87,7 +87,7 @@ export default async function LatestNewsSection() {
                                     </p>
                                 </div>
                                 <Link
-                                    href={`/berita/read?url=${encodeURIComponent(item.link)}`}
+                                    href={item.link} target="_blank" rel="noopener noreferrer"
                                     className="text-primary font-semibold text-sm hover:underline inline-flex items-center"
                                 >
                                     Baca Selengkapnya

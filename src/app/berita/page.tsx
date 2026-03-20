@@ -176,7 +176,7 @@ export default async function Berita({
 
                                         {/* Image Column */}
                                         <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
-                                            <Link href={`/berita/read?url=${encodeURIComponent(item.link)}`}>
+                                            <Link href={item.link} target="_blank" rel="noopener noreferrer">
                                                 <NewsImage
                                                     src={item.image}
                                                     alt={item.title}
@@ -196,7 +196,7 @@ export default async function Berita({
                                                 </div>
 
                                                 <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                                                    <Link href={`/berita/read?url=${encodeURIComponent(item.link)}`}>
+                                                    <Link href={item.link} target="_blank" rel="noopener noreferrer">
                                                         {item.title}
                                                     </Link>
                                                 </h2>
@@ -207,8 +207,8 @@ export default async function Berita({
                                             </div>
 
                                             <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
-                                                <Link href={`/berita/read?url=${encodeURIComponent(item.link)}`} className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
-                                                    Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
+                                                <Link href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
+                                                    Buka di Sumber Asli <ChevronRight className="h-4 w-4 ml-0.5" />
                                                 </Link>
                                             </div>
                                         </div>
@@ -242,7 +242,7 @@ export default async function Berita({
                                 {adminPosts.map((post) => (
                                     <article key={post.id} className="flex flex-col md:flex-row bg-yellow-50 dark:bg-yellow-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-yellow-100 dark:border-yellow-900/30 group">
                                         <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
-                                            <Link href={`/berita/read?slug=${post.slug}`}>
+                                            <Link href={`/berita/${post.slug}`}>
                                                 <NewsImage
                                                     src={post.image || '/logo-kt.webp'}
                                                     alt={post.title}
@@ -261,7 +261,7 @@ export default async function Berita({
                                                     <span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi Internal</span>
                                                 </div>
                                                 <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                                                    <Link href={`/berita/read?slug=${post.slug}`}>
+                                                    <Link href={`/berita/${post.slug}`}>
                                                         {post.title}
                                                     </Link>
                                                 </h2>
@@ -270,7 +270,7 @@ export default async function Berita({
                                                 </p>
                                             </div>
                                             <div className="mt-auto pt-4 border-t border-yellow-200 dark:border-yellow-800/30">
-                                                <Link href={`/berita/read?slug=${post.slug}`} className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
+                                                <Link href={`/berita/${post.slug}`} className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
                                                     Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
                                                 </Link>
                                             </div>
@@ -281,7 +281,7 @@ export default async function Berita({
                                 {/* Item Internal 1 */}
                                 <article className="flex flex-col md:flex-row bg-yellow-50 dark:bg-yellow-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-yellow-100 dark:border-yellow-900/30 group">
                                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
-                                        <Link href="/berita/read?url=internal-profil-mojo">
+                                        <Link href="/berita/internal-profil-mojo">
                                             <NewsImage
                                                 src="/visi-misi.webp"
                                                 alt="Profil Karang Taruna Mojo"
@@ -300,7 +300,7 @@ export default async function Berita({
                                                 <span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi Internal</span>
                                             </div>
                                             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                                                <Link href="/berita/read?url=internal-profil-mojo">
+                                                <Link href="/berita/internal-profil-mojo">
                                                     Mengenal Lebih Dekat Karang Taruna Asta Wira Dipta Kelurahan Mojo, Surakarta
                                                 </Link>
                                             </h2>
@@ -309,7 +309,7 @@ export default async function Berita({
                                             </p>
                                         </div>
                                         <div className="mt-auto pt-4 border-t border-yellow-200 dark:border-yellow-800/30">
-                                            <Link href="/berita/read?url=internal-profil-mojo" className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
+                                            <Link href="/berita/internal-profil-mojo" className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
                                                 Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
                                             </Link>
                                         </div>
@@ -319,7 +319,7 @@ export default async function Berita({
                                 {/* Item Internal 2 - Sejarah Kelurahan Mojo */}
                                 <article className="flex flex-col md:flex-row bg-amber-50 dark:bg-amber-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-amber-100 dark:border-amber-900/30 group">
                                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
-                                        <Link href="/berita/read?url=internal-sejarah-kelurahan-mojo">
+                                        <Link href="/berita/internal-sejarah-kelurahan-mojo">
                                             <NewsImage
                                                 src="/kelurahan-mojo-history.webp"
                                                 alt="Sejarah Kelurahan Mojo"
@@ -338,7 +338,7 @@ export default async function Berita({
                                                 <span className="flex items-center"><User className="h-3 w-3 mr-1" /> Tim Redaksi</span>
                                             </div>
                                             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                                                <Link href="/berita/read?url=internal-sejarah-kelurahan-mojo">
+                                                <Link href="/berita/internal-sejarah-kelurahan-mojo">
                                                     Sejarah Kelurahan Mojo: Lahir dari Pemekaran Semanggi Tahun 2018
                                                 </Link>
                                             </h2>
@@ -347,7 +347,7 @@ export default async function Berita({
                                             </p>
                                         </div>
                                         <div className="mt-auto pt-4 border-t border-amber-200 dark:border-amber-800/30">
-                                            <Link href="/berita/read?url=internal-sejarah-kelurahan-mojo" className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
+                                            <Link href="/berita/internal-sejarah-kelurahan-mojo" className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
                                                 Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
                                             </Link>
                                         </div>
@@ -357,7 +357,7 @@ export default async function Berita({
                                 {/* Item Internal 3 - Profil Kecamatan Pasar Kliwon */}
                                 <article className="flex flex-col md:flex-row bg-amber-50 dark:bg-amber-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-amber-100 dark:border-amber-900/30 group">
                                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
-                                        <Link href="/berita/read?url=internal-profil-pasar-kliwon">
+                                        <Link href="/berita/internal-profil-pasar-kliwon">
                                             <NewsImage
                                                 src="/pasarkliwon.webp"
                                                 alt="Kecamatan Pasar Kliwon"
@@ -376,7 +376,7 @@ export default async function Berita({
                                                 <span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi Internal</span>
                                             </div>
                                             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                                                <Link href="/berita/read?url=internal-profil-pasar-kliwon">
+                                                <Link href="/berita/internal-profil-pasar-kliwon">
                                                     Menjelajahi Pasar Kliwon: Jantung Budaya dan Perdagangan Kota Surakarta
                                                 </Link>
                                             </h2>
@@ -385,7 +385,7 @@ export default async function Berita({
                                             </p>
                                         </div>
                                         <div className="mt-auto pt-4 border-t border-amber-200 dark:border-amber-800/30">
-                                            <Link href="/berita/read?url=internal-profil-pasar-kliwon" className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
+                                            <Link href="/berita/internal-profil-pasar-kliwon" className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
                                                 Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
                                             </Link>
                                         </div>
@@ -395,7 +395,7 @@ export default async function Berita({
                                 {/* Item Internal 4 - Profil Kota Surakarta */}
                                 <article className="flex flex-col md:flex-row bg-amber-50 dark:bg-amber-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-amber-100 dark:border-amber-900/30 group">
                                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
-                                        <Link href="/berita/read?url=internal-profil-kota-surakarta">
+                                        <Link href="/berita/internal-profil-kota-surakarta">
                                             <NewsImage
                                                 src="/surakarta.webp"
                                                 alt="Kota Surakarta"
@@ -414,7 +414,7 @@ export default async function Berita({
                                                 <span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi Internal</span>
                                             </div>
                                             <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                                                <Link href="/berita/read?url=internal-profil-kota-surakarta">
+                                                <Link href="/berita/internal-profil-kota-surakarta">
                                                     Profil Kota Surakarta (Solo) Lengkap: Sejarah, Wisata, & 54 Kelurahan
                                                 </Link>
                                             </h2>
@@ -423,7 +423,7 @@ export default async function Berita({
                                             </p>
                                         </div>
                                         <div className="mt-auto pt-4 border-t border-amber-200 dark:border-amber-800/30">
-                                            <Link href="/berita/read?url=internal-profil-kota-surakarta" className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
+                                            <Link href="/berita/internal-profil-kota-surakarta" className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
                                                 Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
                                             </Link>
                                         </div>

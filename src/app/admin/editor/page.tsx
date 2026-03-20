@@ -901,7 +901,7 @@ function PostEditorContent() {
     const handlePreview = async () => {
         const slug = await handleSave('draft');
         if (slug) {
-            window.open(`/berita/read?slug=${slug}`, '_blank');
+            window.open(`/berita/${slug}`, '_blank');
         }
     };
 

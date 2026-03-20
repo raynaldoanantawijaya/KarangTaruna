@@ -1655,22 +1655,43 @@ async function getLocalNews(slug: string): Promise<NewsDetail | null> {
 }
 
 // Generate Metadata for SEO
-export async function generateMetadata({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }): Promise<Metadata> {
+export async function generateMetadata({ 
+    params,
+    searchParams 
+}: { 
+    params: Promise<{ slug: string }>,
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }> 
+}): Promise<Metadata> {
+    const resolvedParams = await params;
     const resolvedSearchParams = await searchParams;
+    
+    let slug = resolvedParams.slug;
     const url = resolvedSearchParams.url as string;
-    const id = resolvedSearchParams.id as string;
-    const slug = resolvedSearchParams.slug as string;
+    
+    // Fallback for old /berita/read?slug=... or /berita/read?url=...
+    if (slug === 'read') {
+        slug = (resolvedSearchParams.slug as string) || (resolvedSearchParams.id as string) || url;
+    }
+
+    if (!slug && !url) {
+        return {
+            title: "Baca Berita - Karang Taruna Asta Wira Dipta",
+            description: "Portal Berita dan Informasi Terkini Karang Taruna Asta Wira Dipta.",
+            alternates: { canonical: "https://astawiradipta.my.id/berita" }
+        }
+    }
+
+    const decodedSlug = slug ? decodeURIComponent(slug) : url;
 
     // Check Internal dictionary
-    const target = url || id || slug;
-    const internalArticle = INTERNAL_ARTICLES[target];
+    const internalArticle = INTERNAL_ARTICLES[decodedSlug];
 
     if (internalArticle) {
         return {
             title: `${internalArticle.title} - Karang Taruna Asta Wira Dipta`,
             description: internalArticle.title,
             alternates: {
-                canonical: `https://astawiradipta.my.id/berita/read?url=${encodeURIComponent(target)}`
+                canonical: `https://astawiradipta.my.id/berita/${encodeURIComponent(decodedSlug)}`
             },
             robots: {
                 index: true,
@@ -1686,15 +1707,15 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
         }
     }
 
-    // Attempt to fetch local title for metadata if slug/id exists
-    if (slug || id) {
-        const localNews = await getLocalNews(slug || id);
+    // Attempt to fetch local title for metadata if slug exists
+    if (decodedSlug) {
+        const localNews = await getLocalNews(decodedSlug);
         if (localNews) {
             return {
                 title: `${localNews.title} - Karang Taruna Asta Wira Dipta`,
                 description: localNews.title,
                 alternates: {
-                    canonical: `https://astawiradipta.my.id/berita/read?slug=${encodeURIComponent(slug || id)}`
+                    canonical: `https://astawiradipta.my.id/berita/${encodeURIComponent(decodedSlug)}`
                 },
                 openGraph: {
                     title: localNews.title,
@@ -1728,31 +1749,36 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 }
 
 export default async function ReadNews({
+    params,
     searchParams,
 }: {
+    params: Promise<{ slug: string }>,
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
+    const resolvedParams = await params;
     const resolvedSearchParams = await searchParams;
+
+    let slug = resolvedParams.slug;
     const url = resolvedSearchParams.url as string;
 
-    // Support for ID param if URL is missing (fallback for some internal routing?)
-    const id = resolvedSearchParams.id as string;
-    const slug = resolvedSearchParams.slug as string;
+    // Fallback for old /berita/read?slug=...
+    if (slug === 'read') {
+        slug = (resolvedSearchParams.slug as string) || (resolvedSearchParams.id as string) || url;
+    }
 
-    // Determine the effective identifier: url > slug > id
-    const effectiveUrl = url || slug || id;
+    const effectiveUrl = slug ? decodeURIComponent(slug) : url;
 
-    if (!effectiveUrl) return <div className="p-8 text-center">{`URL Invalid (Missing URL, Slug, or ID)`}</div>;
+    if (!effectiveUrl) return <div className="p-8 text-center">{`URL Invalid (Missing Slug or URL)`}</div>;
 
     // 1. Cek Apakah URL adalah internal slug
     let detail = INTERNAL_ARTICLES[effectiveUrl];
 
-    // 2. Cek Local DB (Content.json)
+    // 2. Cek Local DB (Content.json / Firestore)
     if (!detail) {
         detail = await getLocalNews(effectiveUrl) as NewsDetail;
     }
 
-    // 3. Jika bukan internal/local, coba fetch eksternal
+    // 3. Jika bukan internal/local, coba fetch eksternal (Fallback for old URLs)
     if (!detail && url) {
         detail = await getExternalNews(url) as NewsDetail;
     }
