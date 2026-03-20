@@ -482,7 +482,7 @@ export default async function Home() {
 
         {/* Agenda Mendatang Dynamic Section */}
         {proker?.agendas?.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 mb-20">
             <div className="bg-gray-900 dark:bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 dark:border-gray-700">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
                 <div>

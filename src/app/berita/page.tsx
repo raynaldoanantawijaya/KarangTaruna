@@ -30,32 +30,50 @@ interface AdminPost {
 }
 
 
-async function getAdminPosts(query?: string): Promise<AdminPost[]> {
-    try {
-        const postsRef = adminDb.collection('posts');
-        const snapshot = await postsRef
-            .where('status', '==', 'published')
-            .orderBy('createdAt', 'desc')
-            .get();
+import { unstable_cache } from 'next/cache';
 
-        let data = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...(doc.data() as Omit<AdminPost, 'id'>)
-        }));
+const getCachedAdminPosts = unstable_cache(
+    async () => {
+        try {
+            const postsRef = adminDb.collection('posts');
+            const snapshot = await postsRef
+                .where('status', '==', 'published')
+                .orderBy('createdAt', 'desc')
+                .get();
 
-        if (query) {
-            const lowerQuery = query.toLowerCase();
-            data = data.filter(item =>
-                item.title.toLowerCase().includes(lowerQuery) ||
-                (item.content && item.content.toLowerCase().includes(lowerQuery))
-            );
+            return snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...(doc.data() as Omit<AdminPost, 'id'>)
+            }));
+        } catch (error) {
+            console.error("Error fetching admin posts:", error);
+            return [];
         }
+    },
+    ['published-admin-posts'],
+    { revalidate: 60, tags: ['posts'] }
+);
 
-        return data;
-    } catch (error) {
-        console.error("Error fetching admin posts:", error);
-        return [];
+async function getAdminPosts(query?: string, categoryFilter?: string): Promise<AdminPost[]> {
+    let data = await getCachedAdminPosts();
+
+    if (query) {
+        const lowerQuery = query.toLowerCase();
+        data = data.filter(item =>
+            item.title.toLowerCase().includes(lowerQuery) ||
+            (item.content && item.content.toLowerCase().includes(lowerQuery))
+        );
     }
+    
+    if (categoryFilter) {
+        const filterStr = categoryFilter.toLowerCase();
+        data = data.filter(item => {
+            const itemCat = String((item as any).category || (item as any).kategori || '').toLowerCase();
+            return itemCat.includes(filterStr);
+        });
+    }
+    
+    return data;
 }
 
 export default async function Berita({
@@ -72,7 +90,7 @@ export default async function Berita({
     const currentPage = pageParam ? parseInt(pageParam, 10) : 1;
     const itemsPerPage = 5;
 
-    const adminPosts = await getAdminPosts(q);
+    const adminPosts = await getAdminPosts(q, category);
 
     const totalItems = adminPosts.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
