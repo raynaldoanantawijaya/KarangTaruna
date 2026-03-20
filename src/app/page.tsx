@@ -255,18 +255,18 @@ export default async function Home() {
                 <span className="text-primary font-semibold tracking-wider uppercase text-sm">
                   Visi & Misi
                 </span>
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
                   Tujuan & Arah Gerak Kami
-                </h2>
+                </h3>
                 <div className="w-20 h-1 bg-secondary mt-4 rounded-full"></div>
               </div>
               <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                 <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white mb-1">Visi</h4>
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-1">Visi</h3>
                   <p>{vision}</p>
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white mb-1">Misi</h4>
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-1">Misi</h3>
                   <ul className="list-disc pl-5 space-y-1">
                     {Array.isArray(mission) ? mission.map((item: string, index: number) => (
                       <li key={index}>{item}</li>
@@ -360,7 +360,7 @@ export default async function Home() {
                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
                         <Link href="/berita/internal-sejarah-kelurahan-mojo">
                             <NewsImage alt="Sejarah Kelurahan Mojo" className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105" src="/kelurahan-mojo-history.webp" />
-                            <div className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Sejarah</div>
+                            <div className="absolute top-4 left-4 bg-amber-700 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Sejarah</div>
                         </Link>
                     </div>
                     <div className="md:w-7/12 p-6 flex flex-col justify-between">
@@ -385,7 +385,7 @@ export default async function Home() {
                     <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
                         <Link href="/berita/internal-profil-pasar-kliwon">
                             <NewsImage alt="Kecamatan Pasar Kliwon" className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105" src="/pasarkliwon.webp" />
-                            <div className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Profil Wilayah</div>
+                            <div className="absolute top-4 left-4 bg-amber-700 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">Profil Wilayah</div>
                         </Link>
                     </div>
                     <div className="md:w-7/12 p-6 flex flex-col justify-between">
@@ -501,7 +501,7 @@ export default async function Home() {
               <div className={`relative border-l-2 border-white dark:border-gray-900 ml-3 md:ml-6 space-y-12 ${proker.agendas.length > 3 ? 'text-sm' : ''}`}>
                 {proker.agendas.map((agenda: any, idx: number) => {
                   let markerBg = 'border-primary';
-                  let textBadge = 'text-primary bg-primary/20 bg-opacity-20';
+                  let textBadge = 'text-blue-400 dark:text-primary bg-primary/20 bg-opacity-20';
 
                   if (agenda.markerColor === 'secondary') {
                     markerBg = 'border-secondary';
@@ -534,7 +534,7 @@ export default async function Home() {
               </div>
 
               <div className="mt-8 text-center md:hidden">
-                <button className="inline-flex items-center text-primary font-semibold hover:text-primary-dark">
+                <button className="inline-flex items-center text-blue-400 dark:text-primary font-semibold hover:text-blue-300 dark:hover:text-primary-dark">
                   Lihat Kalender Penuh <ArrowRight className="h-5 w-5 ml-1" />
                 </button>
               </div>
@@ -640,7 +640,7 @@ export default async function Home() {
         <section className="bg-gray-50 dark:bg-gray-900 py-8 border-t border-gray-200 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Tentang Karang Taruna Kelurahan Mojo</h2>
-            <p className="text-xs text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xs text-gray-500 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
               Karang Taruna Asta Wira Dipta adalah organisasi kepemudaan resmi yang berlokasi di Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah.
               Kami berfokus pada pemberdayaan pemuda, kegiatan sosial, dan pembangunan masyarakat di wilayah Mojo dan sekitarnya.
               Bergabunglah bersama kami untuk mewujudkan generasi muda Solo yang berbudaya, berdaya saing, dan bermanfaat bagi lingkungan.
