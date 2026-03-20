@@ -142,7 +142,7 @@ function PostEditorContent() {
         if (!editorRef.current || !titleRef.current) return;
 
         const titleText = titleRef.current.innerText.trim();
-        const contentText = editorRef.current.innerText.trim();
+        const contentText = editorRef.current.innerText.trim(); // getting text cleanly
 
         if (!titleText && !contentText) {
             showToast('Judul dan isi artikel kosong!', 'error');
@@ -152,21 +152,25 @@ function PostEditorContent() {
         // 1. Meta Title
         setMetaTitle(titleText);
 
-        // 2. Meta Description
-        // Clean up excessive newlines and spaces
+        // 2. Meta Description (Clean & Smart Truncation at word boundary)
         const cleanContent = contentText.replace(/\s+/g, ' ').trim();
-        const desc = cleanContent.substring(0, 155);
-        setMetaDesc(desc.length === 155 ? desc + '...' : desc);
+        let desc = cleanContent.substring(0, 155);
+        if (cleanContent.length > 155) {
+            const lastSpace = desc.lastIndexOf(' ');
+            if (lastSpace > 100) desc = desc.substring(0, lastSpace); // Avoid cutting words in half
+            desc += '...';
+        }
+        setMetaDesc(desc);
 
-        // 3. Auto Categories (Basic Keyword Matching)
+        // 3. Auto Categories (Robust Keyword Mapping)
         const textToAnalyze = (titleText + ' ' + cleanContent).toLowerCase();
         const detectedCategories = new Set(selectedCategories);
 
         const categoryKeywords: Record<string, string[]> = {
-            'Berita': ['berita', 'kabar', 'info', 'terkini', 'hari ini', 'bencana', 'banjir', 'kebakaran', 'gempa', 'warga'],
-            'Kegiatan': ['rapat', 'pertemuan', 'musyawarah', 'pelatihan', 'lomba', 'acara', 'kegiatan', 'sosialisasi', 'jalan sehat', 'buka bersama', 'sahur', 'puasa', 'festival'],
-            'Pengumuman': ['pengumuman', 'diberitahukan', 'informasi penting', 'undangan', 'himbauan', 'wajib'],
-            'Program Kerja': ['program kerja', 'proker', 'rencana', 'evaluasi', 'target', 'agenda']
+            'Berita': ['berita', 'kabar', 'info', 'terkini', 'hari ini', 'bencana', 'banjir', 'kebakaran', 'gempa', 'warga', 'kunjungan', 'peresmian', 'pelantikan', 'kecelakaan', 'musibah', 'bantuan'],
+            'Kegiatan': ['rapat', 'pertemuan', 'musyawarah', 'pelatihan', 'lomba', 'acara', 'kegiatan', 'sosialisasi', 'jalan sehat', 'buka bersama', 'sahur', 'puasa', 'festival', 'donor darah', 'kerja bakti', 'gotong royong', 'olahraga', 'turnamen', 'senam', 'pengajian', 'kumpulan'],
+            'Pengumuman': ['pengumuman', 'diberitahukan', 'informasi penting', 'undangan', 'himbauan', 'wajib', 'perhatian', 'harap dicatat', 'pendaftaran'],
+            'Program Kerja': ['program kerja', 'proker', 'rencana', 'evaluasi', 'target', 'agenda', 'visi', 'misi', 'pencapaian']
         };
 
         let newCatsAdded = 0;
@@ -180,29 +184,31 @@ function PostEditorContent() {
         }
         setSelectedCategories(Array.from(detectedCategories));
 
-        // 4. Auto Tags Extraction
-        const stopWords = ['dan', 'atau', 'di', 'ke', 'dari', 'yang', 'untuk', 'dengan', 'pada', 'dalam', 'ini', 'itu', 'adalah', 'sebagai', 'oleh', 'kepada', 'bagi', 'agar', 'supaya', 'karena', 'sebab', 'jika', 'kalau', 'saat', 'ketika', 'setelah', 'sebelum', 'lalu', 'kemudian', 'namun', 'tetapi', 'sedangkan', 'melainkan', 'bahkan', 'juga', 'hanya', 'saja', 'sudah', 'telah', 'sedang', 'akan', 'masih', 'bisa', 'dapat', 'harus', 'tidak', 'bukan', 'jangan', 'belum', 'sangat', 'paling', 'lebih', 'kurang', 'serta', 'suatu', 'sebuah', 'seorang', 'mereka', 'kita', 'kami', 'saya', 'dia', 'ia', 'kamu', 'kalian', 'anda', 'tersebut', 'tentang', 'menjadi', 'ada', 'atas', 'bawah', 'samping', 'depan', 'belakang', 'seperti', 'cara', 'buat', 'tahun', 'hari', 'jam', 'waktu', 'banyak'];
+        // 4. Auto Tags Extraction (Smart TF-IDF Lite)
+        // Comprehensive Indonesian Stopwords list
+        const stopWords = new Set([
+            'dan', 'atau', 'serta', 'tetapi', 'melainkan', 'padahal', 'sedangkan', 'karena', 'sebab', 'sehingga', 'maka', 'jika', 'kalau', 'apabila', 'andaikata', 'agar', 'supaya', 'untuk', 'guna', 'bagi', 'sementara', 'ketika', 'waktu', 'saat', 'tatkala', 'sambil', 'seraya', 'selagi', 'sebelum', 'sesudah', 'setelah', 'seusai', 'sejak', 'hingga', 'sampai', 'walau', 'walaupun', 'meski', 'meskipun', 'biarpun', 'kendati', 'kendatipun', 'seperti', 'sebagai', 'laksana', 'bagaikan', 'macam', 'alih', 'bahwa', 'kecuali', 'selain', 'di', 'ke', 'dari', 'pada', 'dalam', 'atas', 'bawah', 'antara', 'dengan', 'tanpa', 'kepada', 'akan', 'terhadap', 'oleh', 'demi', 'tentang', 'mengenai', 'perihal', 'berkat', 'oleh', 'karena', 'sebab', 'buat', 'bagi', 'guna', 'yang', 'ini', 'itu', 'sini', 'situ', 'sana', 'begini', 'begitu', 'aku', 'saya', 'kamu', 'engkau', 'kau', 'dia', 'ia', 'beliau', 'mereka', 'kita', 'kami', 'kalian', 'anda', 'saudara', 'bapak', 'ibu', 'apa', 'siapa', 'kapan', 'bagaimana', 'kenapa', 'mengapa', 'berapa', 'semua', 'segala', 'seluruh', 'tiap', 'setiap', 'sebagian', 'beberapa', 'suatu', 'seseorang', 'sesuatu', 'sebuah', 'sudah', 'telah', 'sedang', 'masih', 'akan', 'belum', 'pernah', 'tidak', 'taktertulis', 'bukan', 'jangan', 'dilarang', 'dapat', 'bisa', 'boleh', 'mungkin', 'harus', 'wajib', 'pasti', 'tentu', 'memang', 'sangat', 'amat', 'paling', 'kurang', 'lebih', 'agak', 'terlalu', 'hanya', 'saja', 'juga', 'pun', 'lah', 'kah', 'tah', 'dong', 'deh', 'kek', 'kok', 'sih', 'kan', 'nya', 'adalah', 'ialah', 'merupakan', 'yaitu', 'yakni', 'jadi', 'lalu', 'terus', 'kemudian', 'akhirnya', 'awal', 'mula', 'akhir', 'kembali', 'lagi', 'baru', 'lama', 'tadi', 'nanti', 'besok', 'kemarin', 'lusa', 'tahun', 'bulan', 'hari', 'jam', 'waktu', 'menit', 'detik', 'kali', 'saat', 'banyak', 'sedikit', 'macam', 'cara', 'buat', 'terus', 'satu', 'dua', 'tiga', 'empat', 'lima', 'utama', 'pertama', 'berisi', 'terdapat', 'memiliki', 'mempunyai', 'melakukan', 'menjadi', 'ada', 'adanya', 'secara', 'memberikan', 'menggunakan', 'salah', 'lainnya', 'selalu', 'kembali'
+        ]);
 
-        // Extract words (4+ chars to be safer for meaning)
-        const words = textToAnalyze.match(/\b([a-zA-Z]{4,})\b/g) || [];
         const wordCounts: Record<string, number> = {};
 
-        // Give extra weight to words in the title
-        const titleWords = titleText.toLowerCase().match(/\b([a-zA-Z]{4,})\b/g) || [];
-        
-        words.forEach(word => {
-            if (!stopWords.includes(word)) {
-                wordCounts[word] = (wordCounts[word] || 0) + 1;
-            }
-        });
-
+        // Extract Title Words Heavily
+        const titleWords = titleText.replace(/[^a-zA-Z0-9\s]/g, ' ').toLowerCase().match(/\b([a-zA-Z]{4,})\b/g) || [];
         titleWords.forEach(word => {
-            if (!stopWords.includes(word)) {
-                wordCounts[word] = (wordCounts[word] || 0) + 3; // Title words get +3 points
+            if (!stopWords.has(word)) {
+                wordCounts[word] = (wordCounts[word] || 0) + 5; // Title words get huge weight (+5)
             }
         });
 
-        // Sort by frequency
+        // Extract Content Words strictly 5 chars min
+        const bodyWords = cleanContent.replace(/[^a-zA-Z0-9\s]/g, ' ').toLowerCase().match(/\b([a-zA-Z]{5,})\b/g) || [];
+        bodyWords.forEach(word => {
+            if (!stopWords.has(word)) {
+                wordCounts[word] = (wordCounts[word] || 0) + 1; // Body words get normal weight (+1)
+            }
+        });
+
+        // Sort by frequency/weight
         const sortedWords = Object.entries(wordCounts)
             .sort((a, b) => b[1] - a[1])
             .map(entry => entry[0]);
@@ -215,7 +221,7 @@ function PostEditorContent() {
         for (const w of sortedWords) {
             if (addedCount >= 5) break;
             if (!currentLowercaseTags.includes(w)) {
-                // Capitalize first letter
+                // Capitalize first letter properly
                 const formattedTag = w.charAt(0).toUpperCase() + w.slice(1);
                 suggestedTags.push(formattedTag);
                 addedCount++;
@@ -226,7 +232,7 @@ function PostEditorContent() {
             setTags(prev => [...prev, ...suggestedTags]);
         }
 
-        showToast(`SEO & Tags berhasil di-generate! (${newCatsAdded} Kategori, ${suggestedTags.length} Tags)`, 'success');
+        showToast(`SEO & Tags disempurnakan! (${newCatsAdded} Kategori, ${suggestedTags.length} Tags)`, 'success');
     };
 
 
