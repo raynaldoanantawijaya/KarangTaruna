@@ -96,6 +96,7 @@ function PostEditorContent() {
 
     const [activeFormats, setActiveFormats] = React.useState<string[]>([]);
     const [isMultilevelActive, setIsMultilevelActive] = React.useState(false); // New State
+    const [isGeneratingMagic, setIsGeneratingMagic] = React.useState(false);
 
     // Sidebar States
     const [visibility, setVisibility] = React.useState<'public' | 'private' | 'password'>('public');
@@ -138,101 +139,69 @@ function PostEditorContent() {
     const [metaTitle, setMetaTitle] = React.useState('');
     const [metaDesc, setMetaDesc] = React.useState('');
 
-    const autoGenerateSeoAndTags = () => {
+    const autoGenerateSeoAndTags = async () => {
         if (!editorRef.current || !titleRef.current) return;
 
         const titleText = titleRef.current.innerText.trim();
-        const contentText = editorRef.current.innerText.trim(); // getting text cleanly
+        const contentText = editorRef.current.innerText.trim();
 
         if (!titleText && !contentText) {
             showToast('Judul dan isi artikel kosong!', 'error');
             return;
         }
 
-        // 1. Meta Title
-        setMetaTitle(titleText);
+        setIsGeneratingMagic(true);
 
-        // 2. Meta Description (Clean & Smart Truncation at word boundary)
-        const cleanContent = contentText.replace(/\s+/g, ' ').trim();
-        let desc = cleanContent.substring(0, 155);
-        if (cleanContent.length > 155) {
-            const lastSpace = desc.lastIndexOf(' ');
-            if (lastSpace > 100) desc = desc.substring(0, lastSpace); // Avoid cutting words in half
-            desc += '...';
-        }
-        setMetaDesc(desc);
+        try {
+            const res = await fetch('/api/admin/generate-seo', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: titleText, content: contentText })
+            });
 
-        // 3. Auto Categories (Robust Keyword Mapping)
-        const textToAnalyze = (titleText + ' ' + cleanContent).toLowerCase();
-        const detectedCategories = new Set(selectedCategories);
+            if (!res.ok) {
+                console.error("Failed to generate SEO from API");
+                showToast('Gagal menghasilkan SEO (Server Error)', 'error');
+                setIsGeneratingMagic(false);
+                return;
+            }
 
-        const categoryKeywords: Record<string, string[]> = {
-            'Berita': ['berita', 'kabar', 'info', 'terkini', 'hari ini', 'bencana', 'banjir', 'kebakaran', 'gempa', 'warga', 'kunjungan', 'peresmian', 'pelantikan', 'kecelakaan', 'musibah', 'bantuan'],
-            'Kegiatan': ['rapat', 'pertemuan', 'musyawarah', 'pelatihan', 'lomba', 'acara', 'kegiatan', 'sosialisasi', 'jalan sehat', 'buka bersama', 'sahur', 'puasa', 'festival', 'donor darah', 'kerja bakti', 'gotong royong', 'olahraga', 'turnamen', 'senam', 'pengajian', 'kumpulan'],
-            'Pengumuman': ['pengumuman', 'diberitahukan', 'informasi penting', 'undangan', 'himbauan', 'wajib', 'perhatian', 'harap dicatat', 'pendaftaran'],
-            'Program Kerja': ['program kerja', 'proker', 'rencana', 'evaluasi', 'target', 'agenda', 'visi', 'misi', 'pencapaian']
-        };
+            const jsonResponse = await res.json();
+            const aiData = jsonResponse.data;
 
-        let newCatsAdded = 0;
-        for (const [catName, keywords] of Object.entries(categoryKeywords)) {
-            if (keywords.some(kw => textToAnalyze.includes(kw))) {
-                if (!detectedCategories.has(catName) && categories.includes(catName)) {
-                    detectedCategories.add(catName);
-                    newCatsAdded++;
+            if (aiData) {
+                if (aiData.metaTitle) setMetaTitle(aiData.metaTitle);
+                if (aiData.metaDesc) setMetaDesc(aiData.metaDesc);
+                
+                if (aiData.tags && Array.isArray(aiData.tags)) {
+                    // Cek duplikasi dengan tag eksisting lalu gabungkan
+                    const currentLowercaseTags = tags.map(t => t.toLowerCase());
+                    const newTags = aiData.tags.filter((t: string) => !currentLowercaseTags.includes(t.toLowerCase()));
+                    if (newTags.length > 0) {
+                        setTags(prev => [...prev, ...newTags]);
+                    }
                 }
+
+                if (aiData.categories && Array.isArray(aiData.categories)) {
+                    // Tambahkan ke seleksi kategori
+                    const detectedCategories = new Set(selectedCategories);
+                    aiData.categories.forEach((cat: string) => {
+                        if (categories.includes(cat) && !detectedCategories.has(cat)) {
+                            detectedCategories.add(cat);
+                        }
+                    });
+                    setSelectedCategories(Array.from(detectedCategories));
+                }
+                showToast('SEO & Tags berhasil digenerate oleh AI!', 'success');
+            } else {
+                showToast('Format respon AI tidak wajar.', 'error');
             }
+        } catch (error) {
+            console.error('Error auto-generating SEO:', error);
+            showToast('Koneksi ke AI gagal.', 'error');
+        } finally {
+            setIsGeneratingMagic(false);
         }
-        setSelectedCategories(Array.from(detectedCategories));
-
-        // 4. Auto Tags Extraction (Smart TF-IDF Lite)
-        // Comprehensive Indonesian Stopwords list
-        const stopWords = new Set([
-            'dan', 'atau', 'serta', 'tetapi', 'melainkan', 'padahal', 'sedangkan', 'karena', 'sebab', 'sehingga', 'maka', 'jika', 'kalau', 'apabila', 'andaikata', 'agar', 'supaya', 'untuk', 'guna', 'bagi', 'sementara', 'ketika', 'waktu', 'saat', 'tatkala', 'sambil', 'seraya', 'selagi', 'sebelum', 'sesudah', 'setelah', 'seusai', 'sejak', 'hingga', 'sampai', 'walau', 'walaupun', 'meski', 'meskipun', 'biarpun', 'kendati', 'kendatipun', 'seperti', 'sebagai', 'laksana', 'bagaikan', 'macam', 'alih', 'bahwa', 'kecuali', 'selain', 'di', 'ke', 'dari', 'pada', 'dalam', 'atas', 'bawah', 'antara', 'dengan', 'tanpa', 'kepada', 'akan', 'terhadap', 'oleh', 'demi', 'tentang', 'mengenai', 'perihal', 'berkat', 'oleh', 'karena', 'sebab', 'buat', 'bagi', 'guna', 'yang', 'ini', 'itu', 'sini', 'situ', 'sana', 'begini', 'begitu', 'aku', 'saya', 'kamu', 'engkau', 'kau', 'dia', 'ia', 'beliau', 'mereka', 'kita', 'kami', 'kalian', 'anda', 'saudara', 'bapak', 'ibu', 'apa', 'siapa', 'kapan', 'bagaimana', 'kenapa', 'mengapa', 'berapa', 'semua', 'segala', 'seluruh', 'tiap', 'setiap', 'sebagian', 'beberapa', 'suatu', 'seseorang', 'sesuatu', 'sebuah', 'sudah', 'telah', 'sedang', 'masih', 'akan', 'belum', 'pernah', 'tidak', 'taktertulis', 'bukan', 'jangan', 'dilarang', 'dapat', 'bisa', 'boleh', 'mungkin', 'harus', 'wajib', 'pasti', 'tentu', 'memang', 'sangat', 'amat', 'paling', 'kurang', 'lebih', 'agak', 'terlalu', 'hanya', 'saja', 'juga', 'pun', 'lah', 'kah', 'tah', 'dong', 'deh', 'kek', 'kok', 'sih', 'kan', 'nya', 'adalah', 'ialah', 'merupakan', 'yaitu', 'yakni', 'jadi', 'lalu', 'terus', 'kemudian', 'akhirnya', 'awal', 'mula', 'akhir', 'kembali', 'lagi', 'baru', 'lama', 'tadi', 'nanti', 'besok', 'kemarin', 'lusa', 'tahun', 'bulan', 'hari', 'jam', 'waktu', 'menit', 'detik', 'kali', 'saat', 'banyak', 'sedikit', 'macam', 'cara', 'buat', 'terus', 'satu', 'dua', 'tiga', 'empat', 'lima', 'utama', 'pertama', 'berisi', 'terdapat', 'memiliki', 'mempunyai', 'melakukan', 'menjadi', 'ada', 'adanya', 'secara', 'memberikan', 'menggunakan', 'salah', 'lainnya', 'selalu', 'kembali'
-        ]);
-
-        const wordCounts: Record<string, number> = {};
-
-        // Extract Title Words Heavily
-        const titleWords = titleText.replace(/[^a-zA-Z0-9\s]/g, ' ').toLowerCase().match(/\b([a-zA-Z]{4,})\b/g) || [];
-        titleWords.forEach(word => {
-            if (!stopWords.has(word)) {
-                wordCounts[word] = (wordCounts[word] || 0) + 5; // Title words get huge weight (+5)
-            }
-        });
-
-        // Extract Content Words strictly 5 chars min
-        const bodyWords = cleanContent.replace(/[^a-zA-Z0-9\s]/g, ' ').toLowerCase().match(/\b([a-zA-Z]{5,})\b/g) || [];
-        bodyWords.forEach(word => {
-            if (!stopWords.has(word)) {
-                wordCounts[word] = (wordCounts[word] || 0) + 1; // Body words get normal weight (+1)
-            }
-        });
-
-        // Sort by frequency/weight
-        const sortedWords = Object.entries(wordCounts)
-            .sort((a, b) => b[1] - a[1])
-            .map(entry => entry[0]);
-
-        // Take top 5 unique words not already in tags
-        const currentLowercaseTags = tags.map(t => t.toLowerCase());
-        const suggestedTags: string[] = [];
-        let addedCount = 0;
-        
-        for (const w of sortedWords) {
-            if (addedCount >= 5) break;
-            if (!currentLowercaseTags.includes(w)) {
-                // Capitalize first letter properly
-                const formattedTag = w.charAt(0).toUpperCase() + w.slice(1);
-                suggestedTags.push(formattedTag);
-                addedCount++;
-            }
-        }
-
-        if (suggestedTags.length > 0) {
-            setTags(prev => [...prev, ...suggestedTags]);
-        }
-
-        showToast(`SEO & Tags disempurnakan! (${newCatsAdded} Kategori, ${suggestedTags.length} Tags)`, 'success');
     };
 
 
@@ -1424,9 +1393,19 @@ function PostEditorContent() {
                             <p className="text-xs text-slate-400 dark:text-slate-600 leading-relaxed">Otomatis ekstraksi Tags, Meta Description, dan Kategori dari judul & isi artikel.</p>
                             <button
                                 onClick={autoGenerateSeoAndTags}
-                                className="w-full py-2.5 bg-sky-600 hover:bg-sky-500 dark:bg-sky-500 dark:hover:bg-sky-600 text-white text-sm font-medium rounded-lg shadow transition-all flex justify-center items-center gap-2 active:scale-95"
+                                disabled={isGeneratingMagic}
+                                className={`w-full py-2.5 text-white text-sm font-medium rounded-lg shadow transition-all flex justify-center items-center gap-2 active:scale-95 ${isGeneratingMagic ? 'bg-sky-400 cursor-not-allowed' : 'bg-sky-600 hover:bg-sky-500 dark:bg-sky-500 dark:hover:bg-sky-600'}`}
                             >
-                                <Sparkles className="w-4 h-4" /> Generate Magic
+                                {isGeneratingMagic ? (
+                                    <>
+                                        <div className="w-4 h-4 border-2 border-white/80 border-t-transparent rounded-full animate-spin"></div>
+                                        Generating...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Sparkles className="w-4 h-4" /> Generate Magic
+                                    </>
+                                )}
                             </button>
                         </div>
 
