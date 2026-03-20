@@ -91,7 +91,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             .orderBy('createdAt', 'desc')
             .get();
 
-        dynamicRoutes = snapshot.docs.map(doc => {
+        dynamicRoutes = snapshot.docs.flatMap(doc => {
             const data = doc.data();
             let lastModDate = new Date();
             if (data.updatedAt) {
@@ -102,12 +102,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 lastModDate = new Date(data.date);
             }
 
-            return {
-                url: `${baseUrl}/berita/${data.slug || doc.id}`,
-                lastModified: lastModDate,
-                changeFrequency: 'weekly',
-                priority: 0.8,
-            };
+            const slug = data.slug || doc.id;
+
+            return [
+                {
+                    url: `${baseUrl}/berita/${slug}`,
+                    lastModified: lastModDate,
+                    changeFrequency: 'weekly' as const,
+                    priority: 0.8,
+                },
+                {
+                    url: `${baseUrl}/artikel/${slug}`,
+                    lastModified: lastModDate,
+                    changeFrequency: 'weekly' as const,
+                    priority: 0.7,
+                },
+            ];
         });
     } catch (error) {
         console.error("Error fetching dynamic sitemap pages from Firebase:", error);

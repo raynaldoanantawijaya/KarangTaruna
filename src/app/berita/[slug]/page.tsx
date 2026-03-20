@@ -1,6 +1,9 @@
-
 import { Metadata } from 'next';
 import { adminDb } from '@/lib/firebase-admin';
+import Link from 'next/link';
+import { Clock, User, ChevronLeft } from 'lucide-react';
+import ShareButtons from '@/components/ShareButtons';
+import { processSocialLinks } from '@/lib/socialEmbed';
 
 interface NewsDetail {
     title: string;
@@ -1638,6 +1641,12 @@ export async function generateMetadata({
                 images: [internalArticle.image?.startsWith('http') ? internalArticle.image : `https://astawiradipta.my.id${internalArticle.image?.startsWith('/') ? '' : '/'}${internalArticle.image}`],
                 type: 'article',
                 authors: [internalArticle.author]
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: internalArticle.title,
+                description: "Berita dan Artikel Karang Taruna Asta Wira Dipta, Kelurahan Mojo, Surakarta.",
+                images: [internalArticle.image?.startsWith('http') ? internalArticle.image : `https://astawiradipta.my.id${internalArticle.image?.startsWith('/') ? '' : '/'}${internalArticle.image}`],
             }
         }
     }
@@ -1657,6 +1666,12 @@ export async function generateMetadata({
                     description: "Berita dan Artikel Karang Taruna Asta Wira Dipta.",
                     images: [localNews.image?.startsWith('http') ? localNews.image : `https://astawiradipta.my.id${localNews.image?.startsWith('/') ? '' : '/'}${localNews.image}`],
                     type: 'article',
+                },
+                twitter: {
+                    card: 'summary_large_image',
+                    title: localNews.title,
+                    description: "Berita dan Artikel Karang Taruna Asta Wira Dipta.",
+                    images: [localNews.image?.startsWith('http') ? localNews.image : `https://astawiradipta.my.id${localNews.image?.startsWith('/') ? '' : '/'}${localNews.image}`],
                 }
             }
         }
@@ -1713,50 +1728,106 @@ export default async function ReadNews({
     }
 
     return (
-        <div className="max-w-4xl mx-auto py-6 sm:py-12 px-4 sm:px-6">
-            {/* Title - Mobile optimized */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white leading-snug sm:leading-tight">
-                {detail.title}
-            </h1>
+        <article className="min-h-screen bg-white dark:bg-[#09090b] pb-16">
+            {/* Header Section */}
+            <header className="max-w-[1000px] mx-auto pt-8 sm:pt-16 px-4 sm:px-6 lg:px-8">
+                <Link href="/berita" className="inline-flex items-center text-[13px] font-bold tracking-widest uppercase text-primary hover:text-primary-dark mb-8 sm:mb-10 transition-colors">
+                    <ChevronLeft className="w-4 h-4 mr-1 stroke-[3]" />
+                    Kembali ke Indeks
+                </Link>
 
-            {/* Meta info - Stacked on mobile */}
-            <div className="flex flex-col sm:flex-row sm:items-center text-sm text-gray-500 mb-4 sm:mb-6 space-y-1 sm:space-y-0 sm:space-x-4">
-                {detail.date && <span className="flex items-center"><svg className="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>{detail.date}</span>}
-                {detail.author && <span className="flex items-center"><svg className="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>{detail.author}</span>}
-            </div>
+                <div className="flex items-center gap-2 mb-5">
+                    <span className="bg-red-600 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 shadow-sm">
+                        Berita Utama
+                    </span>
+                </div>
+
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-black text-gray-900 dark:text-white leading-[1.1] tracking-tight mb-6 sm:mb-8 font-serif">
+                    {detail.title}
+                </h1>
+
+                {/* Byline and Meta */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between py-6 border-y border-gray-200 dark:border-gray-800 mb-8 sm:mb-12">
+                    <div className="flex items-center space-x-4 mb-5 sm:mb-0">
+                        <div className="w-12 h-12 p-1 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 shrink-0">
+                            <img src="/logo-kt.webp" alt="Karang Taruna" className="w-full h-full object-contain" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-gray-900 dark:text-white text-base">
+                                {detail.author || "Redaksi Asta Wira Dipta"}
+                            </p>
+                            <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-0.5 font-medium">
+                                {detail.date && (
+                                    <span className="flex items-center mr-4">
+                                        <Clock className="w-4 h-4 mr-1.5 opacity-70" />
+                                        {detail.date}
+                                    </span>
+                                )}
+                                <span className="flex items-center">
+                                    <User className="w-4 h-4 mr-1.5 opacity-70" />
+                                    Karang Taruna
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Desktop Share Buttons */}
+                    <ShareButtons title={detail.title} url={`/berita/${effectiveUrl}`} variant="icon" />
+                </div>
+            </header>
 
             {/* Featured Image */}
-            {detail.image && (
-                <div className="mb-6 sm:mb-8 rounded-xl overflow-hidden shadow-lg -mx-4 sm:mx-0">
-                    <img
-                        src={detail.image}
-                        alt={detail.title}
-                        className="w-full h-auto object-cover"
-                    />
-                </div>
-            )}
-
-            {/* Article Body - Mobile reading optimized */}
-            <div className="prose prose-base sm:prose-lg dark:prose-invert max-w-none 
-                text-gray-700 dark:text-gray-300
-                prose-p:text-[15px] sm:prose-p:text-base prose-p:leading-relaxed sm:prose-p:leading-loose prose-p:mb-4 sm:prose-p:mb-5
-                prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:mt-6 sm:prose-headings:mt-8 prose-headings:mb-3 sm:prose-headings:mb-4
-                prose-h3:text-xl sm:prose-h3:text-2xl
-                prose-ul:my-3 sm:prose-ul:my-4 prose-ul:pl-4 sm:prose-ul:pl-5
-                prose-li:text-[14px] sm:prose-li:text-base prose-li:my-1
-                prose-strong:text-gray-900 dark:prose-strong:text-white
-                prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                [&_.bg-gradient-to-r]:p-3 sm:[&_.bg-gradient-to-r]:p-4 [&_.bg-gradient-to-r]:text-[13px] sm:[&_.bg-gradient-to-r]:text-sm
-                [&_.grid]:gap-3 sm:[&_.grid]:gap-4
-                [&_table]:text-xs sm:[&_table]:text-sm
-            ">
-                {Array.isArray(detail.body) ? (
-                    detail.body.map((p, i) => (
-                        <p key={i} className="mb-4 leading-relaxed">{p}</p>
-                    ))
-                ) : (
-                    <div dangerouslySetInnerHTML={{ __html: detail.body }} />
+            <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mb-12 sm:mb-16">
+                {detail.image && (
+                    <div className="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-none sm:rounded-2xl flex justify-center items-center overflow-hidden">
+                        <img
+                            src={detail.image}
+                            alt={detail.title}
+                            className="w-full h-auto max-h-[400px] md:max-h-[550px] object-contain"
+                        />
+                    </div>
                 )}
+            </div>
+
+            {/* Main Content Area */}
+            <div className="max-w-[720px] mx-auto px-4 sm:px-6 relative">
+                <div className="prose prose-lg sm:prose-[21px] dark:prose-invert max-w-none 
+                    text-[#333333] dark:text-[#E2E8F0] font-serif
+                    prose-p:leading-[1.7] sm:prose-p:leading-[1.8] prose-p:mb-8
+                    prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-bold prose-headings:font-sans
+                    prose-h2:text-[26px] sm:prose-h2:text-[32px] prose-h2:tracking-tight prose-h2:mt-12 prose-h2:mb-6
+                    prose-h3:text-xl sm:prose-h3:text-2xl
+                    prose-ul:my-8 prose-ul:pl-6 prose-ul:font-sans
+                    prose-li:my-2
+                    prose-strong:text-black dark:prose-strong:text-white prose-strong:font-bold
+                    prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline hover:prose-a:text-blue-800
+                    [&_.bg-gradient-to-r]:p-6 sm:[&_.bg-gradient-to-r]:p-8 [&_.bg-gradient-to-r]:font-sans [&_.bg-gradient-to-r]:rounded-none [&_.bg-gradient-to-r]:my-8
+                    [&_.bg-blue-50]:border-l-4 [&_.bg-blue-50]:border-blue-600 [&_.bg-blue-50]:rounded-none [&_.bg-blue-50]:font-sans [&_.bg-blue-50]:my-10
+                    [&_table]:text-base sm:[&_table]:text-lg [&_table]:font-sans
+                    first-letter:text-[80px] sm:first-letter:text-[100px] first-letter:font-black first-letter:text-gray-900 dark:first-letter:text-white first-letter:float-left first-letter:mr-4 first-letter:mt-2 first-letter:leading-[0.8] first-line:tracking-widest first-line:uppercase first-line:font-bold
+                ">
+                    {Array.isArray(detail.body) ? (
+                        detail.body.map((p, i) => (
+                            <p key={i}>{p}</p>
+                        ))
+                    ) : (
+                        <div dangerouslySetInnerHTML={{ __html: processSocialLinks(detail.body) }} />
+                    )}
+                </div>
+
+                {/* Tags & Bottom Share */}
+                <div className="mt-16 sm:mt-20 pt-8 border-t-[3px] border-black dark:border-white flex flex-col sm:flex-row justify-between items-center gap-6">
+                    <div className="flex items-center gap-4">
+                        <span className="text-[11px] font-black uppercase tracking-widest text-gray-900 dark:text-white">TOPIK:</span>
+                        <div className="flex gap-2 flex-wrap">
+                            <span className="text-xs font-bold uppercase tracking-wider bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 border border-gray-200 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition cursor-pointer">Karang Taruna</span>
+                            <span className="text-xs font-bold uppercase tracking-wider bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 border border-gray-200 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition cursor-pointer">Kota Solo</span>
+                        </div>
+                    </div>
+                    
+                    {/* Share action button */}
+                    <ShareButtons title={detail.title} url={`/berita/${effectiveUrl}`} variant="button" />
+                </div>
             </div>
 
             {/* Structured Data (JSON-LD) for SEO */}
@@ -1768,7 +1839,7 @@ export default async function ReadNews({
                         "@type": "NewsArticle",
                         "headline": detail.title,
                         "image": [detail.image],
-                        "datePublished": new Date().toISOString(), // In real app, use article date
+                        "datePublished": new Date().toISOString(),
                         "author": [{
                             "@type": "Organization",
                             "name": detail.author || "Karang Taruna Asta Wira Dipta",
@@ -1777,14 +1848,6 @@ export default async function ReadNews({
                     })
                 }}
             />
-
-            {/* Source/Footer - Touch friendly */}
-            <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
-                <p className="text-sm text-gray-500 flex items-center">
-                    <svg className="w-4 h-4 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                    Sumber: Redaksi Karang Taruna Asta Wira Dipta
-                </p>
-            </div>
-        </div>
+        </article>
     );
 }
