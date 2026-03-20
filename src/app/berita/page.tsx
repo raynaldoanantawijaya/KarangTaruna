@@ -5,6 +5,7 @@ import NewsImage from "@/components/NewsImage";
 import Pagination from "@/components/Pagination";
 import { adminDb } from '@/lib/firebase-admin';
 import type { Metadata } from 'next';
+import { INTERNAL_ARTICLES } from "@/app/berita/[slug]/page";
 
 export const revalidate = 60; // ISR: regenerate every 60 seconds
 
@@ -17,16 +18,6 @@ export const metadata: Metadata = {
 };
 
 
-// Define Types for API Response
-interface NewsItem {
-    title: string;
-    link: string;
-    image: string;
-    source: string;
-    time: string;
-    body: string;
-}
-
 interface AdminPost {
     id: string;
     title: string;
@@ -38,63 +29,8 @@ interface AdminPost {
     createdAt?: string;
 }
 
-interface ApiResponse {
-    status: number;
-    total: number;
-    data: NewsItem[];
-}
 
-async function getNews(query?: string, category?: string): Promise<NewsItem[]> {
-    const baseUrl = "https://berita-lemon.vercel.app/api";
-
-    // API Search endpoint seems broken (returns empty data).
-    // Fallback strategy: Fetch 'terbaru' (latest) and filter locally.
-    let url = `${baseUrl}/category/terbaru`;
-
-    if (category && !query) {
-        url = `${baseUrl}/category/${encodeURIComponent(category)}`;
-    }
-
-    try {
-        // Timeout after 5 seconds to prevent slow external API from blocking page
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000);
-
-        const res = await fetch(url, {
-            next: { revalidate: 3600 },
-            signal: controller.signal
-        });
-        clearTimeout(timeout);
-
-        if (!res.ok) {
-            console.error("Failed to fetch news:", res.status, res.statusText);
-            return [];
-        }
-
-        const json: ApiResponse = await res.json();
-        let data = json.data || [];
-
-        // Manual filtering if query exists
-        if (query) {
-            const lowerQuery = query.toLowerCase();
-            data = data.filter(item =>
-                item.title.toLowerCase().includes(lowerQuery) ||
-                item.body.toLowerCase().includes(lowerQuery)
-            );
-        }
-
-        return data;
-    } catch (error: any) {
-        if (error.name === 'AbortError') {
-            console.warn('External news API timed out after 5s');
-        } else {
-            console.error("Error fetching news:", error);
-        }
-        return [];
-    }
-}
-
-async function getAdminPosts(): Promise<AdminPost[]> {
+async function getAdminPosts(query?: string): Promise<AdminPost[]> {
     try {
         const postsRef = adminDb.collection('posts');
         const snapshot = await postsRef
@@ -102,10 +38,20 @@ async function getAdminPosts(): Promise<AdminPost[]> {
             .orderBy('createdAt', 'desc')
             .get();
 
-        return snapshot.docs.map(doc => ({
+        let data = snapshot.docs.map(doc => ({
             id: doc.id,
             ...(doc.data() as Omit<AdminPost, 'id'>)
         }));
+
+        if (query) {
+            const lowerQuery = query.toLowerCase();
+            data = data.filter(item =>
+                item.title.toLowerCase().includes(lowerQuery) ||
+                (item.content && item.content.toLowerCase().includes(lowerQuery))
+            );
+        }
+
+        return data;
     } catch (error) {
         console.error("Error fetching admin posts:", error);
         return [];
@@ -126,20 +72,15 @@ export default async function Berita({
     const currentPage = pageParam ? parseInt(pageParam, 10) : 1;
     const itemsPerPage = 5;
 
-    const [allNews, adminPosts] = await Promise.all([
-        getNews(q, category),
-        getAdminPosts()
-    ]);
+    const adminPosts = await getAdminPosts(q);
 
-    const totalItems = allNews.length;
+    const totalItems = adminPosts.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     // Slice data for current page
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const displayedNews = allNews.slice(startIndex, endIndex);
-
-
+    const displayedNews = adminPosts.slice(startIndex, endIndex);
 
     return (
         <div className="w-full">
@@ -150,7 +91,7 @@ export default async function Berita({
                         Berita <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-white to-yellow-100">& Artikel</span>
                     </h1>
                     <p className="text-white/90 dark:text-gray-300 text-sm md:text-base max-w-2xl mx-auto transition-colors">
-                        Informasi terkini seputar kegiatan, pengumuman, dan artikel inspiratif.
+                        Informasi terkini seputar kegiatan, pengumuman, dan artikel inspiratif Karang Taruna.
                     </p>
                 </div>
             </div>
@@ -171,18 +112,21 @@ export default async function Berita({
 
                         {displayedNews.length > 0 ? (
                             <div className="space-y-8">
-                                {displayedNews.map((item, index) => (
-                                    <article key={item.link || index} className="flex flex-col md:flex-row bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700 group h-full">
+                                {displayedNews.map((post) => (
+                                    <article key={post.id} className="flex flex-col md:flex-row bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700 group h-full">
 
                                         {/* Image Column */}
                                         <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
-                                            <Link href={item.link} target="_blank" rel="noopener noreferrer">
+                                            <Link href={`/berita/${post.slug}`}>
                                                 <NewsImage
-                                                    src={item.image}
-                                                    alt={item.title}
+                                                    src={post.image || '/logo-kt.webp'}
+                                                    alt={post.title}
                                                     className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
                                                 />
                                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                                                <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                                    Terbaru
+                                                </div>
                                             </Link>
                                         </div>
 
@@ -190,25 +134,25 @@ export default async function Berita({
                                         <div className="md:w-7/12 p-6 flex flex-col justify-between">
                                             <div>
                                                 <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-2">
-                                                    <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> {item.time ? item.time.split(' ').slice(0, 3).join(' ') : 'Baru saja'}</span>
+                                                    <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> {post.date ? new Date(post.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Baru saja'}</span>
                                                     <span>•</span>
-                                                    <span className="flex items-center"><User className="h-3 w-3 mr-1" /> {item.source}</span>
+                                                    <span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi Internal</span>
                                                 </div>
 
                                                 <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                                                    <Link href={item.link} target="_blank" rel="noopener noreferrer">
-                                                        {item.title}
+                                                    <Link href={`/berita/${post.slug}`}>
+                                                        {post.title}
                                                     </Link>
                                                 </h2>
 
                                                 <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
-                                                    {item.body}
+                                                    {post.content ? post.content.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : ''}
                                                 </p>
                                             </div>
 
                                             <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
-                                                <Link href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
-                                                    Buka di Sumber Asli <ChevronRight className="h-4 w-4 ml-0.5" />
+                                                <Link href={`/berita/${post.slug}`} className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
+                                                    Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
                                                 </Link>
                                             </div>
                                         </div>
@@ -226,57 +170,18 @@ export default async function Berita({
                             </div>
                         ) : (
                             <div className="text-center py-20 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
-                                <p className="text-gray-500 dark:text-gray-400">Tidak ada berita ditemukan untuk pencarian ini.</p>
+                                <p className="text-gray-500 dark:text-gray-400">Belum ada berita yang tersedia saat ini.</p>
                             </div>
                         )}
 
-                        {/* SECTION TAMBAHAN: Kabar Internal (Static + Dynamic) */}
+                        {/* SECTION TAMBAHAN: Kabar Profil Statis */}
                         <div className="mt-16 pt-8 border-t border-gray-100 dark:border-gray-700">
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                                 <span className="bg-secondary w-2 h-8 mr-3 rounded-full"></span>
-                                Kabar Internal Asta Wira Dipta
+                                Profil Wilayah & Organisasi
                             </h3>
 
                             <div className="space-y-6">
-                                {/* Dynamic Admin Posts from Firestore */}
-                                {adminPosts.map((post) => (
-                                    <article key={post.id} className="flex flex-col md:flex-row bg-yellow-50 dark:bg-yellow-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-yellow-100 dark:border-yellow-900/30 group">
-                                        <div className="md:w-5/12 relative overflow-hidden h-48 md:h-auto">
-                                            <Link href={`/berita/${post.slug}`}>
-                                                <NewsImage
-                                                    src={post.image || '/logo-kt.webp'}
-                                                    alt={post.title}
-                                                    className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
-                                                />
-                                                <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                                                    Internal
-                                                </div>
-                                            </Link>
-                                        </div>
-                                        <div className="md:w-7/12 p-6 flex flex-col justify-between">
-                                            <div>
-                                                <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3 space-x-2">
-                                                    <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> {post.date ? new Date(post.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Baru saja'}</span>
-                                                    <span>•</span>
-                                                    <span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi Internal</span>
-                                                </div>
-                                                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                                                    <Link href={`/berita/${post.slug}`}>
-                                                        {post.title}
-                                                    </Link>
-                                                </h2>
-                                                <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
-                                                    {post.content ? post.content.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : ''}
-                                                </p>
-                                            </div>
-                                            <div className="mt-auto pt-4 border-t border-yellow-200 dark:border-yellow-800/30">
-                                                <Link href={`/berita/${post.slug}`} className="inline-flex items-center text-primary font-semibold text-sm hover:underline">
-                                                    Baca Selengkapnya <ChevronRight className="h-4 w-4 ml-0.5" />
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </article>
-                                ))}
 
                                 {/* Item Internal 1 */}
                                 <article className="flex flex-col md:flex-row bg-yellow-50 dark:bg-yellow-900/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-yellow-100 dark:border-yellow-900/30 group">
@@ -444,16 +349,13 @@ export default async function Berita({
                                 </h3>
                                 <ul className="space-y-2">
                                     {[
-                                        { name: "Nasional", slug: "nasional" },
-                                        { name: "Teknologi", slug: "teknologi" },
-                                        { name: "Ekonomi", slug: "ekonomi" },
-                                        { name: "Olahraga", slug: "bolasport" },
-                                        { name: "Terbaru", slug: "terbaru" },
+                                        { name: "Pendidikan & Sosial", slug: "pendidikan" },
+                                        { name: "Ekonomi Kreatif", slug: "ekonomi" },
+                                        { name: "Olahraga & Seni", slug: "olahraga" },
                                     ].map((cat) => (
                                         <li key={cat.slug}>
-                                            <Link href={`/berita?category=${cat.slug}`} className={`flex justify-between items-center px-4 py-3 rounded-lg text-sm transition-all duration-300 ${category === cat.slug ? 'bg-primary text-white shadow-md transform scale-105' : 'bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:pl-6'}`}>
+                                            <Link href={`/berita`} className={`flex justify-between items-center px-4 py-3 rounded-lg text-sm transition-all duration-300 ${category === cat.slug ? 'bg-primary text-white shadow-md transform scale-105' : 'bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:pl-6'}`}>
                                                 <span className="font-medium">{cat.name}</span>
-                                                {category === cat.slug && <ArrowRight className="h-4 w-4" />}
                                             </Link>
                                         </li>
                                     ))}

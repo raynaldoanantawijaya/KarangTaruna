@@ -1,4 +1,4 @@
-import { load } from 'cheerio';
+
 import { Metadata } from 'next';
 import { adminDb } from '@/lib/firebase-admin';
 
@@ -1546,70 +1546,6 @@ export const INTERNAL_ARTICLES: Record<string, NewsDetail> = {
 
 };
 
-async function getExternalNews(url: string): Promise<NewsDetail | null> {
-    try {
-        if (!url || !url.startsWith('http')) {
-            return null;
-        }
-
-        const res = await fetch(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-            }
-        });
-
-        if (!res.ok) {
-            throw new Error(`Failed to fetch ${url} `);
-        }
-
-        const html = await res.text();
-        const $ = load(html);
-
-        const title = $('h1').first().text().trim();
-
-        // Prioritize Open Graph image, then Twitter image, then specific content selectors
-        let image = $('meta[property="og:image"]').attr('content') ||
-            $('meta[name="twitter:image"]').attr('content') ||
-            $('.detail_media img').attr('src') ||
-            $('.read__photo img').attr('src') ||
-            $('.pic_artikel img').attr('src') ||
-            $('figure img').first().attr('src') ||
-            '';
-
-        const body: string[] = [];
-
-        // Try to find the article body container
-        const bodyContent = $('.detail_text, .read__content, .article-content, .post-content, .bk-content, .story-body__content, .read__content-body').first();
-
-        if (bodyContent.length > 0) {
-            bodyContent.find('p').each((_, el) => {
-                const text = $(el).text().trim();
-                // Filter content
-                if (text && !text.includes('SCROLL TO CONTINUE') && !text.includes('ADVERTISEMENT') && !text.includes('Baca juga:')) {
-                    body.push(text);
-                }
-            });
-        } else {
-            // Fallback: get all paragraphs that look like content
-            $('p').each((_, el) => {
-                const text = $(el).text().trim();
-                // Heuristic: Content paragraphs are usually longer
-                if (text.length > 60) body.push(text);
-            });
-        }
-
-        return {
-            title,
-            image,
-            body,
-            date: $('.date, .read__time, .time').first().text().trim(),
-            author: $('.author, .read__author, .editor').first().text().trim()
-        };
-    } catch (error) {
-        console.error("Scraping Error:", error);
-        return null;
-    }
-}
 
 async function getLocalNews(slug: string): Promise<NewsDetail | null> {
     try {
@@ -1666,14 +1602,13 @@ export async function generateMetadata({
     const resolvedSearchParams = await searchParams;
     
     let slug = resolvedParams.slug;
-    const url = resolvedSearchParams.url as string;
     
-    // Fallback for old /berita/read?slug=... or /berita/read?url=...
+    // Fallback for old /berita/read?slug=...
     if (slug === 'read') {
-        slug = (resolvedSearchParams.slug as string) || (resolvedSearchParams.id as string) || url;
+        slug = (resolvedSearchParams.slug as string) || (resolvedSearchParams.id as string);
     }
 
-    if (!slug && !url) {
+    if (!slug || slug === 'undefined') {
         return {
             title: "Baca Berita - Karang Taruna Asta Wira Dipta",
             description: "Portal Berita dan Informasi Terkini Karang Taruna Asta Wira Dipta.",
@@ -1681,7 +1616,7 @@ export async function generateMetadata({
         }
     }
 
-    const decodedSlug = slug ? decodeURIComponent(slug) : url;
+    const decodedSlug = decodeURIComponent(slug);
 
     // Check Internal dictionary
     const internalArticle = INTERNAL_ARTICLES[decodedSlug];
@@ -1700,7 +1635,7 @@ export async function generateMetadata({
             openGraph: {
                 title: internalArticle.title,
                 description: "Berita dan Artikel Karang Taruna Asta Wira Dipta, Kelurahan Mojo, Surakarta.",
-                images: [internalArticle.image.startsWith('http') ? internalArticle.image : `https://astawiradipta.my.id${internalArticle.image.startsWith('/') ? '' : '/'}${internalArticle.image}`],
+                images: [internalArticle.image?.startsWith('http') ? internalArticle.image : `https://astawiradipta.my.id${internalArticle.image?.startsWith('/') ? '' : '/'}${internalArticle.image}`],
                 type: 'article',
                 authors: [internalArticle.author]
             }
@@ -1720,22 +1655,10 @@ export async function generateMetadata({
                 openGraph: {
                     title: localNews.title,
                     description: "Berita dan Artikel Karang Taruna Asta Wira Dipta.",
-                    images: [localNews.image.startsWith('http') ? localNews.image : `https://astawiradipta.my.id${localNews.image.startsWith('/') ? '' : '/'}${localNews.image}`],
+                    images: [localNews.image?.startsWith('http') ? localNews.image : `https://astawiradipta.my.id${localNews.image?.startsWith('/') ? '' : '/'}${localNews.image}`],
                     type: 'article',
                 }
             }
-        }
-    }
-
-    // URL adalah berita eksternal (url=https://...) → noindex karena kontennya dari domain lain
-    if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
-        return {
-            title: "Baca Berita - Karang Taruna Asta Wira Dipta",
-            description: "Portal Berita dan Informasi Terkini Karang Taruna Asta Wira Dipta.",
-            robots: {
-                index: false,
-                follow: false,
-            },
         }
     }
 
@@ -1759,16 +1682,15 @@ export default async function ReadNews({
     const resolvedSearchParams = await searchParams;
 
     let slug = resolvedParams.slug;
-    const url = resolvedSearchParams.url as string;
 
     // Fallback for old /berita/read?slug=...
     if (slug === 'read') {
-        slug = (resolvedSearchParams.slug as string) || (resolvedSearchParams.id as string) || url;
+        slug = (resolvedSearchParams.slug as string) || (resolvedSearchParams.id as string);
     }
 
-    const effectiveUrl = slug ? decodeURIComponent(slug) : url;
+    const effectiveUrl = slug ? decodeURIComponent(slug) : undefined;
 
-    if (!effectiveUrl) return <div className="p-8 text-center">{`URL Invalid (Missing Slug or URL)`}</div>;
+    if (!effectiveUrl || effectiveUrl === 'undefined') return <div className="p-8 text-center">{`Artikel tidak ditemukan`}</div>;
 
     // 1. Cek Apakah URL adalah internal slug
     let detail = INTERNAL_ARTICLES[effectiveUrl];
@@ -1778,18 +1700,13 @@ export default async function ReadNews({
         detail = await getLocalNews(effectiveUrl) as NewsDetail;
     }
 
-    // 3. Jika bukan internal/local, coba fetch eksternal (Fallback for old URLs)
-    if (!detail && url) {
-        detail = await getExternalNews(url) as NewsDetail;
-    }
-
     if (!detail) {
         return (
             <div className="max-w-4xl mx-auto py-12 px-4 text-center">
-                <h2 className="text-xl font-bold mb-4">Gagal memuat konten berita secara penuh.</h2>
-                <p className="mb-6 text-gray-600">Ada kesalahan saat mengambil data. Silakan buka tautan asli.</p>
-                <a href={url} target="_blank" rel="nofollow" className="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-                    Buka di Sumber Asli
+                <h2 className="text-xl font-bold mb-4">Gagal memuat konten berita.</h2>
+                <p className="mb-6 text-gray-600">Berita yang Anda cari tidak ditemukan atau telah dihapus.</p>
+                <a href="/berita" className="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                    Kembali ke Daftar Berita
                 </a>
             </div>
         );
@@ -1863,20 +1780,10 @@ export default async function ReadNews({
 
             {/* Source/Footer - Touch friendly */}
             <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
-                {url && url.startsWith('http') ? (
-                    <>
-                        <p className="text-sm text-gray-500 mb-3">Sumber: {new URL(url).hostname}</p>
-                        <a href={url} target="_blank" rel="nofollow" className="inline-flex items-center bg-primary text-white px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium">
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                            Buka di Sumber Asli
-                        </a>
-                    </>
-                ) : (
-                    <p className="text-sm text-gray-500 flex items-center">
-                        <svg className="w-4 h-4 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                        Sumber: Redaksi Karang Taruna Asta Wira Dipta
-                    </p>
-                )}
+                <p className="text-sm text-gray-500 flex items-center">
+                    <svg className="w-4 h-4 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                    Sumber: Redaksi Karang Taruna Asta Wira Dipta
+                </p>
             </div>
         </div>
     );
