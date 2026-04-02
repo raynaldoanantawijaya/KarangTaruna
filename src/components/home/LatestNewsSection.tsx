@@ -23,10 +23,18 @@ async function getLatestInternalNews(): Promise<AdminPost[]> {
             .limit(4)
             .get();
 
-        return snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...(doc.data() as Omit<AdminPost, 'id'>)
-        }));
+        return snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                title: data.title || '',
+                slug: data.slug || '',
+                image: (data.image && data.image.startsWith('data:image') && data.image.length > 500) ? `/api/post-image/${doc.id}` : (data.image || ''),
+                date: data.date || data.createdAt || '',
+                status: data.status || '',
+                content: data.content ? data.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...' : ''
+            } as AdminPost;
+        });
     } catch (error) {
         console.error("Failed to fetch latest internal news:", error);
         return [];

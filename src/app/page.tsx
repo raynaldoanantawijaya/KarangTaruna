@@ -28,26 +28,7 @@ interface GalleryItem {
   date: string;
 }
 
-import fs from 'fs/promises';
-import path from 'path';
 
-async function getInternalNews() {
-  try {
-    const postsRef = adminDb.collection('posts');
-    const snapshot = await postsRef
-      .where('status', '==', 'published')
-      .orderBy('createdAt', 'desc')
-      .get();
-
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-  } catch (error) {
-    console.error("Error reading internal news from Firestore:", error);
-    return [];
-  }
-}
 
 async function getGalleryItems(limitCount: number = 6) {
   try {
@@ -145,7 +126,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const internalNews = await getInternalNews();
   const galleryItems = await getGalleryItems(6); // Limit to 6 for homepage
   const videoItems = await getVideoItems(2); // Limit to 2 for homepage
   const appearance = await getAppearanceData(); // Fetch Appearance Data
@@ -175,15 +155,7 @@ export default async function Home() {
     "Berperan aktif dalam kegiatan sosial dan kemanusiaan."
   ];
 
-  // Use dynamic news if available, otherwise fallback to static for demo
-  const displayNews = internalNews.length > 0 ? internalNews : Object.entries(INTERNAL_ARTICLES).map(([slug, article]) => ({
-    id: slug,
-    title: article.title,
-    slug: slug,
-    image: article.image,
-    date: article.date,
-    status: 'published'
-  }));
+
 
 
   return (
