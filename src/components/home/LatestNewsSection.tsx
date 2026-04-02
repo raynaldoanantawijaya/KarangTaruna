@@ -69,7 +69,7 @@ export default async function LatestNewsSection() {
                     latestNews.map((item, index) => (
                         <div key={item.id} className="bg-card-light dark:bg-card-dark rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col md:flex-row h-full md:h-56 group">
                             <div className="md:w-1/3 relative h-48 md:h-full overflow-hidden">
-                                <Link href={`/berita/${item.slug}`}>
+                                <Link href={`/berita/${item.slug}`} tabIndex={-1} aria-hidden="true">
                                     <NewsImage
                                         alt={item.title}
                                         className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
@@ -84,7 +84,7 @@ export default async function LatestNewsSection() {
                             </div>
                             <div className="p-6 md:w-2/3 flex flex-col justify-between">
                                 <div>
-                                    <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2 space-x-2">
+                                    <div className="flex items-center text-xs text-gray-600 dark:text-gray-400 mb-2 space-x-2">
                                         <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> {item.date ? new Date(item.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Baru saja'}</span>
                                         <span>•</span>
                                         <span className="flex items-center"><User className="h-3 w-3 mr-1" /> Redaksi</span>
@@ -101,6 +101,8 @@ export default async function LatestNewsSection() {
                                 <Link
                                     href={`/berita/${item.slug}`}
                                     className="text-primary font-semibold text-sm hover:underline inline-flex items-center"
+                                    tabIndex={-1}
+                                    aria-hidden="true"
                                 >
                                     Baca Selengkapnya
                                 </Link>

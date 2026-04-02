@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    formats: ['image/webp'],  // Force WebP output for all images
+    formats: ['image/avif', 'image/webp'],  // Force AVIF/WebP output for maximum compression
     // Quality 75 is the sweet spot: visually nearly identical to 90, but ~40% smaller
     // This applies to ALL images served through next/image (both local and remote)
     // Combined with the upload API compression, this ensures images are always light
