@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Calendar, Users, MapPin, Award, CheckCircle, Clock, User, ChevronRight } from "lucide-react";
 import NewsImage from "@/components/NewsImage";
 import { INTERNAL_ARTICLES } from "@/app/berita/[slug]/page";
@@ -135,9 +136,9 @@ import { Metadata } from "next";
 export const revalidate = 60; // ISR: cache halaman 60 detik, lalu refresh dari Firestore
 
 export const metadata: Metadata = {
-  title: "Karang Taruna Asta Wira Dipta - Kelurahan Mojo, Surakarta",
-  description: "Website Resmi Karang Taruna Asta Wira Dipta, Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo). Wadah pengembangan generasi muda kreatif dan inovatif.",
-  keywords: ["karang taruna kelurahan mojo", "karang taruna mojo", "karangtaruna mojo", "kt mojo", "pemuda surakarta", "asta wira dipta", "organisasi pemuda solo"],
+  title: "Karang Taruna Asta Wira Dipta - Kelurahan Mojo, Surakarta | Organisasi Pemuda Solo",
+  description: "Website Resmi Karang Taruna Asta Wira Dipta Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo). Organisasi kepemudaan terbaik di Mojo, Solo Raya. Program sosial, pelatihan pemuda, kegiatan lingkungan, dan informasi komunitas karang taruna. Bergabunglah dengan kami!",
+  keywords: ["karang taruna kelurahan mojo", "karang taruna mojo", "karang taruna", "karangtaruna mojo", "kt mojo", "pemuda surakarta", "asta wira dipta", "organisasi pemuda solo", "karang taruna surakarta", "karang taruna solo", "karang taruna pasar kliwon", "karang taruna jawa tengah", "organisasi pemuda mojo", "kegiatan pemuda solo", "komunitas pemuda surakarta"],
   alternates: {
     canonical: "https://astawiradipta.my.id",
   }
@@ -239,14 +240,14 @@ export default async function Home() {
                 <div className="absolute bottom-20 right-10 w-3 h-3 bg-white rounded-full animate-sparkle" style={{ animationDelay: '1s' }}></div>
                 <div className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-yellow-200 rounded-full animate-sparkle" style={{ animationDelay: '0.5s' }}></div>
 
-                <img
-                  alt="Logo Karang Taruna"
-                  className="rounded-xl w-full h-full object-contain aspect-[4/3] bg-gray-100 dark:bg-gray-800 p-4"
+                <Image
+                  alt="Visi Misi Karang Taruna Kelurahan Mojo Surakarta"
+                  className="rounded-xl w-full h-full object-contain bg-gray-100 dark:bg-gray-800 p-4"
                   src="/visi-misi.webp"
                   width={800}
                   height={751}
-                  // @ts-ignore
-                  fetchpriority="high"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
             </div>
@@ -636,15 +637,54 @@ export default async function Home() {
             </div>
           </div>
         </section>
-        {/* SEO Content Section (Hidden visually or unobtrusive but readable by bots) */}
-        <section className="bg-gray-50 dark:bg-gray-900 py-8 border-t border-gray-200 dark:border-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Tentang Karang Taruna Kelurahan Mojo</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              Karang Taruna Asta Wira Dipta adalah organisasi kepemudaan resmi yang berlokasi di Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah.
-              Kami berfokus pada pemberdayaan pemuda, kegiatan sosial, dan pembangunan masyarakat di wilayah Mojo dan sekitarnya.
-              Bergabunglah bersama kami untuk mewujudkan generasi muda Solo yang berbudaya, berdaya saing, dan bermanfaat bagi lingkungan.
-            </p>
+        {/* SEO Content Section — Konten Lengkap untuk Ranking Google */}
+        <section className="bg-gray-50 dark:bg-gray-900 py-12 border-t border-gray-200 dark:border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8">
+              <h2 className="text-lg font-bold text-gray-700 dark:text-gray-300 mb-1">Tentang Karang Taruna Kelurahan Mojo</h2>
+              <div className="w-16 h-1 bg-primary mx-auto rounded-full"></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+              <div className="space-y-4">
+                <h3 className="font-bold text-gray-800 dark:text-gray-200 text-base">Karang Taruna Asta Wira Dipta — Organisasi Pemuda Kelurahan Mojo, Surakarta</h3>
+                <p>
+                  <strong>Karang Taruna Asta Wira Dipta</strong> adalah organisasi kepemudaan resmi yang berkedudukan di <strong>Kelurahan Mojo</strong>, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Provinsi Jawa Tengah.
+                  Sebagai <strong>karang taruna</strong> tingkat kelurahan, kami menjadi wadah pengembangan generasi muda yang berkarya, berdaya, dan bertanggung jawab sosial di lingkungan Mojo dan sekitarnya.
+                </p>
+                <p>
+                  Nama &quot;Asta Wira Dipta&quot; diambil dari bahasa Sansekerta yang bermakna <em>pejuang berkepribadian, berpengetahuan, dan terampil</em>.
+                  Didirikan berdasarkan Peraturan Menteri Sosial Nomor 77/HUK/2010, <strong>Karang Taruna Mojo</strong> aktif menjalankan berbagai program pemberdayaan pemuda,
+                  kegiatan sosial kemasyarakatan, serta pembangunan kesejahteraan di wilayah RW 01 hingga RW 12 Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta.
+                </p>
+                <p>
+                  <strong>Karang Taruna Kelurahan Mojo</strong> merupakan salah satu dari puluhan karang taruna yang aktif di Kota Surakarta. Kami berkomitmen untuk menjadi organisasi pemuda terbaik
+                  yang berkontribusi nyata bagi masyarakat Solo melalui aksi sosial, pelatihan keterampilan, dan kegiatan lingkungan hidup.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <h3 className="font-bold text-gray-800 dark:text-gray-200 text-base">Program Unggulan Karang Taruna Mojo Solo</h3>
+                <p>
+                  Sebagai <strong>karang taruna</strong> yang aktif di Kota Solo, kami menggelar berbagai program unggulan meliputi:
+                  <strong> Jumat Berkah Berbagi</strong> (pembagian makanan untuk warga kurang mampu),
+                  <strong> Donor Darah Rutin</strong> bekerja sama dengan PMI Kota Surakarta,
+                  <strong> Kerja Bakti Minggu Bersih</strong> di seluruh wilayah Kelurahan Mojo,
+                  <strong> Workshop Digital Marketing</strong> untuk pemuda,
+                  <strong> Bimbingan Belajar</strong> gratis untuk anak sekolah,
+                  serta <strong>Tanggap Bencana Alam</strong> dan <strong>Bank Sampah</strong> tingkat RW.
+                </p>
+                <p>
+                  Kelurahan Mojo sendiri merupakan kelurahan yang terbentuk pada tahun 2018 dari pemekaran Kelurahan Semanggi.
+                  Berlokasi strategis di Kecamatan Pasar Kliwon, dekat dengan fasilitas penting seperti RSUD Dr. Moewardi, Pasar Klithikan Notoharjo, dan Kampung Batik Laweyan.
+                  Wilayah Mojo juga dikenal sebagai kawasan berkembang dengan populasi pemuda produktif yang tinggi.
+                </p>
+                <h3 className="font-bold text-gray-800 dark:text-gray-200 text-base">Hubungi Karang Taruna Asta Wira Dipta</h3>
+                <p>
+                  Sekretariat <strong>Karang Taruna Kelurahan Mojo</strong> beralamat di Jl. Sungai Serang I No. 313, Mojo, Kec. Pasar Kliwon, Kota Surakarta, Jawa Tengah 57191.
+                  Untuk informasi keanggotaan, kolaborasi, atau kegiatan sosial, silakan hubungi kami melalui email <strong>astawiradipta@gmail.com</strong> atau WhatsApp di nomor +62 87 888 2 666 99.
+                  Bergabunglah bersama <strong>Karang Taruna Mojo</strong> dan jadilah bagian dari generasi muda Solo yang berkarya, berdaya saing, dan bermanfaat bagi lingkungan!
+                </p>
+              </div>
+            </div>
           </div>
         </section>
       </main>

@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
 import FooterServer from "@/components/FooterServer";
+import Script from "next/script";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -132,9 +133,11 @@ export const metadata: Metadata = {
     images: ["https://astawiradipta.my.id/surakarta.webp"],
   },
   category: "organization",
-  verification: {
-    google: "your-google-verification-code", // Ganti dengan kode verifikasi Google Search Console
-  },
+  // PENTING: Ganti dengan kode verifikasi Google Search Console yang asli!
+  // Buka https://search.google.com/search-console → Tambah Properti → Verifikasi HTML Tag
+  // verification: {
+  //   google: "MASUKKAN_KODE_VERIFIKASI_ASLI_DISINI",
+  // },
   other: {
     "geo.region": "ID-JT",
     "geo.placename": "Surakarta, Jawa Tengah, Indonesia",
@@ -230,6 +233,22 @@ const localBusinessJsonLd = {
   priceRange: "Free"
 };
 
+// WebSite Schema for Google Sitelinks Search Box
+const webSiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Karang Taruna Asta Wira Dipta",
+  alternateName: "Karang Taruna Kelurahan Mojo",
+  url: "https://astawiradipta.my.id",
+  description: "Website Resmi Karang Taruna Asta Wira Dipta Kelurahan Mojo, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah.",
+  inLanguage: "id-ID",
+  publisher: {
+    "@type": "Organization",
+    name: "Karang Taruna Asta Wira Dipta",
+    url: "https://astawiradipta.my.id"
+  }
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -238,10 +257,20 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
-        {/* Structured Data */}
+        {/* Structured Data - Organization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {/* Structured Data - Local Business (for Local SEO) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+        />
+        {/* Structured Data - WebSite (for Sitelinks) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
         />
         {/* Additional Meta Tags */}
         <meta name="geo.region" content="ID-JT" />
@@ -250,13 +279,12 @@ export default function RootLayout({
         <meta name="ICBM" content="-7.5755, 110.8243" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1a56db" />
-        {/* Google AdSense */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9253651878551796"
-          crossOrigin="anonymous"
-        ></script>
-        {/* DNS prefetch for external resources (no preconnect to avoid Lighthouse warnings on pages that don't use them) */}
+        {/* Preconnect hints for critical third-party origins */}
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fundingchoicesmessages.google.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://fundingchoicesmessages.google.com" />
+        {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
       </head>
@@ -273,6 +301,12 @@ export default function RootLayout({
             {children}
           </ClientLayoutWrapper>
         </ThemeProvider>
+        {/* Google AdSense - loaded after page is interactive to avoid blocking render */}
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9253651878551796"
+          strategy="lazyOnload"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   );

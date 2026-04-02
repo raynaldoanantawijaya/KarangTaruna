@@ -23,7 +23,8 @@ export const metadata: Metadata = {
     },
 };
 
-const ANONYMOUS_IMG = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
+// Local avatar placeholder (eliminates uncached external request to Wikimedia)
+const ANONYMOUS_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Ccircle cx='64' cy='64' r='64' fill='%23e5e7eb'/%3E%3Ccircle cx='64' cy='48' r='20' fill='%239ca3af'/%3E%3Cellipse cx='64' cy='100' rx='36' ry='24' fill='%239ca3af'/%3E%3C/svg%3E";
 
 export default function Profil() {
     return (
@@ -305,6 +306,26 @@ export default function Profil() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </section>
+
+                {/* SEO Content Section — Profil Lengkap */}
+                <section className="bg-gray-50 dark:bg-gray-800/30 rounded-2xl p-8 border border-gray-100 dark:border-gray-700">
+                    <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">Tentang Karang Taruna Asta Wira Dipta Kelurahan Mojo</h2>
+                    <div className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed space-y-3">
+                        <p>
+                            <strong>Karang Taruna Asta Wira Dipta</strong> merupakan organisasi kepemudaan resmi di tingkat <strong>Kelurahan Mojo</strong>, Kecamatan Pasar Kliwon, Kota Surakarta (Solo), Jawa Tengah.
+                            Sebagai <strong>karang taruna</strong> yang dibentuk berdasarkan amanat Undang-Undang dan Peraturan Menteri Sosial, organisasi ini menjadi garda terdepan dalam pengembangan potensi generasi muda di wilayah Mojo.
+                        </p>
+                        <p>
+                            Struktur organisasi <strong>Karang Taruna Mojo</strong> terdiri dari Ketua, Wakil Ketua, Sekretaris I &amp; II, Bendahara I &amp; II, serta lima Koordinator Bidang yang membawahi:
+                            Bidang Pengembangan Sumber Daya Manusia, Bidang Ekonomi Kreatif &amp; Lingkungan Hidup, Bidang Kerohanian &amp; Pembinaan Mental,
+                            Bidang Olahraga &amp; Seni Budaya, dan Bidang Hubungan Masyarakat &amp; Komunikasi.
+                        </p>
+                        <p>
+                            Dengan motto &quot;Muda, Berkarya, Berbudaya&quot;, <strong>Karang Taruna Kelurahan Mojo</strong> terus berupaya menjadi organisasi pemuda yang aktif, inovatif, dan memberikan dampak positif
+                            bagi masyarakat Surakarta. Kami terbuka untuk pemuda-pemudi yang ingin berkontribusi dalam kegiatan sosial, kemanusiaan, dan pembangunan lingkungan di Kota Solo.
+                        </p>
                     </div>
                 </section>
             </main>

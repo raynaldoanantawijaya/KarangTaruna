@@ -9,7 +9,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const staticRoutes: MetadataRoute.Sitemap = [
         {
             url: baseUrl,
-            lastModified: new Date(),
+            // PENTING: Update tanggal ini HANYA saat konten homepage benar-benar berubah
+            lastModified: new Date('2026-03-30'),
             changeFrequency: 'weekly',
             priority: 1,
         },
@@ -27,7 +28,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
         {
             url: `${baseUrl}/berita`,
-            lastModified: new Date(),
+            // PENTING: Update tanggal ini HANYA saat halaman listing berita berubah
+            lastModified: new Date('2026-03-30'),
             changeFrequency: 'daily',
             priority: 0.8,
         },
